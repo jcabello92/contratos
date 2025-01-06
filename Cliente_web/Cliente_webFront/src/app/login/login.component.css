@@ -1,0 +1,122 @@
+/* Contenedor general del login */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 13vh; /* Espaciado para centrar verticalmente */
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Espacio del logo */
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo-placeholder {
+  width: 100%;
+  height: 100px;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+/* Estilo de los campos de formulario */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Botón de inicio de sesión */
+.btn-login {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-login:hover {
+  background-color: #0056b3;
+}
+
+/* Links adicionales */
+.extra-links {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.extra-links a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.extra-links a:hover {
+  text-decoration: underline;
+}
+
+/* Contenedor de la contraseña */
+.password-group {
+  position: relative;
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  flex: 1;
+}
+
+.toggle-password {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.toggle-password:hover {
+  text-decoration: underline;
+}
+
+/* Contenedor del logo */
+.logo-container {
+  margin-bottom: 20px;
+  text-align: center; /* Centrar el logo */
+}
+
+/* Imagen del logo */
+.logo-image {
+  max-width: 80%; /* Ajusta el ancho máximo para que no desborde */
+  height: auto; /* Mantiene las proporciones */
+  border-radius: 5px; /* Opcional: esquinas redondeadas */
+}
