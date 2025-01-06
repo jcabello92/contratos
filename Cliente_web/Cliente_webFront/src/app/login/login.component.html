@@ -4,7 +4,7 @@
 
   <h3 class="main-title" style="font-size: 24px">Inicio de Sesión</h3>
 
-  <form (ngSubmit)="onLogin()">
+  <form (ngSubmit)="onLogin($event)">
 
     <!-- Imagen que se muestra en el front-->
     <div class="logo-container">
@@ -46,7 +46,11 @@
         </button>
       </div>
     </div>
-    <button type="submit" class="btn-login">Ingresar</button>
+
+    <form (ngSubmit)="onLogin($event)">
+      <!-- Campos del formulario -->
+      <button type="submit" class="btn-login">Ingresar</button>
+    </form>
 
     <!-- Apartados extra-->
     <div class="extra-links">
