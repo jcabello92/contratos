@@ -16,8 +16,6 @@ export class LoginComponent {
   password: string = '';
   showPassword: boolean = false;
 
-
-
   // Función para alternar entre mostrar y ocultar la contraseña
   togglePassword() {
     this.showPassword = !this.showPassword;
