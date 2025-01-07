@@ -1,2 +1,65 @@
-<p>principal-page works!</p>
-<h1>Esta es la página principal</h1>
+<div class="main-layout">
+
+  <!-- Dashboard -->
+  <aside class="dashboard">
+    <img
+      src="https://municipalidaddecurico.cl/wp-content/uploads/2024/12/cropped-nl.jpeg"
+      alt="Logo de la empresa"
+      class="logo-image">
+
+    <div style="height: 20px;"></div>
+    <div style="font-size: 20px">Opciones a elección: </div>
+    <div style="height: 20px;"></div>
+
+
+    <button routerLink="/principalPage/opcion1">Contratos</button>
+    <button routerLink="/principalPage/opcion2">Proveedores</button>
+    <button routerLink="/principalPage/opcion3">Documentos</button>
+    <button routerLink="/principalPage/opcion4">OITs</button>
+    <button routerLink="/principalPage/opcion5">Reprecentantes</button>
+    <button routerLink="/principalPage/opcion6">Opción 6</button>
+  </aside>
+
+  <!-- Contenido principal -->
+  <div class="content-layout">
+
+
+    <!-- Barra de búsqueda -->
+    <header class="search-bar">
+      <div class="home-icon" routerLink="/principalPage">
+        🏠
+      </div>
+      <nav class="breadcrumb">
+        <ng-container *ngIf="breadcrumb.length">
+      <span *ngFor="let crumb of breadcrumb; let last = last">
+        <span > ➜ </span>
+        <span>{{ crumb }}</span>
+      </span>
+        </ng-container>
+      </nav>
+      <div class="search-box">
+        <input type="text" placeholder="Buscar..." />
+        <button>🔍</button>
+      </div>
+      <div class="user-buttons">
+        <button>Usuario</button>
+        <button>Ajustes</button>
+        <button>Notificaciones</button>
+      </div>
+    </header>
+
+
+
+    <!-- Contenido dinámico -->
+    <main class="dynamic-content">
+      <router-outlet></router-outlet>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Footer</p>
+      <h3>Este es el pie de página</h3>
+    </footer>
+  </div>
+</div>

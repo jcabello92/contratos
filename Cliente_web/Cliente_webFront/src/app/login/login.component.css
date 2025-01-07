@@ -137,7 +137,7 @@ input {
 /* Contenedor del logo */
 .logo-container {
   margin-bottom: 20px;
-  text-align: center; /* Centrar el logo */
+  text-align: center;
 }
 
 /* Imagen del logo */

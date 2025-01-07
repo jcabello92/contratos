@@ -1,0 +1,90 @@
+.main-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.dashboard {
+  width: 300px;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.dashboard .logo {
+  margin-bottom: 20px;
+}
+
+.dashboard button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+}
+
+.content-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #ddd;
+}
+
+.search-bar .home-icon {
+  cursor: pointer;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  margin-right: 10px;
+}
+
+.dynamic-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #ccc;
+}
+
+/* Contenedor del logo */
+.logo-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Imagen del logo */
+.logo-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.home-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  font-size: 25px;
+  width: 70%;
+}
+
