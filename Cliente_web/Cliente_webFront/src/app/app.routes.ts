@@ -12,7 +12,7 @@ import {Option6Component} from './option6/option6.component';
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent }, { path: 'principalPage', component: PrincipalPageComponent, children: [
-      { path: '', redirectTo: 'opcion1', pathMatch: 'full' },
+      { path: '', redirectTo: 'principalPage', pathMatch: 'full' },
       { path: 'opcion1', component: Option1Component },
       { path: 'opcion2', component: Option2Component },
       { path: 'opcion3', component: Option3Component },

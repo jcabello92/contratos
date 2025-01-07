@@ -40,21 +40,27 @@
       <div class="search-box">
         <input type="text" placeholder="Buscar..." />
         <button>🔍</button>
+        <div style="width: 50px"></div>
       </div>
       <div class="user-buttons">
-        <button>Usuario</button>
-        <button>Ajustes</button>
-        <button>Notificaciones</button>
+        <button>Usuario 👤</button>
+        <button>Ajustes ⚙️</button>
+        <button>Notificaciones 🔔</button>
       </div>
     </header>
 
 
+    <!-- Página principal en blanco-->
+    <div *ngIf="currentRoute === '/principalPage'">
+      <h1 style="margin-left: 20px;">
+        Bienvenido, esta es la página principal
+      </h1>
+    </div>
 
     <!-- Contenido dinámico -->
     <main class="dynamic-content">
       <router-outlet></router-outlet>
     </main>
-
 
     <!-- Footer -->
     <footer class="footer">
