@@ -25,7 +25,6 @@
   <!-- Contenido principal -->
   <div class="content-layout">
 
-
     <!-- Barra de búsqueda -->
     <header class="search-bar">
       <div class="home-icon" routerLink="/principalPage">
@@ -45,21 +44,20 @@
         <div style="width: 50px"></div>
       </div>
       <div class="user-buttons">
-        <button>Usuario 👤</button>
-        <button>Ajustes ⚙️</button>
-        <button>Notificaciones 🔔</button>
+        <button routerLink = '/Usuario'>Usuario 👤</button>
+        <button routerLink = '/Ajustes'>Ajustes ⚙️</button>
+        <button routerLink = '/Notificaciones'>Notificaciones 🔔</button>
       </div>
     </header>
 
 
     <!-- Página principal en blanco-->
     <div *ngIf="currentRoute === '/principalPage'">
-      <h1 style="margin-left: 20px;">
-        Bienvenido, esta es la página principal
-      </h1>
+      <h1 style="margin-left: 20px;"> Bienvenido, esta es la página principal </h1>
+      <p style="margin-left: 20px"> Este es solo un print de prueba</p>
     </div>
 
-    <!-- Contenido dinámico -->
+    <!-- Contenido dinámico/Navegación de las rutas -->
     <main class="dynamic-content">
       <router-outlet></router-outlet>
     </main>
@@ -69,5 +67,6 @@
       <p>Footer</p>
       <h3>Este es el pie de página</h3>
     </footer>
+
   </div>
 </div>

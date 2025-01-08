@@ -9,10 +9,14 @@ import {OITsComponent} from './oits/oits.component';
 import {RepresentantesComponent} from './representantes/representantes.component'
 import {Option6Component} from './option6/option6.component';
 import {Option7Component} from './option7/option7.component';
+import {UsuarioComponent} from './usuario/usuario.component';
+import {AjustesComponent} from './ajustes/ajustes.component';
+import {NotificacionesComponent} from './notificaciones/notificaciones.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent }, { path: 'principalPage', component: PrincipalPageComponent, children: [
+  { path: 'login', component: LoginComponent },
+  { path: 'principalPage', component: PrincipalPageComponent, children: [
       { path: '', redirectTo: 'principalPage', pathMatch: 'full' },
       { path: 'Contratos', component: ContratosComponent },
       { path: 'Proveedores', component: ProveedoresComponent },
@@ -23,6 +27,9 @@ export const routes: Routes = [
       { path: 'Opcion7', component: Option7Component }
     ]
   },
+  { path: 'Usuario', component: UsuarioComponent },
+  { path: 'Ajustes', component: AjustesComponent },
+  { path: 'Notificaciones', component: NotificacionesComponent },
   { path: '**', redirectTo: '/login' }
 ];
 
