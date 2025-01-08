@@ -12,8 +12,7 @@ import {Option7Component} from './option7/option7.component';
 import {UsuarioComponent} from './usuario/usuario.component';
 import {AjustesComponent} from './ajustes/ajustes.component';
 import {NotificacionesComponent} from './notificaciones/notificaciones.component';
-// @ts-ignore
-import { AuthGuard } from '../auth.guard';
+import { AuthGuard } from './auth.guard'
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -29,9 +28,9 @@ export const routes: Routes = [
       { path: 'Opcion7', component: Option7Component }
     ]
   },
-  { path: 'Usuario', component: UsuarioComponent },
-  { path: 'Ajustes', component: AjustesComponent },
-  { path: 'Notificaciones', component: NotificacionesComponent },
+  { path: 'Usuario', component: UsuarioComponent, canActivate: [AuthGuard] },
+  { path: 'Ajustes', component: AjustesComponent, canActivate: [AuthGuard]  },
+  { path: 'Notificaciones', component: NotificacionesComponent, canActivate: [AuthGuard]  },
   { path: '**', redirectTo: '/login' }
 ];
 
