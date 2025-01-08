@@ -12,6 +12,8 @@ import {Option7Component} from './option7/option7.component';
 import {UsuarioComponent} from './usuario/usuario.component';
 import {AjustesComponent} from './ajustes/ajustes.component';
 import {NotificacionesComponent} from './notificaciones/notificaciones.component';
+// @ts-ignore
+import { AuthGuard } from '../auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },

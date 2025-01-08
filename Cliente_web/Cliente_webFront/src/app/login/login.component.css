@@ -3,8 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 120vh; /* altura de la ventana */
-  background-image: url('https://eyrabooks.com/uploads/blog_posts/banners/17b1494bfafe69ae39fb045fe9f4ab20.jpg');
+  height: 100vh; /* altura de la ventana */
+  background-image: url('https://media.licdn.com/dms/image/v2/C5612AQGenM3_eMaA2Q/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1591283009410?e=2147483647&v=beta&t=4w3j8QFBQCD7qk0knrONTc9TsowpB5ZEisim6FdjEjA');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -18,7 +18,7 @@
   max-width: 400px;
   margin: 0 auto;
   margin-top: -5vh; /*Margen vertical*/
-  background-color: #e8cb9a; /*#e8cb9a*/
+  background-color: #9bb7eb; /*Color del recuadro del login*/ /* #dfe5f1 */
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
