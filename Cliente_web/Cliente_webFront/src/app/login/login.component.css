@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh; /* altura de la ventana */
-  background-image: url('https://media.licdn.com/dms/image/v2/C5612AQGenM3_eMaA2Q/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1591283009410?e=2147483647&v=beta&t=4w3j8QFBQCD7qk0knrONTc9TsowpB5ZEisim6FdjEjA');
+  background-image: url('https://st4.depositphotos.com/5339154/28761/i/450/depositphotos_287615164-stock-photo-documents-and-contract-on-wooden.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -18,7 +18,7 @@
   max-width: 400px;
   margin: 0 auto;
   margin-top: -5vh; /*Margen vertical*/
-  background-color: #fcdd35; /*Color del recuadro del login*/ /* #dfe5f1 */
+  background-color: #593A2E; /*Color del recuadro del login*/ /* #dfe5f1 */
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -26,11 +26,11 @@
 }
 
 .main-title {
-  color: #3c3c3c;
+  color: white;
 }
 
 .main-title-small {
-  color: #515151;
+  color: white;
   font-size: 17px;
 }
 
