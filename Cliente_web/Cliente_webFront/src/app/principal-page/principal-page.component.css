@@ -5,7 +5,7 @@
 
 .dashboard {
   width: 300px;
-  background-color: #f4f4f4;
+  background-color: #3CB371;
   padding: 20px;
 }
 
@@ -17,9 +17,24 @@
   display: block;
   width: 100%;
   margin-bottom: 10px;
-  padding: 10px;
-  text-align: left;
+  padding: 10px 15px; /* Ajustar el padding para más espacio */
+  text-align: center; /* Centrar el texto */
+  font-family: 'Arial', sans-serif; /* Asegura una fuente simple y profesional */
+  font-size: 14px; /* Ajusta el tamaño del texto */
+  font-weight: bold; /* Hace que el texto sea más visible */
+  background-color: #FFFFFF; /* Fondo blanco */
+  color: #000000; /* Texto en negro */
+  border: 1px solid #3CB371; /* Bordes en verde oscuro */
+  border-radius: 20px; /* Bordes redondeados */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Suavidad en el cambio de color */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
 }
+
+.dashboard button:hover {
+  background-color: #FFD700; /* Fondo verde al pasar el mouse */
+  color: #2E8B57; /* Texto blanco al pasar el mouse */
+}
+
 
 .content-layout {
   flex: 1;
@@ -32,11 +47,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: #ddd;
+  background-color: #2E8B57; /* Fondo verde primario */ /*#2E8B57  #3CB371*/
+  color: #FFFFFF; /* Texto blanco */
 }
 
 .search-bar .home-icon {
   cursor: pointer;
+  color: #FFFFFF; /* Iconos blancos */
 }
 
 .search-box {
@@ -48,6 +65,52 @@
   margin-right: 10px;
 }
 
+.glass{
+  background-color: #3CB371; /* Fondo amarillo dorado */
+  color: #000000; /* Texto negro */
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Suavidad en el hover */
+  margin-right: 20px;
+}
+
+.search-bar button {
+  display: block;
+  width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+  margin-bottom: 10px; /* Espaciado inferior */
+  padding: 10px 15px; /* Ajustar el padding para más espacio */
+  text-align: center; /* Centrar el texto */
+  font-family: 'Arial', sans-serif; /* Fuente sencilla y profesional */
+  font-size: 14px; /* Tamaño del texto */
+  font-weight: bold; /* Texto más visible */
+  background-color: #FFD700; /* Fondo amarillo dorado */
+  color: #000000; /* Texto negro */
+  border: none; /* Sin bordes */
+  border-radius: 20px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Suavidad en los cambios de color */
+}
+
+.search-bar button:hover {
+  background-color: #FFFACD; /* Fondo amarillo suave al pasar el mouse */
+  color: #2E8B57; /* Texto verde oscuro en hover */
+}
+
+
+.principalTitles {
+  color: #2E8B57; /* Verde oscuro para el título principal */
+  text-align: center; /* Centrado visualmente */
+}
+
+.secondaryText {
+  color: #4F4F4F; /* Gris oscuro para el texto secundario */
+  font-weight: lighter; /* Fuente más ligera */
+}
+
+
+/*Este usa el main*/
 .dynamic-content {
   flex: 1;
   padding: 20px;
@@ -55,9 +118,11 @@
 }
 
 .footer {
-  text-align: center;
-  padding: 10px;
-  background-color: #ccc;
+  background-color: #2E8B57; /* Fondo verde oscuro */
+  color: #FFFFFF; /* Texto blanco */
+  text-align: center; /* Centrado */
+  padding: 20px;
+  border-top: 5px solid #FFD700; /* Borde superior amarillo dorado */
 }
 
 /* Contenedor del logo */

@@ -8,7 +8,7 @@
       class="logo-image">
 
     <div style="height: 20px;"></div>
-    <div style="font-size: 20px">Opciones a elección: </div>
+    <div style="font-size: 20px; color: white"  >Opciones a elección: </div>
     <div style="height: 20px;"></div>
 
 
@@ -38,7 +38,7 @@
       </span>
         </ng-container>
       </nav>
-      <div class="search-box">
+      <div class="search-box , glass"   >
         <input type="text" placeholder="Buscar..." />
         <button>🔍</button>
         <div style="width: 50px"></div>
@@ -53,8 +53,8 @@
 
     <!-- Página principal en blanco-->
     <div *ngIf="currentRoute === '/principalPage'">
-      <h1 style="margin-left: 20px;"> Bienvenido, esta es la página principal </h1>
-      <p style="margin-left: 20px"> Este es solo un print de prueba</p>
+      <h1 style="margin-left: 20px" class="principalTitles"> Bienvenido, esta es la página principal </h1>
+      <p style="margin-left: 20px" class="secondaryText"> Este es solo un print de prueba</p>
     </div>
 
     <!-- Contenido dinámico/Navegación de las rutas -->
