@@ -38,3 +38,36 @@ td, th {
   background-color: #FFFACD; /* Fondo amarillo suave al pasar el mouse */
   color: #2E8B57; /* Texto verde oscuro en hover */
 }
+
+
+.combo-box {
+  display: block;
+  width: 200px;
+  padding: 10px 15px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #FFD700;
+  color: #000000;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Estilo específico para el botón para mantener el mismo formato */
+button.combo-box {
+  width: auto;
+  font-weight: bold;
+  background-color: #FFD700;
+  color: #000;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button.combo-box:hover {
+  background-color: #FFCC00;
+}
