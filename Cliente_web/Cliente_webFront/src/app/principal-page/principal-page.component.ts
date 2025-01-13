@@ -19,6 +19,8 @@ export class PrincipalPageComponent implements OnInit, OnDestroy{
   breadcrumb: string[] = [];
   currentRoute: string | undefined;
   private routerSubscription: Subscription | undefined;
+  isFirstTime: boolean = true;
+
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
@@ -36,6 +38,7 @@ export class PrincipalPageComponent implements OnInit, OnDestroy{
     this.routerSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.urlAfterRedirects; // Actualizamos la ruta actual
+        this.adjustDashboardHeight();
       }
     });
   }
@@ -53,4 +56,26 @@ export class PrincipalPageComponent implements OnInit, OnDestroy{
     this.breadcrumb = parts.slice(1);
   }
 
+
+  adjustDashboardHeight(): void {
+    const dashboard = document.querySelector('.dashboard') as HTMLElement;
+    const content = document.querySelector('.dynamic-content') as HTMLElement;
+    const footer = document.querySelector('.footer') as HTMLElement;
+
+    if (dashboard && content && footer) {
+      const totalContentHeight = content.offsetHeight + footer.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      // Lógica para la primera ejecución
+      if (this.isFirstTime) {
+        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight)+788}px`;
+        console.log("Locura:",this.isFirstTime)
+        this.isFirstTime = false; // Cambiar a false después de la primera ejecución
+        console.log("Locura2:",this.isFirstTime)
+      } else {
+        // Para las siguientes veces, no sumar los 788px
+        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight+300)}px`;
+      }
+    }
+  }
 }

@@ -71,3 +71,14 @@ button.combo-box {
 button.combo-box:hover {
   background-color: #FFCC00;
 }
+
+.table-container {
+  max-height: calc(100vh - 150px); /* Ajusta según la altura del header y footer */
+  overflow-y: auto; /* Habilita el scroll vertical en la tabla */
+  border: 1px solid #ddd;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
