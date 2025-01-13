@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import { Router } from '@angular/router'
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Md5 } from 'ts-md5';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [
-    FormsModule
-  ],
+  imports: [FormsModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  //Variables declaradas
   user: string = '';
   password: string = '';
   showPassword: boolean = false;
@@ -24,11 +22,19 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  // Función de login, para guardar el usuario y la contraseña más adelante (será usada más adelante)
+  // Función de login, para guardar el usuario y la contraseña cifrada
   onLogin(event: Event) {
     event.preventDefault();
+
+    const md5 = new Md5();
+    const hashedPassword = md5.appendStr(this.password).end();
+
+    // Mostrar en consola para verificar
     console.log('User:', this.user);
-    console.log('Password:', this.password);
+    console.log("password",this.password)
+    console.log('Hashed Password:', hashedPassword);
+
+    // Aquí puedes enviar el usuario y la contraseña cifrada a tu backend
     this.router.navigate(['/principalPage']);
   }
 }
