@@ -62,20 +62,30 @@ export class PrincipalPageComponent implements OnInit, OnDestroy{
     const content = document.querySelector('.dynamic-content') as HTMLElement;
     const footer = document.querySelector('.footer') as HTMLElement;
 
+    const routeHeights: { [key: string]: number } = {
+      "/principalPage/Contratos": 788,
+      "/principalPage/Proveedores": 788,
+      "/principalPage/Documentos": 788,
+      "/principalPage/OIT": 788,
+      "/principalPage/Representantes": 788,
+    };
+
     if (dashboard && content && footer) {
       const totalContentHeight = content.offsetHeight + footer.offsetHeight;
       const viewportHeight = window.innerHeight;
 
       // Lógica para la primera ejecución
       if (this.isFirstTime) {
-        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight)+788}px`;
-        console.log("Locura:",this.isFirstTime)
+        // @ts-ignore
+        const additionalHeight = routeHeights[this.currentRoute] || 0;
+        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight) + additionalHeight}px`;
         this.isFirstTime = false; // Cambiar a false después de la primera ejecución
-        console.log("Locura2:",this.isFirstTime)
       } else {
-        // Para las siguientes veces, no sumar los 788px
-        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight+300)}px`;
+        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight)+67}px`;
       }
     }
   }
+
+
+
 }
