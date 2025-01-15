@@ -12,11 +12,15 @@ import {Option7Component} from './option7/option7.component';
 import {UsuarioComponent} from './usuario/usuario.component';
 import {AjustesComponent} from './ajustes/ajustes.component';
 import {NotificacionesComponent} from './notificaciones/notificaciones.component';
+import {PrincipalPageUsersComponent} from './principal-page-users/principal-page-users.component';
 import { AuthGuard } from './auth.guard'
 
 export const routes: Routes = [
+
+
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+
   { path: 'principalPage', component: PrincipalPageComponent, children: [
       { path: '', redirectTo: 'principalPage', pathMatch: 'full' },
       { path: 'Contratos', component: ContratosComponent },
@@ -31,7 +35,29 @@ export const routes: Routes = [
   { path: 'Usuario', component: UsuarioComponent, canActivate: [AuthGuard] },
   { path: 'Ajustes', component: AjustesComponent, canActivate: [AuthGuard]  },
   { path: 'Notificaciones', component: NotificacionesComponent, canActivate: [AuthGuard]  },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' },
+
+
+  // =======================================================
+
+/*
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+
+  {path: 'principalPageUsers', component: PrincipalPageUsersComponent, children: [
+      { path: '', redirectTo: 'principalPageUsers', pathMatch: 'full' },
+      { path: 'Contratos', component: ContratosComponent },
+      { path: 'Proveedores', component: ProveedoresComponent },
+      { path: 'Documentos', component: DocumentosComponent },
+      { path: 'OIT', component: OITsComponent },
+      { path: 'Representantes', component: RepresentantesComponent },
+    ]
+  },
+  { path: 'Usuario', component: UsuarioComponent},
+  { path: 'Ajustes', component: AjustesComponent},
+  { path: 'Notificaciones', component: NotificacionesComponent},
+  { path: '**', redirectTo: '/login' },
+*/
 ];
 
 @NgModule({

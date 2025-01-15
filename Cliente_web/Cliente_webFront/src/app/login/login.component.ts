@@ -32,9 +32,10 @@ export class LoginComponent {
     // Mostrar en consola para verificar
     console.log('User:', this.user);
     console.log("password",this.password)
-    console.log('Hashed Password:', hashedPassword);
+     console.log('Hashed Password:', hashedPassword);
 
     // Aquí puedes enviar el usuario y la contraseña cifrada a tu backend
     this.router.navigate(['/principalPage']);
+    //this.router.navigate(['/principalPageUsers']);
   }
 }

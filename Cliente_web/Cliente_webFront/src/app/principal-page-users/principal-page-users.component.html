@@ -1,0 +1,70 @@
+<div class="main-layout">
+
+  <!-- Dashboard -->
+  <aside class="dashboard">
+    <img
+      src="https://municipalidaddecurico.cl/wp-content/uploads/2024/12/cropped-nl.jpeg"
+      alt="Logo de la empresa"
+      class="logo-image">
+
+    <div style="height: 20px;"></div>
+    <div style="font-size: 25px;font-weight: bold; color: white"  >Opciones a elección: </div>
+    <div style="height: 20px;"></div>
+
+
+    <button routerLink="/principalPageUsers/Contratos">Contratos</button>
+    <button routerLink="/principalPageUsers/Proveedores">Proveedores</button>
+    <button routerLink="/principalPageUsers/Documentos">Documentos</button>
+    <button routerLink="/principalPageUsers/OIT">OITs</button>
+    <button routerLink="/principalPageUsers/Representantes">Reprecentantes</button>
+
+  </aside>
+
+  <!-- Contenido principal -->
+  <div class="content-layout">
+
+    <!-- Barra de búsqueda -->
+    <header class="search-bar">
+      <div class="home-icon" routerLink="/principalPageUsers">
+        🏠
+      </div>
+      <nav class="breadcrumb">
+        <ng-container *ngIf="breadcrumb.length">
+      <span *ngFor="let crumb of breadcrumb; let last = last">
+        <span > ➜ </span>
+        <span>{{ crumb }}</span>
+      </span>
+        </ng-container>
+      </nav>
+      <div class="search-box , glass"   >
+        <input type="text" placeholder="Buscar..." />
+        <button>🔍</button>
+        <div style="width: 50px"></div>
+      </div>
+      <div class="user-buttons">
+        <button routerLink = '/Usuario'>Usuario 👤</button>
+        <button routerLink = '/Ajustes'>Ajustes ⚙️</button>
+        <button routerLink = '/Notificaciones'>Notificaciones 🔔</button>
+      </div>
+    </header>
+
+
+    <!-- Página principal en blanco-->
+    <div *ngIf="currentRoute === '/principalPageUsers'">
+      <h1 style="margin-left: 20px" class="principalTitles"> Bienvenido, esta es la página principal, pero del Usuario</h1>
+      <p style="margin-left: 20px" class="secondaryText"> Este es solo un print de prueba</p>
+    </div>
+
+    <!-- Contenido dinámico/Navegación de las rutas -->
+    <main class="dynamic-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Footer</p>
+      <h3>Este es el pie de página</h3>
+    </footer>
+
+  </div>
+</div>
