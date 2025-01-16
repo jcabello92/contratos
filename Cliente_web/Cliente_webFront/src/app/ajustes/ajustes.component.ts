@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-ajustes',
@@ -11,5 +11,6 @@ import {RouterLink} from '@angular/router';
   styleUrl: './ajustes.component.css'
 })
 export class AjustesComponent {
+  constructor(private router: Router) {}
 
 }

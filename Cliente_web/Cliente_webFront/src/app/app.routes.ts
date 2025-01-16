@@ -14,38 +14,16 @@ import {AjustesComponent} from './ajustes/ajustes.component';
 import {NotificacionesComponent} from './notificaciones/notificaciones.component';
 import {PrincipalPageUsersComponent} from './principal-page-users/principal-page-users.component';
 import { AuthGuard } from './auth.guard'
+import {UsuarioUserComponent} from './usuario-user/usuario-user.component';
+import {AjustesUserComponent} from './ajustes-user/ajustes-user.component';
+import {NotificacionesUserComponent} from './notificaciones-user/notificaciones-user.component';
 
 export const routes: Routes = [
-
-
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
 
+  // Ruta principal para administradores
   { path: 'principalPage', component: PrincipalPageComponent, children: [
-      { path: '', redirectTo: 'principalPage', pathMatch: 'full' },
-      { path: 'Contratos', component: ContratosComponent },
-      { path: 'Proveedores', component: ProveedoresComponent },
-      { path: 'Documentos', component: DocumentosComponent },
-      { path: 'OIT', component: OITsComponent },
-      { path: 'Representantes', component: RepresentantesComponent },
-      { path: 'Opcion6', component: Option6Component },
-      { path: 'Opcion7', component: Option7Component }
-    ]
-  },
-  { path: 'Usuario', component: UsuarioComponent, canActivate: [AuthGuard] },
-  { path: 'Ajustes', component: AjustesComponent, canActivate: [AuthGuard]  },
-  { path: 'Notificaciones', component: NotificacionesComponent, canActivate: [AuthGuard]  },
-  { path: '**', redirectTo: '/login' },
-
-
-  // =======================================================
-
-/*
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-
-  {path: 'principalPageUsers', component: PrincipalPageUsersComponent, children: [
-      { path: '', redirectTo: 'principalPageUsers', pathMatch: 'full' },
       { path: 'Contratos', component: ContratosComponent },
       { path: 'Proveedores', component: ProveedoresComponent },
       { path: 'Documentos', component: DocumentosComponent },
@@ -53,11 +31,24 @@ export const routes: Routes = [
       { path: 'Representantes', component: RepresentantesComponent },
     ]
   },
-  { path: 'Usuario', component: UsuarioComponent},
-  { path: 'Ajustes', component: AjustesComponent},
-  { path: 'Notificaciones', component: NotificacionesComponent},
-  { path: '**', redirectTo: '/login' },
-*/
+
+  // Ruta principal para usuarios
+  { path: 'principalPageUsers', component: PrincipalPageUsersComponent, children: [
+      { path: 'Contratos', component: ContratosComponent },
+      { path: 'Proveedores', component: ProveedoresComponent },
+      { path: 'Documentos', component: DocumentosComponent },
+      { path: 'OIT', component: OITsComponent },
+      { path: 'Representantes', component: RepresentantesComponent },
+    ]
+  },
+
+  { path: 'Usuario', component: UsuarioComponent },
+  { path: 'Ajustes', component: AjustesComponent },
+  { path: 'Notificaciones', component: NotificacionesComponent },
+  { path: 'UsuarioUsers', component: UsuarioUserComponent },
+  { path: 'AjustesUsers', component: AjustesUserComponent },
+  { path: 'NotificacionesUsers', component: NotificacionesUserComponent },
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({
