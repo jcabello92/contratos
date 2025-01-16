@@ -17,6 +17,7 @@ import { AuthGuard } from './auth.guard'
 import {UsuarioUserComponent} from './usuario-user/usuario-user.component';
 import {AjustesUserComponent} from './ajustes-user/ajustes-user.component';
 import {NotificacionesUserComponent} from './notificaciones-user/notificaciones-user.component';
+import {ManipularUsuariosComponent} from './manipular-usuarios/manipular-usuarios.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'Documentos', component: DocumentosComponent },
       { path: 'OIT', component: OITsComponent },
       { path: 'Representantes', component: RepresentantesComponent },
+      { path: 'ManipularUsuarios' , component: ManipularUsuariosComponent }
     ]
   },
 
