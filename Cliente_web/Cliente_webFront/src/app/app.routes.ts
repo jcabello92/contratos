@@ -36,7 +36,7 @@ export const routes: Routes = [
 
   // Ruta principal para usuarios
   { path: 'principalPageUsers', component: PrincipalPageUsersComponent, children: [
-      { path: 'Contratos', component: ContratosComponent },
+      { path: 'Contratos', component: ContratosComponent},
       { path: 'Proveedores', component: ProveedoresComponent },
       { path: 'Documentos', component: DocumentosComponent },
       { path: 'OIT', component: OITsComponent },

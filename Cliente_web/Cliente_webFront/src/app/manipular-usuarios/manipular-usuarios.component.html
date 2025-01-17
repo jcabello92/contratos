@@ -1,8 +1,46 @@
-<h1>Trabajar con los Usuarios</h1>
+<div class="tabla-usuarios">
+  <h1>Trabajar con los Usuarios</h1>
 
-<button  (click)="openModal()">Crear Usuario</button>
-<button> Actualizar un usuario</button>
-<button> Borrar un usuario</button>
+  <!-- Botones de acción -->
+  <div class="botones-usuarios">
+    <button (click)="openModal()">Crear Usuario</button>
+    <button (click)="abrirPrimerModal()">Actualizar un usuario</button>
+    <button>Borrar un usuario</button>
+  </div>
+
+  <!-- Tabla para mostrar usuarios -->
+  <div class="tabla-contenedor">
+    <table *ngIf="usuarios.length > 0">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>RUT</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Rol</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.id }}</td>
+        <td>{{ usuario.usuario }}</td>
+        <td>{{ usuario.rut }}</td>
+        <td>{{ usuario.nombre }}</td>
+        <td>{{ usuario.correo }}</td>
+        <td>{{ usuario.rol }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <p *ngIf="usuarios.length === 0" class="mensaje-sin-usuarios">
+      No se han encontrado usuarios.
+    </p>
+  </div>
+</div>
+
+
+
+<!-- =========================================== MODALES ================================================== -->
 
 <!-- Modal de crear usuario -->
 <div class="modal" tabindex="-1" [ngClass]="{ 'show': showModal }" [ngStyle]="{ display: showModal ? 'block' : 'none' }">
@@ -58,3 +96,63 @@
     </div>
   </div>
 </div>
+
+<!-- Primer Modal: Selección de usuario -->
+<div class="modal" *ngIf="mostrarPrimerModal">
+  <div class="modal-contenido">
+    <h2>Selecciona un usuario</h2>
+    <ul>
+      <li *ngFor="let usuario of usuarios" (click)="seleccionarUsuario(usuario.id)">
+        {{ usuario.nombre }} - {{ usuario.correo }}
+      </li>
+    </ul>
+    <div class="modal-botones">
+      <button (click)="cerrarPrimerModal()">Cancelar</button>
+      <button [disabled]="!usuarioSeleccionado" (click)="abrirSegundoModal()">Actualizar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Segundo Modal: Detalle del usuario -->
+<div class="modal-container" *ngIf="mostrarSegundoModal">
+  <div class="modal">
+    <h2 class="modal-title">Actualizar Usuario</h2>
+    <div class="modal-grid">
+      <label>
+        <span>Usuario:</span>
+        <input type="text" [(ngModel)]="usuarioDetalle.usuario" class="input-field" />
+      </label>
+      <label>
+        <span>Rut:</span>
+        <input type="text" [(ngModel)]="usuarioDetalle.rut" class="input-field" />
+      </label>
+      <label>
+        <span>Nombre:</span>
+        <input type="text" [(ngModel)]="usuarioDetalle.nombre" class="input-field" />
+      </label>
+      <label>
+        <span>Apellido:</span>
+        <input type="text" [(ngModel)]="usuarioDetalle.apellido" class="input-field" />
+      </label>
+      <label>
+        <span>Teléfono:</span>
+        <input type="text" [(ngModel)]="usuarioDetalle.telefono" class="input-field" />
+      </label>
+      <label>
+        <span>Correo:</span>
+        <input type="email" [(ngModel)]="usuarioDetalle.correo" class="input-field" />
+      </label>
+      <label class="grid-span">
+        <span>Rol:</span>
+        <input type="text" [(ngModel)]="usuarioDetalle.rol" class="input-field" />
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cerrarSegundoModal()">Cancelar</button>
+      <button class="btn-submit" (click)="actualizarUsuario()">Actualizar Usuario</button>
+    </div>
+  </div>
+</div>
+
+
+

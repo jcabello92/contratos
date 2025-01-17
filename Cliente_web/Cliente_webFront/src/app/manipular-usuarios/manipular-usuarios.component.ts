@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, contentChild, OnInit} from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NgClass, NgStyle } from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Md5 } from 'ts-md5';
 
@@ -11,13 +11,18 @@ import { Md5 } from 'ts-md5';
     NgStyle,
     FormsModule,
     HttpClientModule,
+    NgIf,
+    NgForOf,
   ],
   templateUrl: './manipular-usuarios.component.html',
   standalone: true,
   styleUrl: './manipular-usuarios.component.css',
 })
-export class ManipularUsuariosComponent {
+export class ManipularUsuariosComponent implements OnInit{
   showModal: boolean = false;
+  mostrarPrimerModal: boolean = false;
+  mostrarSegundoModal: boolean = false;
+
   nuevoUsuario = {
     usuario: '',
     contrasena: '',
@@ -29,7 +34,25 @@ export class ManipularUsuariosComponent {
     rol: '',
   };
 
+  protected usuarios: any[] = [];
+  usuarioSeleccionado: number | null = null;
+
+  usuarioDetalle = {
+    id: null,
+    usuario: '',
+    rut: '',
+    nombre: '',
+    apellido: '',
+    telefono: '',
+    correo: '',
+    rol: ''
+  };
+
   constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.ObtenerUsuarios()
+  }
 
   openModal() {
     this.showModal = true;
@@ -95,4 +118,118 @@ export class ManipularUsuariosComponent {
       },
     });
   }
+
+
+  ObtenerUsuarios() {
+    this.http.get<any[]>('http://localhost:8000/api/usuarios/pagina/1').subscribe(
+      (response) => {
+        this.usuarios = response; // Almacenar usuarios en la variable
+        console.log('Usuarios llamados obtenidos', this.usuarios);
+      },
+      (error) => {
+        console.error('Error al obtener los usuarios:', error);
+      }
+    );
+  }
+
+  // Abrir el primer modal
+  abrirPrimerModal(): void {
+    this.mostrarPrimerModal = true;
+  }
+
+  // Cerrar el primer modal
+  cerrarPrimerModal(): void {
+    this.mostrarPrimerModal = false;
+    this.usuarioSeleccionado = null;
+  }
+
+  // Seleccionar usuario
+  seleccionarUsuario(id: number): void {
+    this.usuarioSeleccionado = id;
+  }
+
+  // Abrir el segundo modal
+  abrirSegundoModal(): void {
+    if (this.usuarioSeleccionado) {
+      console.log('ID seleccionado:', this.usuarioSeleccionado);
+
+      this.http.get(`http://localhost:8000/api/usuarios/id/${this.usuarioSeleccionado}`).subscribe(
+        (data: any) => {
+          console.log('Respuesta de la API:', data);
+
+          // Si data es un array y tiene al menos un elemento
+          if (Array.isArray(data) && data.length > 0) {
+            const usuario = data[0]; // Tomar el primer elemento del array
+
+            if (usuario && usuario.id) {
+              this.usuarioDetalle = {
+                id: usuario.id || null,
+                usuario: usuario.usuario || '',
+                rut: usuario.rut || '',
+                nombre: usuario.nombre || '',
+                apellido: usuario.apellido || '',
+                telefono: usuario.telefono || '',
+                correo: usuario.correo || '',
+                rol: usuario.rol || '',
+              };
+              this.mostrarPrimerModal = false;
+              this.mostrarSegundoModal = true;
+            } else {
+              console.error('El usuario recibido no tiene un ID válido.');
+              console.log('Usuario:', usuario);
+            }
+          } else {
+            console.error('La respuesta de la API no contiene un usuario válido.');
+            console.log('Respuesta completa:', data);
+          }
+        },
+        (error) => {
+          console.error('Error al obtener los datos del usuario:', error);
+        }
+      );
+    } else {
+      console.error('No se seleccionó un usuario');
+    }
+  }
+
+
+  // Cerrar el segundo modal
+  cerrarSegundoModal(): void {
+    this.mostrarSegundoModal = false;
+    // Reiniciar usuarioDetalle con una estructura vacía
+    this.usuarioDetalle = {
+      id: null,
+      usuario: '',
+      rut: '',
+      nombre: '',
+      apellido: '',
+      telefono: '',
+      correo: '',
+      rol: '',
+    };
+  }
+
+  // Actualizar usuario
+  actualizarUsuario(): void {
+    if (this.usuarioDetalle && this.usuarioDetalle.id) {
+      this.http
+        .patch(`http://localhost:8000/api/usuarios/${this.usuarioDetalle.id}`, this.usuarioDetalle)
+        .subscribe(
+          () => {
+            alert('Usuario actualizado correctamente');
+            this.mostrarSegundoModal = false;
+            this.ObtenerUsuarios();
+          },
+          (error) => {
+            console.error('Error al actualizar el usuario:', error);
+            console.log('Datos enviados en el PATCH:', this.usuarioDetalle);
+
+          }
+        );
+    } else {
+      console.error('El ID del usuario no está definido');
+    }
+  }
+
+
 }
