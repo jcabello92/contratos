@@ -213,12 +213,14 @@ export class ManipularUsuariosComponent implements OnInit{
   }
 
   // Actualizar usuario
+// Actualizar usuario
   actualizarUsuario(): void {
     if (this.usuarioDetalle && this.usuarioDetalle.id) {
       this.http
-        .patch(`http://localhost:8000/api/usuarios/${this.usuarioDetalle.id}`, this.usuarioDetalle)
+        .patch(`http://localhost:8000/api/usuarios/${this.usuarioDetalle.id}`, this.usuarioDetalle, { responseType: 'text' })
         .subscribe(
-          () => {
+          (response) => {
+            console.log('Respuesta del servidor:', response);
             alert('Usuario actualizado correctamente');
             this.mostrarSegundoModalActualizar = false;
             this.ObtenerUsuarios();
@@ -226,13 +228,13 @@ export class ManipularUsuariosComponent implements OnInit{
           (error) => {
             console.error('Error al actualizar el usuario:', error);
             console.log('Datos enviados en el PATCH:', this.usuarioDetalle);
-
           }
         );
     } else {
       console.error('El ID del usuario no está definido');
     }
   }
+
 
 
   abrirModalEliminar(): void {
