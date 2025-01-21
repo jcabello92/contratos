@@ -330,3 +330,83 @@ button:disabled {
     transform: translateY(0);
   }
 }
+
+/*=================================*/
+
+/* Estilo general para los modales */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-dialog {
+  background: #fff;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  padding: 1rem;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  margin: 0;
+  padding: 1rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-body {
+  margin: 1rem 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  color: red;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background-color: red;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: gray;
+  color: white;
+}
+
+.btn-primary {
+  background-color: blue;
+  color: white;
+}

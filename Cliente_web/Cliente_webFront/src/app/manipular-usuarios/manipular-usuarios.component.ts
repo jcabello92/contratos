@@ -133,7 +133,7 @@ export class ManipularUsuariosComponent implements OnInit{
   }
 
   // Abrir el primer modal
-  abrirPrimerModal(): void {
+  abrirPrimerModalActualizar(): void {
     this.mostrarPrimerModal = true;
   }
 
@@ -230,6 +230,56 @@ export class ManipularUsuariosComponent implements OnInit{
       console.error('El ID del usuario no está definido');
     }
   }
+
+
+  abrirModalEliminar(): void {
+    this.mostrarPrimerModal = true;
+    this.usuarioSeleccionado = null;
+  }
+
+  cerrarModalEliminar(): void {
+    this.mostrarPrimerModal = false;
+    this.usuarioSeleccionado = null;
+  }
+
+  validarUsuarioEliminar(): void {
+    if (!this.usuarioSeleccionado) {
+      alert('Por favor, ingresa un ID válido.');
+      return;
+    }
+
+    this.ObtenerUsuarios(); // Llamada para obtener los usuarios
+    const usuarioExiste = this.usuarios.some(usuario => usuario.id === this.usuarioSeleccionado);
+
+    if (usuarioExiste) {
+      this.mostrarPrimerModal = false;
+      this.mostrarSegundoModal = true;
+    } else {
+      this.cerrarModalEliminar();
+      alert('El ID del usuario ingresado no existe.');
+    }
+  }
+
+  confirmarEliminarUsuario(): void {
+    if (!this.usuarioSeleccionado) {
+      alert('No se ha seleccionado un usuario para eliminar.');
+      return;
+    }
+
+    this.http.delete(`http://localhost:8000/api/usuarios/${this.usuarioSeleccionado}`, { responseType: 'text' }).subscribe(
+      (response) => {
+        alert(`Usuario con ID ${this.usuarioSeleccionado} eliminado correctamente.`);
+        this.mostrarSegundoModal = false;
+        this.ObtenerUsuarios(); // Actualizar la lista de usuarios
+      },
+      (error) => {
+        console.error('Error al eliminar el usuario:', error);
+        alert('Ocurrió un error al intentar eliminar el usuario.');
+      }
+    );
+  }
+
+
 
 
 }

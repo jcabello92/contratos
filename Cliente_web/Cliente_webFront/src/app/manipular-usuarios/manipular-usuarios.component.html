@@ -4,8 +4,8 @@
   <!-- Botones de acción -->
   <div class="botones-usuarios">
     <button (click)="openModal()">Crear Usuario</button>
-    <button (click)="abrirPrimerModal()">Actualizar un usuario</button>
-    <button>Borrar un usuario</button>
+    <button (click)="abrirPrimerModalActualizar()">Actualizar un usuario</button>
+    <button class="btn btn-danger" (click)="abrirModalEliminar()">Borrar un Usuario</button>
   </div>
 
   <!-- Tabla para mostrar usuarios -->
@@ -153,6 +153,60 @@
     </div>
   </div>
 </div>
+
+<!-- Primer modal para ingresar el ID -->
+<div
+  class="modal"
+  *ngIf="mostrarPrimerModal"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Eliminar Usuario</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModalEliminar()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ingrese el ID del usuario que desea eliminar:</p>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="usuarioSeleccionado"
+        />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button class="btn btn-primary" (click)="validarUsuarioEliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Segundo modal para confirmar la eliminación -->
+<div
+  class="modal"
+  *ngIf="mostrarSegundoModal"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModalEliminar()"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          ¿Está seguro de querer eliminar al usuario con ID:
+          <strong>{{ usuarioSeleccionado }}</strong>?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmarEliminarUsuario()">Eliminar Usuario</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 
