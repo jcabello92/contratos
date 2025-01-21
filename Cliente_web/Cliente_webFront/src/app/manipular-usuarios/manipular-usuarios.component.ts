@@ -20,8 +20,10 @@ import { Md5 } from 'ts-md5';
 })
 export class ManipularUsuariosComponent implements OnInit{
   showModal: boolean = false;
-  mostrarPrimerModal: boolean = false;
-  mostrarSegundoModal: boolean = false;
+  mostrarPrimerModalEliminar: boolean = false;
+  mostrarPrimerModalActualizar: boolean = false;
+  mostrarSegundoModalEliminar: boolean = false;
+  mostrarSegundoModalActualizar: boolean = false;
 
   nuevoUsuario = {
     usuario: '',
@@ -112,6 +114,7 @@ export class ManipularUsuariosComponent implements OnInit{
       next: (response) => {
         console.log('Usuario creado exitosamente:', response);
         this.closeModal();
+        this.ObtenerUsuarios()
       },
       error: (error) => {
         console.error('Error al crear el usuario:', error);
@@ -134,12 +137,12 @@ export class ManipularUsuariosComponent implements OnInit{
 
   // Abrir el primer modal
   abrirPrimerModalActualizar(): void {
-    this.mostrarPrimerModal = true;
+    this.mostrarPrimerModalActualizar = true;
   }
 
   // Cerrar el primer modal
   cerrarPrimerModal(): void {
-    this.mostrarPrimerModal = false;
+    this.mostrarPrimerModalActualizar = false;
     this.usuarioSeleccionado = null;
   }
 
@@ -172,8 +175,8 @@ export class ManipularUsuariosComponent implements OnInit{
                 correo: usuario.correo || '',
                 rol: usuario.rol || '',
               };
-              this.mostrarPrimerModal = false;
-              this.mostrarSegundoModal = true;
+              this.mostrarPrimerModalActualizar = false;
+              this.mostrarSegundoModalActualizar = true;
             } else {
               console.error('El usuario recibido no tiene un ID válido.');
               console.log('Usuario:', usuario);
@@ -195,7 +198,7 @@ export class ManipularUsuariosComponent implements OnInit{
 
   // Cerrar el segundo modal
   cerrarSegundoModal(): void {
-    this.mostrarSegundoModal = false;
+    this.mostrarSegundoModalActualizar = false;
     // Reiniciar usuarioDetalle con una estructura vacía
     this.usuarioDetalle = {
       id: null,
@@ -217,7 +220,7 @@ export class ManipularUsuariosComponent implements OnInit{
         .subscribe(
           () => {
             alert('Usuario actualizado correctamente');
-            this.mostrarSegundoModal = false;
+            this.mostrarSegundoModalActualizar = false;
             this.ObtenerUsuarios();
           },
           (error) => {
@@ -233,12 +236,13 @@ export class ManipularUsuariosComponent implements OnInit{
 
 
   abrirModalEliminar(): void {
-    this.mostrarPrimerModal = true;
+    this.mostrarPrimerModalEliminar = true;
     this.usuarioSeleccionado = null;
   }
 
   cerrarModalEliminar(): void {
-    this.mostrarPrimerModal = false;
+    this.mostrarPrimerModalEliminar = false;
+    this.mostrarSegundoModalEliminar = false;
     this.usuarioSeleccionado = null;
   }
 
@@ -252,8 +256,8 @@ export class ManipularUsuariosComponent implements OnInit{
     const usuarioExiste = this.usuarios.some(usuario => usuario.id === this.usuarioSeleccionado);
 
     if (usuarioExiste) {
-      this.mostrarPrimerModal = false;
-      this.mostrarSegundoModal = true;
+      this.mostrarPrimerModalEliminar = false;
+      this.mostrarSegundoModalEliminar = true;
     } else {
       this.cerrarModalEliminar();
       alert('El ID del usuario ingresado no existe.');
@@ -269,7 +273,7 @@ export class ManipularUsuariosComponent implements OnInit{
     this.http.delete(`http://localhost:8000/api/usuarios/${this.usuarioSeleccionado}`, { responseType: 'text' }).subscribe(
       (response) => {
         alert(`Usuario con ID ${this.usuarioSeleccionado} eliminado correctamente.`);
-        this.mostrarSegundoModal = false;
+        this.mostrarSegundoModalEliminar = false;
         this.ObtenerUsuarios(); // Actualizar la lista de usuarios
       },
       (error) => {

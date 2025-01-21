@@ -98,7 +98,7 @@
 </div>
 
 <!-- Primer Modal: Selección de usuario -->
-<div class="modal" *ngIf="mostrarPrimerModal">
+<div class="modal" *ngIf="mostrarPrimerModalActualizar">
   <div class="modal-contenido">
     <h2>Selecciona un usuario</h2>
     <ul>
@@ -114,7 +114,7 @@
 </div>
 
 <!-- Segundo Modal: Detalle del usuario -->
-<div class="modal-container" *ngIf="mostrarSegundoModal">
+<div class="modal-container" *ngIf="mostrarSegundoModalActualizar">
   <div class="modal">
     <h2 class="modal-title">Actualizar Usuario</h2>
     <div class="modal-grid">
@@ -157,7 +157,7 @@
 <!-- Primer modal para ingresar el ID -->
 <div
   class="modal"
-  *ngIf="mostrarPrimerModal"
+  *ngIf="mostrarPrimerModalEliminar"
 >
   <div class="modal-dialog">
     <div class="modal-content">
@@ -184,7 +184,7 @@
 <!-- Segundo modal para confirmar la eliminación -->
 <div
   class="modal"
-  *ngIf="mostrarSegundoModal"
+  *ngIf="mostrarSegundoModalEliminar"
 >
   <div class="modal-dialog">
     <div class="modal-content">
