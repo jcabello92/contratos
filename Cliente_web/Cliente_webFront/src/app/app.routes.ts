@@ -24,32 +24,32 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   // Ruta principal para administradores
-  { path: 'principalPage', component: PrincipalPageComponent, children: [
-      { path: 'Contratos', component: ContratosComponent },
-      { path: 'Proveedores', component: ProveedoresComponent },
-      { path: 'Documentos', component: DocumentosComponent },
-      { path: 'OIT', component: OITsComponent },
-      { path: 'Representantes', component: RepresentantesComponent },
-      { path: 'ManipularUsuarios' , component: ManipularUsuariosComponent }
+  { path: 'principalPage', component: PrincipalPageComponent,canActivate:[AuthGuard], children: [
+      { path: 'Contratos', component: ContratosComponent,canActivate:[AuthGuard] },
+      { path: 'Proveedores', component: ProveedoresComponent,canActivate:[AuthGuard] },
+      { path: 'Documentos', component: DocumentosComponent,canActivate:[AuthGuard] },
+      { path: 'OIT', component: OITsComponent,canActivate:[AuthGuard] },
+      { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
+      { path: 'ManipularUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] }
     ]
   },
 
   // Ruta principal para usuarios
-  { path: 'principalPageUsers', component: PrincipalPageUsersComponent, children: [
-      { path: 'Contratos', component: ContratosComponent},
-      { path: 'Proveedores', component: ProveedoresComponent },
-      { path: 'Documentos', component: DocumentosComponent },
-      { path: 'OIT', component: OITsComponent },
-      { path: 'Representantes', component: RepresentantesComponent },
+  { path: 'principalPageUsers', component: PrincipalPageUsersComponent,canActivate:[AuthGuard], children: [
+      { path: 'Contratos', component: ContratosComponent,canActivate:[AuthGuard]},
+      { path: 'Proveedores', component: ProveedoresComponent ,canActivate:[AuthGuard]},
+      { path: 'Documentos', component: DocumentosComponent ,canActivate:[AuthGuard]},
+      { path: 'OIT', component: OITsComponent ,canActivate:[AuthGuard]},
+      { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
     ]
   },
 
-  { path: 'Usuario', component: UsuarioComponent },
-  { path: 'Ajustes', component: AjustesComponent },
-  { path: 'Notificaciones', component: NotificacionesComponent },
-  { path: 'UsuarioUsers', component: UsuarioUserComponent },
-  { path: 'AjustesUsers', component: AjustesUserComponent },
-  { path: 'NotificacionesUsers', component: NotificacionesUserComponent },
+  { path: 'Usuario', component: UsuarioComponent ,canActivate:[AuthGuard]},
+  { path: 'Ajustes', component: AjustesComponent ,canActivate:[AuthGuard]},
+  { path: 'Notificaciones', component: NotificacionesComponent ,canActivate:[AuthGuard]},
+  { path: 'UsuarioUsers', component: UsuarioUserComponent,canActivate:[AuthGuard] },
+  { path: 'AjustesUsers', component: AjustesUserComponent,canActivate:[AuthGuard] },
+  { path: 'NotificacionesUsers', component: NotificacionesUserComponent ,canActivate:[AuthGuard]},
   { path: '**', redirectTo: '/login' }
 ];
 
