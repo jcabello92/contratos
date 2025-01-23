@@ -30,7 +30,7 @@ export const routes: Routes = [
       { path: 'Documentos', component: DocumentosComponent,canActivate:[AuthGuard] },
       { path: 'OIT', component: OITsComponent,canActivate:[AuthGuard] },
       { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
-      { path: 'ManipularUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] }
+      { path: 'GestionarUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] }
     ]
   },
 

@@ -14,6 +14,14 @@
   display: block;
 }
 
+.modalTitulo{
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: white;
+  text-align: center;
+}
+
 .modal-dialog {
   position: relative;
   margin: auto;
@@ -24,7 +32,7 @@
 }
 
 .custom-modal-content {
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 10px;
   border: 2px solid #005c2e; /* Verde institucional */
   overflow: hidden;
@@ -39,7 +47,8 @@
 .custom-modal-body {
   padding: 20px;
   font-family: Arial, sans-serif;
-  color: #333333;
+  color: #000;
+  height: auto;
 }
 
 .custom-modal-footer {
@@ -163,14 +172,14 @@ tr:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal-contenido {
-  background-color: white;
+  background-color: #3CB371;
   border-radius: 8px;
   padding: 16px;
   width: 400px;
@@ -198,6 +207,7 @@ li {
 
 li:hover {
   background-color: #f1f1f1;
+  color: #000;
 }
 
 .modal-botones {
@@ -215,7 +225,7 @@ button {
 }
 
 button:hover {
-  background-color: #ddd;
+  background-color: #FFD700;
 }
 
 button:disabled {
@@ -226,45 +236,46 @@ button:disabled {
 
 .modal-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
-  z-index: 1000;
+  top: 240px;
+  left: 630px;
+  width: 40%;
+  height: 43%;
+  background: rgba(0, 0, 0, 0.1); /* Fondo semitransparente */
 }
 
-.modal {
-  background: rgba(0, 0, 0, 0.6);
-
+.modalOscuro {
+  background-color: #3CB371;
+  border-radius: 8px;
+  padding: 16px;
+  width: 750px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: auto;
+  font-family: Arial, sans-serif;
 }
 
 .modal-title {
-  font-size: 1.8rem;
-  font-weight: 600;
+  font-size: 2.3rem;
+  font-weight: 800;
   margin-bottom: 20px;
-  color: #333333;
+  color: yellow;
   text-align: center;
 }
 
 .modal-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 15px;
 }
 
 .modal-grid label {
   display: flex;
   flex-direction: column;
-  font-size: 0.9rem;
-  color: #555555;
+  font-size: 1.2rem;
+  color: white;
 }
 
 .modal-grid .grid-span {
-  grid-column: span 2;
+  grid-column: span 3;
 }
 
 
@@ -291,8 +302,8 @@ button:disabled {
 }
 
 .btn-cancel {
-  background: #e0e0e0;
-  color: #333333;
+  background: white;
+  color: #3CB371;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -302,7 +313,8 @@ button:disabled {
 }
 
 .btn-cancel:hover {
-  background: #c0c0c0;
+  background: #FFD700;
+  color: #2E8B57;
 }
 
 .btn-submit {
@@ -348,11 +360,12 @@ button:disabled {
 }
 
 .modal-dialog {
-  background: #fff;
+  background: #3CB371;
   border-radius: 8px;
   width: 400px;
   max-width: 90%;
   padding: 1rem;
+
 }
 
 .modal-header,
@@ -367,6 +380,7 @@ button:disabled {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #ddd;
+  font-family: Arial, sans-serif;
 }
 
 .modal-body {
@@ -402,8 +416,8 @@ button:disabled {
 }
 
 .btn-secondary {
-  background-color: gray;
-  color: white;
+  background-color: white;
+  color: #3CB371;
 }
 
 .btn-primary {

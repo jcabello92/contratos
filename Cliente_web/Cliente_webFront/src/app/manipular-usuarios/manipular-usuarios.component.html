@@ -51,46 +51,68 @@
   <div class="modal-dialog">
     <div class="modal-content custom-modal-content">
       <div class="modal-header custom-modal-header">
-        <h5 class="modal-title">Crear Nuevo Usuario</h5>
+        <h5 class="modalTitulo">Crear Nuevo Usuario</h5>
         <button type="button" class="btn-close custom-btn-close" aria-label="Close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body custom-modal-body">
         <form>
           <div class="mb-3">
-            <label for="usuario" class="form-label">Usuario</label>
+            <label for="usuario" class="form-label">Usuario: </label>
             <input type="text" class="form-control" id="usuario" [(ngModel)]="nuevoUsuario.usuario" name="usuario" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="contrasena" class="form-label">Contraseña</label>
+            <label for="contrasena" class="form-label">Contraseña: </label>
             <input type="password" class="form-control" id="contrasena" [(ngModel)]="nuevoUsuario.contrasena" name="contrasena" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="rut" class="form-label">RUT</label>
+            <label for="rut" class="form-label">RUT: </label>
             <input type="text" class="form-control" id="rut" [(ngModel)]="nuevoUsuario.rut" name="rut" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
+            <label for="nombre" class="form-label">Nombre: </label>
             <input type="text" class="form-control" id="nombre" [(ngModel)]="nuevoUsuario.nombre" name="nombre" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="apellido" class="form-label">Apellido</label>
+            <label for="apellido" class="form-label">Apellido: </label>
             <input type="text" class="form-control" id="apellido" [(ngModel)]="nuevoUsuario.apellido" name="apellido" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="telefono" class="form-label">Teléfono</label>
+            <label for="telefono" class="form-label">Teléfono: </label>
             <input type="text" class="form-control" id="telefono" [(ngModel)]="nuevoUsuario.telefono" name="telefono" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="correo" class="form-label">Correo</label>
+            <label for="correo" class="form-label">Correo: </label>
             <input type="email" class="form-control" id="correo" [(ngModel)]="nuevoUsuario.correo" name="correo" />
           </div>
+
+          <div style="height: 20px"></div>
+
           <div class="mb-3">
-            <label for="rol" class="form-label">Rol</label>
+            <label for="rol" class="form-label">Rol: </label>
             <select class="form-select" id="rol" [(ngModel)]="nuevoUsuario.rol" name="rol">
               <option value="1">Administrador</option>
               <option value="2">Usuario</option>
             </select>
           </div>
+
         </form>
       </div>
       <div class="modal-footer custom-modal-footer">
@@ -104,7 +126,7 @@
 <!-- Primer Modal: Selección de usuario -->
 <div class="modal" *ngIf="mostrarPrimerModalActualizar">
   <div class="modal-contenido">
-    <h2>Selecciona un usuario</h2>
+    <h2>Selecciona un usuario: </h2>
     <ul>
       <li *ngFor="let usuario of usuarios" (click)="seleccionarUsuario(usuario.id)">
         {{ usuario.nombre }} - {{ usuario.correo }}
@@ -119,7 +141,7 @@
 
 <!-- Segundo Modal: Detalle del usuario -->
 <div class="modal-container" *ngIf="mostrarSegundoModalActualizar">
-  <div class="modal">
+  <div class="modalOscuro">
     <h2 class="modal-title">Actualizar Usuario</h2>
     <div class="modal-grid">
       <label>
