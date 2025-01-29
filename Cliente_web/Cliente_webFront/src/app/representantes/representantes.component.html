@@ -151,4 +151,15 @@
 </div>
 
 
+<!-- Modal de eliminación -->
+<div *ngIf="modalAbiertoEliminar" class="modal">
+  <div class="modal-content">
+    <h3>¿Está seguro que desea eliminar a los representantes con los id: {{ idsParaEliminar }}?</h3>
+    <button (click)="confirmarEliminacion()">Confirmar</button>
+    <button (click)="cerrarModalEliminar()">Cancelar</button>
+  </div>
+</div>
+
+
+
 

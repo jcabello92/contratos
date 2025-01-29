@@ -33,6 +33,10 @@ export class RepresentantesComponent implements OnInit {
   representanteSeleccionado: boolean[] = [];
   representanteActual: any = {};
   showModalEditar = false;
+  modalAbiertoEliminar: boolean = false; // Controla el modal de eliminación
+  representantesParaEliminar: any[] = []; // Almacena los representantes seleccionados
+  idsParaEliminar: string = ''; // Almacena los IDs seleccionados como string para el modal de confirmación
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -145,31 +149,53 @@ export class RepresentantesComponent implements OnInit {
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // Función para eliminar representantes seleccionados
+  // Función para mostrar el modal de eliminación con los IDs seleccionados
   eliminarRepresentante() {
     const seleccionados = this.representantes.filter((_, index) => this.representanteSeleccionado[index]);
+
     if (seleccionados.length > 0) {
-      console.log('Representantes seleccionados para eliminar:', seleccionados);
-      // Aquí puedes agregar la lógica para eliminar los representantes
+      // Crear la lista de IDs seleccionados para mostrar en el modal
+      const idsSeleccionados = seleccionados.map((representante) => representante.id).join(', ');
+
+      // Asignar los IDs a mostrar en el modal
+      this.idsParaEliminar = idsSeleccionados;
+
+      // Abrir el modal de confirmación
+      this.modalAbiertoEliminar = true;
     } else {
       console.log('Ningún representante seleccionado para eliminar');
     }
   }
+
+  // Función para cerrar el modal de eliminación
+  cerrarModalEliminar() {
+    this.modalAbiertoEliminar = false;
+    this.idsParaEliminar = ''; // Limpiar los IDs mostrados en el modal
+  }
+
+  // Función para confirmar la eliminación de los representantes seleccionados
+  confirmarEliminacion() {
+    const seleccionados = this.representantes.filter((_, index) => this.representanteSeleccionado[index]);
+
+    seleccionados.forEach((representante) => {
+      const url = `http://localhost:8000/api/representantes/${representante.id}`;
+
+      this.http.delete(url, { responseType: 'text' }).subscribe(
+        (response) => {
+          console.log(`Representante con ID ${representante.id} eliminado:`, response);
+          this.obtenerRepresentantes(); // Actualizar la lista después de la eliminación
+        },
+        (error) => {
+          console.error(`Error al eliminar el representante con ID ${representante.id}:`, error);
+        }
+      );
+    });
+
+    // Cerrar el modal después de la eliminación
+    this.cerrarModalEliminar();
+  }
+
+
+
 
 }
