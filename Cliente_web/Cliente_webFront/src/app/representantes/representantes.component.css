@@ -62,7 +62,6 @@ button.combo-box {
   color: #000;
   border-radius: 20px;
   border: none;
-  padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -81,3 +80,27 @@ button.combo-box:hover {
   width: 100%;
   border-collapse: collapse;
 }
+
+/*===================================*/
+.botonesCrud-container {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se acomoden si no caben en una sola línea */
+  justify-content: center; /* Centra los botones horizontalmente */
+  align-items: center; /* Centra los botones verticalmente */
+  gap: 10px; /* Espaciado entre botones */
+}
+
+.botonesCrud {
+  display: inline-block;
+  width: 200px;
+  padding: 10px 15px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #0056b3;
+  color: white;
+  border: 2px solid darkblue; /* Asegura que el borde sea visible */
+  border-radius: 30px;
+  text-align: center;
+}
+
