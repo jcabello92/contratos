@@ -26,7 +26,7 @@
 <div style="height: 30px"></div>
 
 <div class="botonesCrud-container">
-  <button class="botonesCrud">Crear Representante</button>
+  <button class="botonesCrud" (click)="abrirModalRepresentantesCrear()">Crear Representante</button>
   <button class="botonesCrud">Actualizar Representante</button>
   <button class="botonesCrud">Eliminar Representante</button>
 </div>
@@ -40,6 +40,7 @@
 <table>
   <thead>
   <tr class="encabezado">
+    <td>Selector</td>
     <td>ID</td>
     <td>RUT</td>
     <td>Nombre</td>
@@ -50,13 +51,13 @@
   </thead>
   <tbody>
   <tr *ngFor="let representante of representantes">
+    <td>wow </td>
     <td>{{ representante.id }}</td>
     <td>{{ representante.rut }}</td>
     <td>{{ representante.nombre }}</td>
     <td>{{ representante.apellido }}</td>
     <td>{{ representante.telefono }}</td>
     <td>{{ representante.correo }}</td>
-
   </tr>
   </tbody>
 </table>
@@ -67,4 +68,35 @@
 <div style="display: flex; justify-content: space-between; width: 100%;">
   <button class="buttons" style="flex: 1; margin-right: 10px;">Página Anterior</button>
   <button class="buttons" style="flex: 1;">Página Siguiente</button>
+</div>
+
+
+
+<!-- ==================================================== MODALES ======================================================-->
+
+<!-- Modal -->
+<div class="modal" *ngIf="modalAbiertoCrear">
+  <div class="modal-content">
+    <h2>Crear Representante</h2>
+
+    <label>RUT:</label>
+    <input type="text" [(ngModel)]="nuevoRepresentante.rut">
+
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="nuevoRepresentante.nombre">
+
+    <label>Apellido:</label>
+    <input type="text" [(ngModel)]="nuevoRepresentante.apellido">
+
+    <label>Teléfono:</label>
+    <input type="text" [(ngModel)]="nuevoRepresentante.telefono">
+
+    <label>Correo:</label>
+    <input type="email" [(ngModel)]="nuevoRepresentante.correo">
+
+    <div class="modal-buttons">
+      <button class="boton-cancelar" (click)="cerrarModalRepresentantesCrear()">Cancelar</button>
+      <button class="boton-crear" (click)="crearRepresentante()">Crear</button>
+    </div>
+  </div>
 </div>
