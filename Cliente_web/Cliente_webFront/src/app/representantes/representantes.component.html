@@ -27,8 +27,8 @@
 
 <div class="botonesCrud-container">
   <button class="botonesCrud" (click)="abrirModalRepresentantesCrear()">Crear Representante</button>
-  <button class="botonesCrud">Actualizar Representante</button>
-  <button class="botonesCrud">Eliminar Representante</button>
+  <button class="botonesCrud" (click)="actualizarRepresentante()">Actualizar Representante</button>
+  <button class="botonesCrud" (click)="eliminarRepresentante()">Eliminar Representante</button>
 </div>
 
 
@@ -50,8 +50,14 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let representante of representantes">
-    <td>wow </td>
+  <tr *ngFor="let representante of representantes; let i = index">
+    <td class="px-4 py-2">
+      <input
+        type="checkbox"
+        [checked]="representanteSeleccionado[i]"
+        (change)="onCheckboxChange(i)"
+      />
+    </td>
     <td>{{ representante.id }}</td>
     <td>{{ representante.rut }}</td>
     <td>{{ representante.nombre }}</td>
@@ -74,7 +80,7 @@
 
 <!-- ==================================================== MODALES ======================================================-->
 
-<!-- Modal -->
+<!-- Modal crear-->
 <div class="modal" *ngIf="modalAbiertoCrear">
   <div class="modal-content">
     <h2>Crear Representante</h2>
@@ -100,3 +106,49 @@
     </div>
   </div>
 </div>
+
+
+<!-- Modal Actualizar -->
+<div *ngIf="showModalEditar" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white p-6 rounded shadow-lg w-1/3">
+    <h2 class="text-xl font-bold mb-4">Actualizar Representante</h2>
+
+    <!-- RUT -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">RUT</label>
+      <input type="text" [(ngModel)]="representanteActual.rut" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="rut" [ngModelOptions]="{standalone: true}" />
+    </div>
+
+    <!-- Nombre -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Nombre</label>
+      <input type="text" [(ngModel)]="representanteActual.nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="nombre" [ngModelOptions]="{standalone: true}" />
+    </div>
+
+    <!-- Apellido -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Apellido</label>
+      <input type="text" [(ngModel)]="representanteActual.apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="apellido" [ngModelOptions]="{standalone: true}" />
+    </div>
+
+    <!-- Teléfono -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+      <input type="text" [(ngModel)]="representanteActual.telefono" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="telefono" [ngModelOptions]="{standalone: true}" />
+    </div>
+
+    <!-- Correo -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Correo</label>
+      <input type="email" [(ngModel)]="representanteActual.correo" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="correo" [ngModelOptions]="{standalone: true}" />
+    </div>
+
+    <div class="flex justify-between mt-4">
+      <button class="bg-blue-500 text-white py-2 px-4 rounded" (click)="actualizarElRepresentante()">Actualizar</button>
+      <button class="bg-gray-500 text-white py-2 px-4 rounded" (click)="cancelarActualizacion()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+

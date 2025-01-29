@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -29,7 +30,11 @@ export class RepresentantesComponent implements OnInit {
     correo: ''
   };
 
-  constructor(private http: HttpClient) {}
+  representanteSeleccionado: boolean[] = [];
+  representanteActual: any = {};
+  showModalEditar = false;
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.obtenerRepresentantes(); // Cargar datos al iniciar el componente
@@ -85,6 +90,86 @@ export class RepresentantesComponent implements OnInit {
   }
 
 
+// Maneja el cambio de los checkboxes
+  onCheckboxChange(index: number) {
+    this.representanteSeleccionado[index] = !this.representanteSeleccionado[index];
+  }
 
+  actualizarRepresentante() {
+    const seleccionados = this.representantes.filter((_, index) => this.representanteSeleccionado[index]);
+
+    if (seleccionados.length === 1) {
+      // Solo se puede actualizar un representante a la vez
+      this.representanteActual = seleccionados[0];
+      console.log(this.representanteActual)
+      this.showModalEditar = true;
+    } else if (seleccionados.length > 1) {
+      // Mostrar alerta si se seleccionaron varios representantes
+      alert('Solo puedes seleccionar un representante para actualizar.');
+    } else {
+      // Mostrar alerta si no se seleccionó ningún representante
+      alert('Por favor selecciona un representante para actualizar.');
+    }
+  }
+
+
+  cancelarActualizacion() {
+    this.showModalEditar = false; // Cierra el modal sin realizar cambios
+  }
+
+  actualizarElRepresentante() {
+    const representante = this.representanteActual;
+    let url = `http://localhost:8000/api/representantes/${representante.id}?`;
+
+    const params: string[] = [];
+    if (representante.rut) params.push(`rut=${representante.rut}`);
+    if (representante.nombre) params.push(`nombre=${representante.nombre}`);
+    if (representante.apellido) params.push(`apellido=${representante.apellido}`);
+    if (representante.telefono) params.push(`telefono=${representante.telefono}`);
+    if (representante.correo) params.push(`correo=${representante.correo}`);
+
+    if (params.length > 0) {
+      url += params.join('&');
+    }
+
+    // Aseguramos que la respuesta se maneje como texto si es necesario
+    this.http.patch(url, {}, { responseType: 'text' }).subscribe(
+      (response) => {
+        console.log('Representante actualizado correctamente:', response);
+        this.showModalEditar = false; // Cerrar el modal después de la actualización
+        this.obtenerRepresentantes(); // Actualizar la lista de representantes
+      },
+      (error) => {
+        console.error('Error al actualizar representante:', error);
+      }
+    );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Función para eliminar representantes seleccionados
+  eliminarRepresentante() {
+    const seleccionados = this.representantes.filter((_, index) => this.representanteSeleccionado[index]);
+    if (seleccionados.length > 0) {
+      console.log('Representantes seleccionados para eliminar:', seleccionados);
+      // Aquí puedes agregar la lógica para eliminar los representantes
+    } else {
+      console.log('Ningún representante seleccionado para eliminar');
+    }
+  }
 
 }
