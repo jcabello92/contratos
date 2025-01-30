@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {NgForOf} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-proveedores',
@@ -8,12 +9,15 @@ import {NgForOf} from '@angular/common';
   styleUrls: ['./proveedores.component.css'],
   imports: [
     NgForOf,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   standalone: true
 })
 export class ProveedoresComponent implements OnInit {
   proveedores: any[] = []; // Aquí almacenaremos los proveedores
+  proveedorSeleccionado: boolean[] = [];
+
 
   constructor(private http: HttpClient) {}
 
@@ -113,6 +117,12 @@ export class ProveedoresComponent implements OnInit {
     (document.getElementById('correo') as HTMLInputElement).value = '';
     (document.getElementById('representante') as HTMLInputElement).value = '';
   }
+
+  seleccionarTodos(event: any) {
+    const seleccionar = event.target.checked;
+    this.proveedorSeleccionado = this.proveedores.map(() => seleccionar);
+  }
+
 
 
 }

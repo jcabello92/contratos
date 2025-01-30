@@ -241,3 +241,33 @@ button.combo-box:hover {
 .botones button:nth-child(1):hover {
   background-color: #a71d2a;
 }
+/*======================================================================*/
+
+/* Estilo para los checkboxes */
+input[type="checkbox"] {
+  accent-color: #FFD700; /* Color dorado para el checkbox */
+  width: 20px;
+  height: 20px;
+  margin: 0; /* Elimina el margen extra por defecto */
+}
+
+/* Estilo para las celdas de la tabla */
+th, td {
+  border: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 14px; /* Ajuste opcional para el tamaño de la fuente */
+}
+
+thead {
+  background-color: #f4f4f4; /* Color de fondo para la cabecera */
+}
+
+.encabezado {
+  font-weight: bold; /* Resalta la cabecera */
+}
+
+/* Opcional: agregar hover en las filas para mejorar la interactividad */
+tbody tr:hover {
+  background-color: #f9f9f9; /* Color al pasar el ratón por encima */
+}
