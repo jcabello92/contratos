@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {NgForOf} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-proveedores',
@@ -10,35 +12,53 @@ import {FormsModule} from '@angular/forms';
   imports: [
     NgForOf,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgClass
   ],
   standalone: true
 })
 export class ProveedoresComponent implements OnInit {
-  proveedores: any[] = []; // Aquí almacenaremos los proveedores
+  proveedores: any[] = []; // Lista para almacenar los datos de los proveedores
+  modalAbiertoCrear: boolean = false; // Controla la visibilidad del modal
+  nuevoProveedor = {
+    rut: '',
+    razonSocial: '',
+    direccion: '',
+    comuna: '',
+    telefono: '',
+    correo: '',
+    representante: ''
+  };
+
   proveedorSeleccionado: boolean[] = [];
+  proveedorActual: any = {};
+  showModalEditar = false;
+  modalAbiertoEliminar: boolean = false; // Controla el modal de eliminación
+  proveedoresParaEliminar: any[] = []; // Almacena los proveedores seleccionados
+  idsProveedoresEliminar: string = ''; // Almacena los IDs seleccionados como string para el modal de confirmación
 
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
-    this.obtenerProveedores();
+    this.obtenerProveedores(); // Cargar datos al iniciar el componente
+  }
 
-    // Asegurar que el evento se asigne después de la carga del DOM
-    const formCrear = document.getElementById('formCrear') as HTMLFormElement;
-    if (formCrear) {
-      formCrear.addEventListener('submit', (event) => {
-        event.preventDefault(); // Evita que el formulario se recargue
-        this.crearProveedor();
-      });
-    }
+  // Abrir Modal
+  abrirModalProveedorCrear() {
+    this.modalAbiertoCrear = true;
+  }
+
+  // Cerrar Modal
+  cerrarModalProveedorCrear() {
+    this.modalAbiertoCrear = false;
+    this.nuevoProveedor = { rut: '', razonSocial: '', direccion: '', comuna: '', telefono: '', correo: '', representante: '' }; // Reiniciar campos
   }
 
   obtenerProveedores() {
     this.http.get<any>('http://localhost:8000/api/proveedores/pagina/1')
       .subscribe(
         data => {
-          this.proveedores = data; // Asigna los datos obtenidos al array
+          this.proveedores = data; // Asigna los datos obtenidos a la variable
         },
         error => {
           console.error('Error al obtener proveedores:', error);
@@ -46,83 +66,142 @@ export class ProveedoresComponent implements OnInit {
       );
   }
 
+  // Crear Proveedor
+  crearProveedor() {
+    // Función para agregar ceros a la izquierda hasta completar la longitud requerida
+    const formatearCampo = (campo: string, longitud: number) => {
+      return String(campo).padStart(longitud, '0');
+    };
 
-  abrirModalCrear(): void {
-    const modal = document.getElementById('modalCrear');
-    if (modal) {
-      modal.style.display = 'flex';
+    const proveedor = {
+      rut: this.nuevoProveedor.rut,
+      razon_social: this.nuevoProveedor.razonSocial,
+      direccion: this.nuevoProveedor.direccion,
+
+      // Formatear comuna a 3 dígitos
+      comuna: this.nuevoProveedor.comuna ? formatearCampo(this.nuevoProveedor.comuna, 3) : this.nuevoProveedor.comuna,
+
+      telefono: this.nuevoProveedor.telefono,
+      correo: this.nuevoProveedor.correo,
+
+      // Formatear representante a 4 dígitos
+      representante: this.nuevoProveedor.representante ? formatearCampo(this.nuevoProveedor.representante, 4) : this.nuevoProveedor.representante,
+    };
+
+    const url = 'http://localhost:8000/api/proveedores';
+
+    this.http.post(url, proveedor, { responseType: 'text' })
+      .subscribe(
+        response => {
+          console.log('Respuesta del servidor:', response);
+          this.obtenerProveedores(); // Actualizar la lista después de la creación
+          this.cerrarModalProveedorCrear(); // Cerrar el modal
+        },
+        error => {
+          console.error('Error al crear proveedor:', error);
+        }
+      );
+  }
+
+
+  // Maneja el cambio de los checkboxes
+  onCheckboxChange(index: number) {
+    this.proveedorSeleccionado[index] = !this.proveedorSeleccionado[index];
+  }
+
+  actualizarProveedor() {
+    const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
+
+    if (seleccionados.length === 1) {
+      // Solo se puede actualizar un proveedor a la vez
+      this.proveedorActual = seleccionados[0];
+      console.log(this.proveedorActual);
+      this.showModalEditar = true;
+    } else if (seleccionados.length > 1) {
+      alert('Solo puedes seleccionar un proveedor para actualizar.');
+    } else {
+      alert('Por favor selecciona un proveedor para actualizar.');
     }
   }
 
-  cerrarModalCrear(): void {
-    const modal = document.getElementById('modalCrear');
-    if (modal) {
-      modal.style.display = 'none';
+  cancelarActualizacion() {
+    this.showModalEditar = false; // Cierra el modal sin realizar cambios
+  }
+
+  actualizarElProveedor() {
+    const proveedor = this.proveedorActual;
+
+    // Función para agregar ceros a la izquierda hasta completar la longitud requerida
+    const formatearCampo = (campo: string, longitud: number) => {
+      return String(campo).padStart(longitud, '0');
+    };
+
+    // Solo enviar los campos que han cambiado
+    const datosActualizar: any = {};
+
+    if (proveedor.rut) datosActualizar.rut = proveedor.rut;
+    if (proveedor.razon_social) datosActualizar.razon_social = proveedor.razon_social;
+    if (proveedor.direccion) datosActualizar.direccion = proveedor.direccion;
+
+    // Formatear comuna a 3 dígitos
+    if (proveedor.comuna) datosActualizar.comuna = formatearCampo(proveedor.comuna, 3);
+
+    if (proveedor.telefono) datosActualizar.telefono = proveedor.telefono;
+    if (proveedor.correo) datosActualizar.correo = proveedor.correo;
+
+    // Formatear representante a 4 dígitos
+    if (proveedor.representante) datosActualizar.representante = formatearCampo(proveedor.representante, 4);
+
+    const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
+
+    this.http.patch(url, datosActualizar, { responseType: 'text' })
+      .subscribe(
+        (response) => {
+          console.log('Proveedor actualizado correctamente:', response);
+          this.showModalEditar = false;
+          this.obtenerProveedores(); // Actualizar la lista de proveedores
+        },
+        (error) => {
+          console.error('Error al actualizar proveedor:', error);
+        }
+      );
+  }
+
+
+  eliminarProveedor() {
+    const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
+
+    if (seleccionados.length > 0) {
+      const idsSeleccionados = seleccionados.map((proveedor) => proveedor.id).join(', ');
+      this.idsProveedoresEliminar = idsSeleccionados;
+      this.modalAbiertoEliminar = true;
+    } else {
+      console.log('Ningún proveedor seleccionado para eliminar');
     }
   }
 
-  crearProveedor(): void {
-    const rut = (document.getElementById('rut') as HTMLInputElement)?.value || '';
-    const razonSocial = (document.getElementById('razon_social') as HTMLInputElement)?.value || '';
-    const direccion = (document.getElementById('direccion') as HTMLInputElement)?.value || '';
-    const comuna = (document.getElementById('comuna') as HTMLInputElement)?.value.padStart(3, '0') || '';
-    const telefono = (document.getElementById('telefono') as HTMLInputElement)?.value || '';
-    const correo = (document.getElementById('correo') as HTMLInputElement)?.value || '';
-    const representante = (document.getElementById('representante') as HTMLInputElement)?.value.padStart(4, '0') || '';
+  cerrarModalEliminar() {
+    this.modalAbiertoEliminar = false;
+    this.idsProveedoresEliminar = '';
+  }
 
-    console.log({ rut, razonSocial, direccion, comuna, telefono, correo, representante });
+  confirmarEliminacion() {
+    const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
 
-    // Crear la URL con los parámetros de la API
-    const url = `http://localhost:8000/api/proveedores/?rut=${rut}&razon_social=${razonSocial}&direccion=${direccion}&comuna=${comuna}&telefono=${telefono}&correo=${correo}&representante=${representante}`;
+    seleccionados.forEach((proveedor) => {
+      const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
 
-    // Hacer la llamada POST a la API usando fetch
-    fetch(url, {
-      method: 'POST', // Método POST
-    })
-      .then(response => {
-        // Verificar si la respuesta es JSON antes de intentar parsearla
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          return response.json(); // Si es JSON, parsear
-        } else {
-          return response.text(); // Si no es JSON, devolver el texto completo
+      this.http.delete(url, { responseType: 'text' }).subscribe(
+        (response) => {
+          console.log(`Proveedor con ID ${proveedor.id} eliminado:`, response);
+          this.obtenerProveedores(); // Actualizar la lista después de la eliminación
+        },
+        (error) => {
+          console.error(`Error al eliminar el proveedor con ID ${proveedor.id}:`, error);
         }
-      })
-      .then(data => {
-        if (typeof data === 'string') {
-          // Si la respuesta es un texto, mostrarlo en consola
-          console.log('Respuesta no JSON:', data);
-          this.obtenerProveedores();
-        } else {
-          console.log('Proveedor creado:', data);
-          this.obtenerProveedores();
-        }
-        // Cerrar el modal después de enviar
-        this.cerrarModalCrear();
-        // Limpiar los campos del modal
-        this.limpiarCamposModal();
-      })
-      .catch(error => {
-        console.error('Error al crear el proveedor:', error);
-      });
+      );
+    });
+
+    this.cerrarModalEliminar();
   }
-
-  limpiarCamposModal() {
-    // Limpiar los campos del modal
-    (document.getElementById('rut') as HTMLInputElement).value = '';
-    (document.getElementById('razon_social') as HTMLInputElement).value = '';
-    (document.getElementById('direccion') as HTMLInputElement).value = '';
-    (document.getElementById('comuna') as HTMLInputElement).value = '';
-    (document.getElementById('telefono') as HTMLInputElement).value = '';
-    (document.getElementById('correo') as HTMLInputElement).value = '';
-    (document.getElementById('representante') as HTMLInputElement).value = '';
-  }
-
-  seleccionarTodos(event: any) {
-    const seleccionar = event.target.checked;
-    this.proveedorSeleccionado = this.proveedores.map(() => seleccionar);
-  }
-
-
-
 }
