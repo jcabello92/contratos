@@ -28,7 +28,7 @@ export const routes: Routes = [
       { path: 'Contratos', component: ContratosComponent,canActivate:[AuthGuard] },
       { path: 'Proveedores', component: ProveedoresComponent,canActivate:[AuthGuard] },
       { path: 'Documentos', component: DocumentosComponent,canActivate:[AuthGuard] },
-      { path: 'OIT', component: OITsComponent,canActivate:[AuthGuard] },
+      { path: 'Itos', component: OITsComponent,canActivate:[AuthGuard] },
       { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
       { path: 'GestionarUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] }
     ]
@@ -39,7 +39,7 @@ export const routes: Routes = [
       { path: 'Contratos', component: ContratosComponent,canActivate:[AuthGuard]},
       { path: 'Proveedores', component: ProveedoresComponent ,canActivate:[AuthGuard]},
       { path: 'Documentos', component: DocumentosComponent ,canActivate:[AuthGuard]},
-      { path: 'OIT', component: OITsComponent ,canActivate:[AuthGuard]},
+      { path: 'Itos', component: OITsComponent ,canActivate:[AuthGuard]},
       { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
     ]
   },

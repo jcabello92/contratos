@@ -152,7 +152,7 @@ button.combo-box:hover {
   animation: scaleUp 0.2s ease-in-out forwards;
 
   position: fixed; /* Asegura que siempre se mantenga centrado */
-  top: 0%;
+  top:  0%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
