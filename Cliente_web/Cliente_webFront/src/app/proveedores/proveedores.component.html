@@ -39,6 +39,7 @@
   <thead>
   <tr class="encabezado">
     <td>Seleccionar</td> <!-- Checkbox para seleccionar todos -->
+    <td>ID</td>
     <td>RUT</td>
     <td>Razón Social</td>
     <td>Dirección</td>
@@ -54,6 +55,7 @@
       <input type="checkbox" (change)="onCheckboxChange(i)"
              [checked]="proveedorSeleccionado[i]" />
     </td> <!-- Checkbox individual -->
+    <td>{{ proveedor.id}}</td>
     <td>{{ proveedor.rut }}</td>
     <td>{{ proveedor.razon_social }}</td>
     <td>{{ proveedor.direccion }}</td>
