@@ -176,7 +176,7 @@ export class ProveedoresComponent implements OnInit {
       this.idsProveedoresEliminar = idsSeleccionados;
       this.modalAbiertoEliminar = true;
     } else {
-      console.log('Ningún proveedor seleccionado para eliminar');
+      alert('Ningún proveedor fue seleccionado para eliminar');
     }
   }
 
