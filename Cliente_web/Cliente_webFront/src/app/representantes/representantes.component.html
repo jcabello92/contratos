@@ -7,7 +7,6 @@
       <option value="opcion1">Rut</option>
       <option value="opcion2">Nombre</option>
       <option value="opcion3">Apellido</option>
-      <option value="opcion4">Dirección</option>
       <option value="opcion5">Teléfono</option>
       <option value="opcion6">Correo</option>
     </select>
@@ -111,31 +110,26 @@
   <div class="bg-white p-6 rounded shadow-lg w-1/3">
     <h2 class="text-xl font-bold mb-4">Actualizar Representante</h2>
 
-    <!-- RUT -->
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">RUT</label>
-      <input type="text" [(ngModel)]="representanteActual.rut" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="rut" [ngModelOptions]="{standalone: true}" />
+      <input type="text" [(ngModel)]="representanteActual.rut" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="rut" [ngModelOptions]="{standalone: true}" disabled/>
     </div>
 
-    <!-- Nombre -->
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">Nombre</label>
       <input type="text" [(ngModel)]="representanteActual.nombre" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="nombre" [ngModelOptions]="{standalone: true}" />
     </div>
 
-    <!-- Apellido -->
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">Apellido</label>
       <input type="text" [(ngModel)]="representanteActual.apellido" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="apellido" [ngModelOptions]="{standalone: true}" />
     </div>
 
-    <!-- Teléfono -->
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">Teléfono</label>
       <input type="text" [(ngModel)]="representanteActual.telefono" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="telefono" [ngModelOptions]="{standalone: true}" />
     </div>
 
-    <!-- Correo -->
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">Correo</label>
       <input type="email" [(ngModel)]="representanteActual.correo" class="w-full px-3 py-2 border border-gray-300 rounded-md" name="correo" [ngModelOptions]="{standalone: true}" />

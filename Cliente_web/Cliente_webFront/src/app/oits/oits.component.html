@@ -5,11 +5,11 @@
     <label for="opciones" style="margin-right: 10px;">Selecciona una opción:</label>
     <select id="opciones" name="opciones" class="combo-box">
       <option value="opcion1">Rut</option>
-      <option value="opcion2">Razón Social</option>
-      <option value="opcion3">Dirección</option>
+      <option value="opcion2">Nombre</option>
+      <option value="opcion3">Apellido</option>
       <option value="opcion4">Teléfono</option>
       <option value="opcion5">Correo</option>
-      <option value="opcion6">Representante</option>
+      <option value="opcion6">Area</option>
     </select>
   </div>
 
@@ -20,15 +20,15 @@
       <option value="opcion2">De Último al Primero</option>
     </select>
   </div>
-  <button class="combo-box">Buscar</button>
+  <button class="combo-box" (click)="obtenerItos()">Buscar</button>
 </div>
 
 <div style="height: 20px"></div>
 
 <div class="botonesCrud-container">
-  <button class="botonesCrud" > Crear Representante</button>
-  <button class="botonesCrud"> Actualizar Representante</button>
-  <button class="botonesCrud"> Eliminar Representante</button>
+  <button class="botonesCrud" (click)="abrirModalItoCrear()">Crear Ito</button>
+  <button class="botonesCrud" (click)="actualizarIto()">Actualizar Ito</button>
+  <button class="botonesCrud" (click)="eliminarIto()">Eliminar Ito</button>
 </div>
 
 <div style="height: 30px"></div>
@@ -36,6 +36,7 @@
 <table>
   <thead>
   <tr class="encabezado">
+    <td>Selector</td>
     <td>ID</td>
     <td>RUT</td>
     <td>Nombre</td>
@@ -44,18 +45,21 @@
     <td>Correo</td>
     <td>Area</td>
   </tr>
-
+  </thead>
+  <tbody>
   <tr *ngFor="let ito of itos; let i = index">
+    <td>
+      <input type="checkbox" (change)="onCheckboxChange(i)" [checked]="itoSeleccionado[i]" />
+    </td>
     <td>{{ ito.id }}</td>
-    <td>{{ ito.rut}}</td>
+    <td>{{ ito.rut }}</td>
     <td>{{ ito.nombre }}</td>
     <td>{{ ito.apellido }}</td>
     <td>{{ ito.telefono }}</td>
     <td>{{ ito.correo }}</td>
     <td>{{ ito.area }}</td>
   </tr>
-
-  </thead>
+  </tbody>
 </table>
 
 <div style="height: 20px"></div>
@@ -65,3 +69,64 @@
   <button class="buttons" style="flex: 1;">Página Siguiente</button>
 </div>
 
+
+<!-- =========================================== MODALES ======================================================= -->
+
+<!-- Modal para Crear ito -->
+<div *ngIf="modalAbiertoCrear" class="modal">
+  <div class="modal-content">
+    <h2>Crear nuevo Ito</h2>
+    <label for="rut">RUT:</label>
+    <input id="rut" [(ngModel)]="nuevoIto.rut" />
+    <label for="nombre">Nombre:</label>
+    <input id="nombre" [(ngModel)]="nuevoIto.nombre" />
+    <label for="apellido">Apellido:</label>
+    <input id="apellido" [(ngModel)]="nuevoIto.apellido" />
+    <label for="telefono">Teléfono:</label>
+    <input id="telefono" [(ngModel)]="nuevoIto.telefono" />
+    <label for="correo">Correo:</label>
+    <input id="correo" [(ngModel)]="nuevoIto.correo" />
+    <label for="area">Area:</label>
+    <input id="area" [(ngModel)]="nuevoIto.area" />
+    <div class="modal-buttons">
+      <button (click)="crearIto()" class="boton-crear">Crear</button>
+      <button (click)="cerrarModalItoCrear()" class="boton-cancelar">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Editar ito -->
+<div *ngIf="showModalEditar" class="modal">
+  <div class="modal-content">
+    <h2>Actualizar Ito</h2>
+    <label for="rutEdit">RUT:</label>
+    <input id="rutEdit" [(ngModel)]="itoActual.rut" disabled/>
+    <label for="nombreEdit">Nombre:</label>
+    <input id="nombreEdit" [(ngModel)]="itoActual.nombre" />
+    <label for="apellidoEdit">Apellido:</label>
+    <input id="apellidoEdit" [(ngModel)]="itoActual.apellido" />
+    <label for="telefonoEdit">Teléfono:</label>
+    <input id="telefonoEdit" [(ngModel)]="itoActual.telefono" />
+    <label for="correoEdit">Correo:</label>
+    <input id="correoEdit" [(ngModel)]="itoActual.correo" />
+    <label for="areaEdit">Area:</label>
+    <input id="areaEdit" [(ngModel)]="itoActual.area" />
+
+    <div class="modal-buttons">
+      <button (click)="actualizarElIto()" class="boton-crear">Actualizar</button>
+      <button (click)="cancelarActualizacion()" class="boton-cancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Eliminar ito -->
+<div *ngIf="modalAbiertoEliminar" class="modal">
+  <div class="modal-content">
+    <h2>Confirmar Eliminación</h2>
+    <p>¿Estás seguro de que deseas eliminar los siguientes ID(s): {{ idsParaEliminar }}?</p>
+    <div class="modal-buttons">
+      <button (click)="confirmarEliminacion()" class="boton-crear">Confirmar</button>
+      <button (click)="cerrarModalEliminar()" class="boton-cancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
