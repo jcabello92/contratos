@@ -1,14 +1,14 @@
 table {
-  border: 1px solid black;
-  border-collapse: collapse; /* Para que no haya un dobles borde*/
-  margin: auto;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-td, th {
-  border: 1px solid black;
-  padding: 8px; /* Espaciado dentro de las celdas */
-  text-align: center; /* Alineación del texto */
-  font-family: 'Times New Roman', Times, serif;
+th, td {
+  border: 12px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
 }
 
 .encabezado{
@@ -17,21 +17,20 @@ td, th {
   font-weight: bold;
 }
 
+/* Estilos mejorados para los botones */
 .buttons {
-  display: block;
-  width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
-  margin-bottom: 10px; /* Espaciado inferior */
-  padding: 10px 15px; /* Ajustar el padding para más espacio */
-  text-align: center; /* Centrar el texto */
-  font-family: 'Arial', sans-serif; /* Fuente sencilla y profesional */
-  font-size: 14px; /* Tamaño del texto */
-  font-weight: bold; /* Texto más visible */
-  background-color: #FFD700; /* Fondo amarillo dorado */
-  color: #000000; /* Texto negro */
-  border: none; /* Sin bordes */
-  border-radius: 20px; /* Bordes redondeados */
-  cursor: pointer; /* Cambia el cursor al pasar por encima */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Suavidad en los cambios de color */
+  display: inline-block;
+  padding: 10px 20px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  background-color: #FFD700;
+  color: #000;
+  transition: 0.3s ease-in-out;
 }
 
 .hover {
@@ -71,14 +70,17 @@ button.combo-box:hover {
 }
 
 .table-container {
-  max-height: calc(100vh - 150px); /* Ajusta según la altura del header y footer */
-  overflow-y: auto; /* Habilita el scroll vertical en la tabla */
-  border: 1px solid #ddd;
+  max-width: 50%;  /* Hace que la tabla no ocupe toda la pantalla */
+  margin: 10px auto; /* Centrar en la pantalla */
+  overflow-x: auto;  /* Permite desplazamiento horizontal si es necesario */
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 10px;
 }
 
 .table-container table {
   width: 100%;
-  border-collapse: collapse;
 }
 
 /*===================================*/
@@ -91,19 +93,15 @@ button.combo-box:hover {
 }
 
 .botonesCrud {
-  display: inline-block;
-  width: 200px;
-  padding: 10px 15px;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  font-weight: bold;
   background-color: #0056b3;
   color: white;
-  border: 2px solid darkblue; /* Asegura que el borde sea visible */
+  font-size: 14px;
+  font-weight: bold;
+  padding: 12px 18px;
   border-radius: 30px;
-  text-align: center;
+  border: 2px solid darkblue;
+  transition: 0.3s;
 }
-
 /*======================================================*/
 
 /* Estilos para el modal */
