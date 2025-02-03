@@ -1,70 +1,61 @@
-<h1>Tipos de Documentos</h1>
+<div class="container">
+  <h2>Gestión de Tipos de Documentos</h2>
+  <button class="botonesCrud" (click)="abrirModal('agregar')">Agregar Documento</button>
 
-<div style="display: flex; align-items: center; gap: 150px;">
-  <div>
-    <label for="opciones" style="margin-right: 10px;">Selecciona una opción:</label>
-    <select id="opciones" name="opciones" class="combo-box">
-      <option value="opcion1">ID</option>
-      <option value="opcion2">Nombre</option>
-    </select>
+  <div class="table-container">
+    <table>
+      <thead class="encabezado">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let documento of tiposDeDocumento">
+        <td>{{ documento.id }}</td>
+        <td>{{ documento.nombre }}</td>
+        <td>
+          <button class="botonesCrud" (click)="abrirModal('editar', documento)">Editar</button>
+          <button class="botonesCrud" (click)="abrirModal('eliminar', documento)">Eliminar</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-
-  <div>
-    <label for="opciones2" style="margin-left: -10px;">Seleccione la siguiente opción:</label>
-    <select id="opciones2" name="opciones" class="combo-box">
-      <option value="opcion1">De Primero al Último</option>
-      <option value="opcion2">De Último al Primero</option>
-    </select>
-  </div>
-  <button class="combo-box">Buscar</button>
 </div>
 
-<div style="height: 30px"></div>
-
-<div class="botonesCrud-container">
-  <button class="botonesCrud">Crear Tipo de documento</button>
-  <button class="botonesCrud">Actualizar Tipo de documento</button>
-  <button class="botonesCrud">Eliminar Tipo de documento</button>
+<!-- Modal Agregar -->
+<div *ngIf="modalActivo === 'agregar'" class="modal">
+  <div class="modal-content">
+    <h3>Agregar Tipo de Documento</h3>
+    <input class="w-full px-3 py-2 border border-gray-300 rounded-md" [(ngModel)]="nuevoDocumento.nombre" placeholder="Nombre" />
+    <div class="modal-actions">
+      <button class="boton-crear" (click)="agregarTipoDocumento()">Guardar</button>
+      <button class="boton-cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
 </div>
 
+<!-- Modal Editar -->
+<div *ngIf="modalActivo === 'editar'" class="modal">
+  <div class="modal-content">
+    <h3>Editar Tipo de Documento</h3>
+    <input class="w-full px-3 py-2 border border-gray-300 rounded-md" [(ngModel)]="documentoSeleccionado.nombre" placeholder="Nombre" />
+    <div class="modal-actions">
+      <button class="boton-crear" (click)="actualizarTipoDocumento()">Guardar</button>
+      <button class="boton-cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-<div style="height: 20px"></div>
-
-
-<table>
-  <thead>
-  <tr class="encabezado">
-    <td>Selector</td>
-    <td>ID</td>
-    <td>Nombre</td>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let TipoDocumento of TiposDeDocumentos; let i = index">
-    <input
-      type="checkbox"
-      [checked]="TipoDocumentoSeleccionado[i]"
-      (change)="onCheckboxChange(i)"
-    />
-    <td>{{ TipoDocumento.id }}</td>
-    <td>{{ TipoDocumento.nombre }}</td>
-  </tr>
-  </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- Modal Eliminar -->
+<div *ngIf="modalActivo === 'eliminar'" class="modal">
+  <div class="modal-content">
+    <h3>¿Estás seguro de eliminar este documento?</h3>
+    <div class="modal-actions">
+      <button class="boton-crear" (click)="eliminarTipoDocumento()">Sí</button>
+      <button class="boton-cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

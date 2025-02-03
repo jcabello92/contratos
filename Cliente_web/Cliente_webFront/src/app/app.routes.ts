@@ -16,7 +16,7 @@ import {UsuarioUserComponent} from './usuario-user/usuario-user.component';
 import {AjustesUserComponent} from './ajustes-user/ajustes-user.component';
 import {NotificacionesUserComponent} from './notificaciones-user/notificaciones-user.component';
 import {ManipularUsuariosComponent} from './manipular-usuarios/manipular-usuarios.component';
-import {TipoDocumentoComponent} from './tipo-documento/tipo-documento.component';
+import {TipoDeDocumentoComponent} from './tipo-documento/tipo-documento.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,7 +30,7 @@ export const routes: Routes = [
       { path: 'Itos', component: OITsComponent,canActivate:[AuthGuard] },
       { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
       { path: 'GestionarUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] },
-      { path: 'TipoDocumento' , component: TipoDocumentoComponent,canActivate:[AuthGuard] }
+      { path: 'TipoDocumento' , component: TipoDeDocumentoComponent,canActivate:[AuthGuard] }
     ]
   },
 
