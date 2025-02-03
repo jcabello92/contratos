@@ -7,8 +7,6 @@ import {ProveedoresComponent} from './proveedores/proveedores.component';
 import {DocumentosComponent} from './documentos/documentos.component';
 import {OITsComponent} from './oits/oits.component';
 import {RepresentantesComponent} from './representantes/representantes.component'
-import {Option6Component} from './option6/option6.component';
-import {Option7Component} from './option7/option7.component';
 import {UsuarioComponent} from './usuario/usuario.component';
 import {AjustesComponent} from './ajustes/ajustes.component';
 import {NotificacionesComponent} from './notificaciones/notificaciones.component';
@@ -18,6 +16,7 @@ import {UsuarioUserComponent} from './usuario-user/usuario-user.component';
 import {AjustesUserComponent} from './ajustes-user/ajustes-user.component';
 import {NotificacionesUserComponent} from './notificaciones-user/notificaciones-user.component';
 import {ManipularUsuariosComponent} from './manipular-usuarios/manipular-usuarios.component';
+import {TipoDocumentoComponent} from './tipo-documento/tipo-documento.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,7 +29,8 @@ export const routes: Routes = [
       { path: 'Documentos', component: DocumentosComponent,canActivate:[AuthGuard] },
       { path: 'Itos', component: OITsComponent,canActivate:[AuthGuard] },
       { path: 'Representantes', component: RepresentantesComponent,canActivate:[AuthGuard] },
-      { path: 'GestionarUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] }
+      { path: 'GestionarUsuarios' , component: ManipularUsuariosComponent,canActivate:[AuthGuard] },
+      { path: 'TipoDocumento' , component: TipoDocumentoComponent,canActivate:[AuthGuard] }
     ]
   },
 
