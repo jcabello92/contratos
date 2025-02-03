@@ -18,6 +18,7 @@ import {Router} from '@angular/router';
 })
 export class TipoDocumentoComponent implements OnInit{
   TiposDeDocumentos: any[] = [];
+  TipoDocumentoSeleccionado: boolean[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -35,6 +36,10 @@ export class TipoDocumentoComponent implements OnInit{
           console.error('Error al obtener los tipos de documentos:', error);
         }
       );
+  }
+
+  onCheckboxChange(index: number) {
+    this.TipoDocumentoSeleccionado[index] = !this.TipoDocumentoSeleccionado[index];
   }
 
 

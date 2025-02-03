@@ -41,8 +41,11 @@
   </thead>
   <tbody>
   <tr *ngFor="let TipoDocumento of TiposDeDocumentos; let i = index">
-    <td class="px-4 py-2"> wow
-    </td>
+    <input
+      type="checkbox"
+      [checked]="TipoDocumentoSeleccionado[i]"
+      (change)="onCheckboxChange(i)"
+    />
     <td>{{ TipoDocumento.id }}</td>
     <td>{{ TipoDocumento.nombre }}</td>
   </tr>

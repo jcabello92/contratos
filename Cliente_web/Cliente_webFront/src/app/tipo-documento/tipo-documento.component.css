@@ -103,3 +103,17 @@ button.combo-box:hover {
   border-radius: 30px;
   text-align: center;
 }
+
+/* ============================================================================== */
+input[type="checkbox"] {
+  accent-color: #FFD700; /* Color dorado para el checkbox */
+  width: 20px;
+  height: 20px;
+}
+
+
+th, td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 10px;
+}
