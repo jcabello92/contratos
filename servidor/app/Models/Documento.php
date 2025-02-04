@@ -4,21 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Usuario extends Model
+class Documento extends Model
 {
     public $timestamps = false;
 
     protected $connection = 'mariadb';
-    protected $table = 'usuarios';
+    protected $table = 'documentos';
     protected $fillable = [
-        'usuario',
-        'contrasena',
-        'rut',
         'nombre',
-        'apellido',
-        'telefono',
-        'correo',
-        'rol',
+        'fecha_subida',
+        'hora_subida',
+        'tipo_documento',
+        'contrato',
         'estado'
     ];
 }
