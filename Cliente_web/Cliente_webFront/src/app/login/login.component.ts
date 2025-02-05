@@ -44,6 +44,9 @@ export class LoginComponent {
           const matchedUser = users[0];
           console.log('Usuario encontrado:', matchedUser);
 
+          // Guardar el usuario autenticado en el localStorage
+          localStorage.setItem('loggedInUser', JSON.stringify(matchedUser)); // Almacena el usuario en localStorage
+
           // Redirigir según el rol del usuario
           if (matchedUser.rol === 1) {
             this.router.navigate(['/principalPage']); // Página de administrador
@@ -60,4 +63,5 @@ export class LoginComponent {
       }
     );
   }
+
 }

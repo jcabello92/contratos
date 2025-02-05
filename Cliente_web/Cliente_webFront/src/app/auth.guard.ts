@@ -9,15 +9,20 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const loggedInUser = localStorage.getItem('loggedInUser'); // Comprueba si el usuario está autenticado
+    const loggedInUser = localStorage.getItem('loggedInUser'); // Obtiene el usuario del localStorage
+    console.log('AuthGuard: Verificando autenticación...');
+    console.log('Valor en localStorage:', loggedInUser);
 
     if (loggedInUser) {
-      // Aquí podrías agregar validaciones adicionales si quisieras
+      console.log('Usuario autenticado. Permitiendo acceso.');
       return true; // Permitir acceso si está autenticado
     } else {
-      // Si no está autenticado, redirigir al login
-      this.router.navigate(['/login']);
+      console.log('Usuario NO autenticado. Redirigiendo a login.');
+      this.router.navigate(['/login']); // Redirigir al login si no está autenticado
       return false;
     }
   }
+
+
+
 }
