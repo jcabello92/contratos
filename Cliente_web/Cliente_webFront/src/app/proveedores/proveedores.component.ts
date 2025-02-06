@@ -37,6 +37,11 @@ export class ProveedoresComponent implements OnInit {
   proveedoresParaEliminar: any[] = []; // Almacena los proveedores seleccionados
   idsProveedoresEliminar: string = ''; // Almacena los IDs seleccionados como string para el modal de confirmación
 
+  //filtros
+  campoOrden: string = 'rut'; // Valor predeterminado
+  orden: string = 'asc'; // Valor predeterminado
+
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
@@ -204,4 +209,31 @@ export class ProveedoresComponent implements OnInit {
 
     this.cerrarModalEliminar();
   }
+  
+  filtrarProveedores() {
+    const url = `http://localhost:8000/api/proveedores/pagina/1`;
+
+    this.http.get<any[]>(url).subscribe(
+      (data) => {
+        // Ordenar manualmente los proveedores según `campoOrden` y `orden`
+        this.proveedores = data.sort((a, b) => {
+          const valorA = a[this.campoOrden] ? a[this.campoOrden].toString().toLowerCase() : '';
+          const valorB = b[this.campoOrden] ? b[this.campoOrden].toString().toLowerCase() : '';
+
+          if (this.orden === 'asc') {
+            return valorA.localeCompare(valorB);
+          } else {
+            return valorB.localeCompare(valorA);
+          }
+        });
+      },
+      (error) => {
+        console.error('Error al filtrar proveedores:', error);
+      }
+    );
+  }
+
+
+
+
 }

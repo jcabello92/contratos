@@ -3,25 +3,23 @@
 <!-- Filtros y búsqueda -->
 <div style="display: flex; align-items: center; gap: 150px;">
   <div>
-    <label for="opciones" style="margin-right: 10px;">Selecciona una opción:</label>
-    <select id="opciones" name="opciones" class="combo-box">
-      <option value="opcion1">Rut</option>
-      <option value="opcion2">Razón Social</option>
-      <option value="opcion3">Dirección</option>
-      <option value="opcion4">Comuna</option>
-      <option value="opcion5">Teléfono</option>
-      <option value="opcion6">Correo</option>
-      <option value="opcion7">Representante</option>
+    <label for="campoOrden" style="margin-right: 10px;">Selecciona una opción:</label>
+    <select id="campoOrden" [(ngModel)]="campoOrden" class="combo-box">
+      <option value="rut">Rut</option>
+      <option value="razon_social">Razón Social</option>
+      <option value="direccion">Dirección</option>
+      <option value="comuna">Comuna</option>
+      <option value="representante">Representante</option>
     </select>
   </div>
   <div>
-    <label for="opciones2" style="margin-right: 10px;">Seleccione la siguiente opción:</label>
-    <select id="opciones2" name="opciones" class="combo-box">
-      <option value="opcion1">De Primero al Último</option>
-      <option value="opcion2">De Último al Primero</option>
+    <label for="orden" style="margin-right: 10px;">Seleccione la siguiente opción:</label>
+    <select id="orden" [(ngModel)]="orden" class="combo-box">
+      <option value="asc">De Primero al Último</option>
+      <option value="desc">De Último al Primero</option>
     </select>
   </div>
-  <button class="combo-box">Buscar</button>
+  <button class="combo-box" (click)="filtrarProveedores()">Buscar</button>
 </div>
 
 <div style="height: 30px"></div>
@@ -39,7 +37,7 @@
 <table>
   <thead>
   <tr class="encabezado">
-    <td>Seleccionar</td> <!-- Checkbox para seleccionar todos -->
+    <td>Seleccionar</td>
     <td>ID</td>
     <td>RUT</td>
     <td>Razón Social</td>
@@ -53,10 +51,9 @@
   <tbody>
   <tr *ngFor="let proveedor of proveedores; let i = index">
     <td>
-      <input type="checkbox" (change)="onCheckboxChange(i)"
-             [checked]="proveedorSeleccionado[i]" />
-    </td> <!-- Checkbox individual -->
-    <td>{{ proveedor.id}}</td>
+      <input type="checkbox" (change)="onCheckboxChange(i)" [checked]="proveedorSeleccionado[i]" />
+    </td>
+    <td>{{ proveedor.id }}</td>
     <td>{{ proveedor.rut }}</td>
     <td>{{ proveedor.razon_social }}</td>
     <td>{{ proveedor.direccion }}</td>
@@ -75,6 +72,7 @@
   <button class="buttons" style="flex: 1; margin-right: 10px;">Página Anterior</button>
   <button class="buttons" style="flex: 1;">Página Siguiente</button>
 </div>
+
 
 
 <!-- ==================================================== MODALES ======================================================-->
