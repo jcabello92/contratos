@@ -217,7 +217,7 @@ export class RepresentantesComponent implements OnInit {
         });
       },
       (error) => {
-        console.error('Error al filtrar proveedores:', error);
+        console.error('Error al filtrar representantes:', error);
       }
     );
   }

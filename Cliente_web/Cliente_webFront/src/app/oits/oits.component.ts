@@ -216,7 +216,7 @@ export class OITsComponent implements OnInit {
         });
       },
       (error) => {
-        console.error('Error al filtrar proveedores:', error);
+        console.error('Error al filtrar itos:', error);
       }
     );
   }
