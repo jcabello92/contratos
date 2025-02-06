@@ -209,7 +209,7 @@ export class ProveedoresComponent implements OnInit {
 
     this.cerrarModalEliminar();
   }
-  
+
   filtrarProveedores() {
     const url = `http://localhost:8000/api/proveedores/pagina/1`;
 
@@ -232,8 +232,5 @@ export class ProveedoresComponent implements OnInit {
       }
     );
   }
-
-
-
 
 }

@@ -31,6 +31,10 @@ export class DocumentosComponent implements OnInit {
   documentosParaEliminar: any[] = [];
   idsParaEliminar: string = '';
 
+  //filtros
+  campoOrden: string = 'nombre'; // Valor predeterminado
+  orden: string = 'asc'; // Valor predeterminado
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
@@ -180,4 +184,40 @@ export class DocumentosComponent implements OnInit {
 
     this.cerrarModalEliminar();
   }
+
+  filtrarDocumentos() {
+    const url = `http://localhost:8000/api/documentos/pagina/1`;
+
+    this.http.get<any[]>(url).subscribe(
+      (data) => {
+        this.documentos = data.sort((a, b) => {
+          let valorA: any = a[this.campoOrden];
+          let valorB: any = b[this.campoOrden];
+
+          if (this.campoOrden === 'fecha_subida') {
+            valorA = new Date(valorA);
+            valorB = new Date(valorB);
+          } else if (this.campoOrden === 'hora_subida') {
+            valorA = this.parsearHora(valorA);
+            valorB = this.parsearHora(valorB);
+          } else {
+            valorA = valorA ? valorA.toString().toLowerCase() : '';
+            valorB = valorB ? valorB.toString().toLowerCase() : '';
+          }
+
+          return this.orden === 'asc' ? (valorA > valorB ? 1 : -1) : (valorA < valorB ? 1 : -1);
+        });
+      },
+      (error) => {
+        console.error('Error al filtrar documentos:', error);
+      }
+    );
+  }
+
+  parsearHora(hora: string): number {
+    const [horas, minutos] = hora.split(':').map(Number);
+    return horas * 60 + minutos;
+  }
+
+
 }
