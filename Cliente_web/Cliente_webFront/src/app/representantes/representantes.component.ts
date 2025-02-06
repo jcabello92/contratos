@@ -37,6 +37,10 @@ export class RepresentantesComponent implements OnInit {
   representantesParaEliminar: any[] = []; // Almacena los representantes seleccionados
   idsParaEliminar: string = ''; // Almacena los IDs seleccionados como string para el modal de confirmación
 
+  //filtros
+  campoOrden: string = 'rut'; // Valor predeterminado
+  orden: string = 'asc'; // Valor predeterminado
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -195,6 +199,28 @@ export class RepresentantesComponent implements OnInit {
     this.cerrarModalEliminar();
   }
 
+  filtrarRepresentantes() {
+    const url = `http://localhost:8000/api/representantes/pagina/1`;
+
+    this.http.get<any[]>(url).subscribe(
+      (data) => {
+        // Ordenar manualmente los proveedores según `campoOrden` y `orden`
+        this.representantes = data.sort((a, b) => {
+          const valorA = a[this.campoOrden] ? a[this.campoOrden].toString().toLowerCase() : '';
+          const valorB = b[this.campoOrden] ? b[this.campoOrden].toString().toLowerCase() : '';
+
+          if (this.orden === 'asc') {
+            return valorA.localeCompare(valorB);
+          } else {
+            return valorB.localeCompare(valorA);
+          }
+        });
+      },
+      (error) => {
+        console.error('Error al filtrar proveedores:', error);
+      }
+    );
+  }
 
 
 

@@ -2,24 +2,22 @@
 
 <div style="display: flex; align-items: center; gap: 150px;">
   <div>
-    <label for="opciones" style="margin-right: 10px;">Selecciona una opción:</label>
-    <select id="opciones" name="opciones" class="combo-box">
-      <option value="opcion1">Rut</option>
-      <option value="opcion2">Nombre</option>
-      <option value="opcion3">Apellido</option>
-      <option value="opcion5">Teléfono</option>
-      <option value="opcion6">Correo</option>
+    <label for="campoOrden" style="margin-right: 10px;">Selecciona una opción:</label>
+    <select id="campoOrden" [(ngModel)]="campoOrden" class="combo-box">
+      <option value="rut">Rut</option>
+      <option value="nombre">Nombre</option>
+      <option value="apellido">Apellido</option>
     </select>
   </div>
 
   <div>
-    <label for="opciones2" style="margin-left: -10px;">Seleccione la siguiente opción:</label>
-    <select id="opciones2" name="opciones" class="combo-box">
-      <option value="opcion1">De Primero al Último</option>
-      <option value="opcion2">De Último al Primero</option>
+    <label for="orden" style="margin-left: -10px;">Seleccione la siguiente opción:</label>
+    <select id="orden" [(ngModel)]="orden" class="combo-box">
+      <option value="asc">De Primero al Último</option>
+      <option value="desc">De Último al Primero</option>
     </select>
   </div>
-  <button class="combo-box">Buscar</button>
+  <button class="combo-box" (click)="filtrarRepresentantes()">Buscar</button>
 </div>
 
 <div style="height: 30px"></div>
