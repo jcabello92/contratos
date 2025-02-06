@@ -2,25 +2,23 @@
 
 <div style="display: flex; align-items: center; gap: 150px;">
   <div>
-    <label for="opciones" style="margin-right: 10px;">Selecciona una opción:</label>
-    <select id="opciones" name="opciones" class="combo-box">
-      <option value="opcion1">Rut</option>
-      <option value="opcion2">Nombre</option>
-      <option value="opcion3">Apellido</option>
-      <option value="opcion4">Teléfono</option>
-      <option value="opcion5">Correo</option>
-      <option value="opcion6">Area</option>
+    <label for="campoOrden" style="margin-right: 10px;">Selecciona una opción:</label>
+    <select id="campoOrden" [(ngModel)]="campoOrden" class="combo-box">
+      <option value="rut">Rut</option>
+      <option value="nombre">Nombre</option>
+      <option value="apellido">Apellido</option>
+      <option value="area">Area</option>
     </select>
   </div>
 
   <div>
-    <label for="opciones2" style="margin-right: 10px;">Seleccione la siguiente opción:</label>
-    <select id="opciones2" name="opciones" class="combo-box">
-      <option value="opcion1">De Primero al Último</option>
-      <option value="opcion2">De Último al Primero</option>
+    <label for="orden" style="margin-right: 10px;">Seleccione la siguiente opción:</label>
+    <select id="orden" [(ngModel)]="orden" class="combo-box">
+      <option value="asc">De Primero al Último</option>
+      <option value="desc">De Último al Primero</option>
     </select>
   </div>
-  <button class="combo-box" (click)="obtenerItos()">Buscar</button>
+  <button class="combo-box" (click)="filtrarItos()">Buscar</button>
 </div>
 
 <div style="height: 20px"></div>
@@ -48,9 +46,7 @@
   </thead>
   <tbody>
   <tr *ngFor="let ito of itos; let i = index">
-    <td>
-      <input type="checkbox" (change)="onCheckboxChange(i)" [checked]="itoSeleccionado[i]" />
-    </td>
+    <td><input type="checkbox" (change)="onCheckboxChange(i)" [checked]="itoSeleccionado[i]" /></td>
     <td>{{ ito.id }}</td>
     <td>{{ ito.rut }}</td>
     <td>{{ ito.nombre }}</td>

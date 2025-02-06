@@ -37,6 +37,10 @@ export class OITsComponent implements OnInit {
   itosParaEliminar: any[] = []; // Almacena los itos seleccionados
   idsParaEliminar: string = ''; // Almacena los IDs seleccionados como string para el modal de confirmación
 
+  //Filtros
+  campoOrden: string = 'rut'; // Valor predeterminado
+  orden: string = 'asc'; // Valor predeterminado
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
@@ -192,4 +196,29 @@ export class OITsComponent implements OnInit {
 
     this.cerrarModalEliminar();
   }
+
+
+  filtrarItos() {
+    const url = `http://localhost:8000/api/itos/pagina/1`;
+
+    this.http.get<any[]>(url).subscribe(
+      (data) => {
+        // Ordenar manualmente los proveedores según `campoOrden` y `orden`
+        this.itos = data.sort((a, b) => {
+          const valorA = a[this.campoOrden] ? a[this.campoOrden].toString().toLowerCase() : '';
+          const valorB = b[this.campoOrden] ? b[this.campoOrden].toString().toLowerCase() : '';
+
+          if (this.orden === 'asc') {
+            return valorA.localeCompare(valorB);
+          } else {
+            return valorB.localeCompare(valorA);
+          }
+        });
+      },
+      (error) => {
+        console.error('Error al filtrar proveedores:', error);
+      }
+    );
+  }
+
 }
