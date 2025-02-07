@@ -82,19 +82,29 @@ export class OITsComponent implements OnInit {
     params.set('correo', this.nuevoIto.correo);
     params.set('area', areaConTresDigitos);  // Usamos el área con 3 dígitos
 
-    const url = `http://localhost:8000/api/itos?${params.toString()}`;
+    if(this.nuevoIto.rut && this.nuevoIto.nombre && this.nuevoIto.apellido && this.nuevoIto.telefono && this.nuevoIto.correo && areaConTresDigitos){
+      const url = `http://localhost:8000/api/itos?${params.toString()}`;
 
-    this.http.post(url, {}, { responseType: 'text' })
-      .subscribe(
-        response => {
-          console.log('Respuesta del servidor:', response);
-          this.obtenerItos();
-          this.cerrarModalItoCrear();
-        },
-        error => {
-          console.error('Error al crear ito:', error);
-        }
-      );
+      this.http.post(url, {}, { responseType: 'text' })
+        .subscribe(
+          response => {
+            if(response=="No se enviaron todos los datos requeridos."){
+              alert("Un dato ingresado, no fue reconocido por el sistema")
+            }else{
+              alert("El ito fue creado exitosamente")
+              console.log('Respuesta del servidor:', response);
+              this.obtenerItos();
+              this.cerrarModalItoCrear();
+            }
+          },
+          error => {
+            console.error('Error al crear ito:', error);
+            alert("No se pudo crear el ito, hay un dato mal ingresado")
+          }
+        );
+    }else{
+      alert("No están todos los datos ingresados")
+    }
   }
 
   // Maneja el cambio de los checkboxes
@@ -143,16 +153,27 @@ export class OITsComponent implements OnInit {
       url += params.join('&');
     }
 
-    this.http.patch(url, {}, { responseType: 'text' }).subscribe(
-      (response) => {
-        console.log('Ito actualizado correctamente:', response);
-        this.showModalEditar = false; // Cerrar el modal después de la actualización
-        this.obtenerItos(); // Actualizar la lista de itos
-      },
-      (error) => {
-        console.error('Error al actualizar ito:', error);
-      }
-    );
+    if(ito.rut && ito.nombre && ito.apellido && ito.telefono && ito.correo && areaConTresDigitos){
+      this.http.patch(url, {}, { responseType: 'text' }).subscribe(
+        (response) => {
+          if(response=="Se encontraron errores en los datos enviados."){
+            alert("Un dato ingresado, no fue reconocido por el sistema")
+          }else{
+            alert("Ito actualizado correctamente")
+            console.log('Ito actualizado correctamente:', response);
+            this.showModalEditar = false; // Cerrar el modal después de la actualización
+            this.obtenerItos(); // Actualizar la lista de itos
+          }
+        },
+        (error) => {
+          console.error('Error al actualizar ito:', error);
+          alert("No se pudo actualizar el ito, hay un dato mal ingresado")
+        }
+      );
+    }else{
+      alert("No están todos los datos ingresados")
+
+    }
   }
 
 
@@ -186,10 +207,12 @@ export class OITsComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
           console.log(`Ito con ID ${ito.id} eliminado:`, response);
+          alert("Ito(s) eliminado(s) con éxito")
           this.obtenerItos(); // Actualizar la lista después de la eliminación
         },
         (error) => {
           console.error(`Error al eliminar el ito con ID ${ito.id}:`, error);
+          alert("Error al eliminar un(os) ito(s)")
         }
       );
     });
