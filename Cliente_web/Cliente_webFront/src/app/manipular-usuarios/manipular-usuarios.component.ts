@@ -109,17 +109,26 @@ export class ManipularUsuariosComponent implements OnInit{
 
     console.log('URL generada:', url); // Registro en consola para depuración
 
-    // Realizar la solicitud POST
-    this.http.post(url, null, { responseType: 'text' }).subscribe({
-      next: (response) => {
-        console.log('Usuario creado exitosamente:', response);
-        this.closeModal();
-        this.ObtenerUsuarios()
-      },
-      error: (error) => {
-        console.error('Error al crear el usuario:', error);
-      },
-    });
+    if(this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena && this.nuevoUsuario.rut && this.nuevoUsuario.nombre && this.nuevoUsuario.apellido && this.nuevoUsuario.telefono && this.nuevoUsuario.correo && this.nuevoUsuario.rol){
+      this.http.post(url, null, { responseType: 'text' }).subscribe({
+        next: (response) => {
+          if(response == "Se encontraron errores en los datos enviados."){
+            alert("Un dato ingresado, no fue reconocido por el sistema")
+          }else {
+            alert("El documento fue creado exitosamente")
+            console.log('Usuario creado exitosamente:', response);
+            this.closeModal();
+            this.ObtenerUsuarios()
+          }
+        },
+        error: (error) => {
+          console.error('Error al crear el usuario:', error);
+          alert("No se pudo crear el usuario, hay un dato mal ingresado")
+        },
+      });
+    }else{
+      alert("No están todos los datos ingresados")
+    }
   }
 
 
