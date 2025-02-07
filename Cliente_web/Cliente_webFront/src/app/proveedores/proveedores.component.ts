@@ -228,6 +228,7 @@ export class ProveedoresComponent implements OnInit {
         },
         (error) => {
           console.error(`Error al eliminar el proveedor con ID ${proveedor.id}:`, error);
+          alert("Error al eliminar un(os) proveedor(s)")
         }
       );
     });

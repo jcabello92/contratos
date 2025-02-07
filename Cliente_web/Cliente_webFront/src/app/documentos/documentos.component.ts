@@ -75,18 +75,31 @@ export class DocumentosComponent implements OnInit {
     params.set('tipo_documento', this.nuevoDocumento.tipo_documento);
     params.set('contrato', this.nuevoDocumento.contrato);
 
-    const url = `http://localhost:8000/api/documentos?${params.toString()}`;
+    if(this.nuevoDocumento.nombre && this.nuevoDocumento.fecha_subida && this.nuevoDocumento.hora_subida && this.nuevoDocumento.tipo_documento && this.nuevoDocumento.contrato){
+      const url = `http://localhost:8000/api/documentos?${params.toString()}`;
 
-    this.http.post(url, {}, { responseType: 'text' }).subscribe(
-      response => {
-        console.log('Documento creado:', response);
-        this.obtenerDocumentos();
-        this.cerrarModalDocumentosCrear();
-      },
-      error => {
-        console.error('Error al crear documento:', error);
-      }
-    );
+      this.http.post(url, {}, { responseType: 'text' }).subscribe(
+        response => {
+          if(response == "No se enviaron todos los datos requeridos."){
+            alert("Un dato ingresado, no fue reconocido por el sistema")
+          }else{
+            console.log('Documento creado:', response);
+            alert("El documento fue creado exitosamente")
+            this.obtenerDocumentos();
+            this.cerrarModalDocumentosCrear();
+          }
+        },
+        error => {
+          console.error('Error al crear documento:', error);
+          alert("No se pudo crear el documento, hay un dato mal ingresado")
+        }
+      );
+    }else{
+      alert("No están todos los datos ingresados")
+    }
+
+
+
   }
 
 
@@ -136,16 +149,28 @@ export class DocumentosComponent implements OnInit {
       url += params.join('&');
     }
 
-    this.http.patch(url, {}, { responseType: 'text' }).subscribe(
-      response => {
-        console.log('Documento actualizado:', response);
-        this.showModalEditar = false;
-        this.obtenerDocumentos();
-      },
-      error => {
-        console.error('Error al actualizar documento:', error);
-      }
-    );
+    if(doc.nombre && doc.fecha_subida && doc.hora_subida && doc.tipo_documento && doc.contrato){
+      this.http.patch(url, {}, { responseType: 'text' }).subscribe(
+        response => {
+          if(response == "Se encontraron errores en los datos enviados."){
+            alert("Un dato ingresado, no fue reconocido por el sistema")
+          }else{
+            alert("Documento actualizado correctamente")
+            console.log('Documento actualizado:', response);
+            this.showModalEditar = false;
+            this.obtenerDocumentos();
+          }
+        },
+        error => {
+          console.error('Error al actualizar documento:', error);
+          alert("No se pudo actualizar el documento, hay un dato mal ingresado")
+        }
+      );
+    }else{
+      alert("No están todos los datos ingresados")
+    }
+
+
   }
 
 
@@ -174,10 +199,12 @@ export class DocumentosComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         response => {
           console.log(`Documento con ID ${doc.id} eliminado:`, response);
+          alert("documento(s) eliminado(s) con éxito")
           this.obtenerDocumentos();
         },
         error => {
           console.error(`Error al eliminar el documento con ID ${doc.id}:`, error);
+          alert("Error al eliminar un(os) documento(s)")
         }
       );
     });
