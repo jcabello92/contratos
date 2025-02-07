@@ -203,16 +203,19 @@ export class OITsComponent implements OnInit {
 
     this.http.get<any[]>(url).subscribe(
       (data) => {
-        // Ordenar manualmente los proveedores según `campoOrden` y `orden`
         this.itos = data.sort((a, b) => {
-          const valorA = a[this.campoOrden] ? a[this.campoOrden].toString().toLowerCase() : '';
-          const valorB = b[this.campoOrden] ? b[this.campoOrden].toString().toLowerCase() : '';
+          let valorA: any = a[this.campoOrden];
+          let valorB: any = b[this.campoOrden];
 
-          if (this.orden === 'asc') {
-            return valorA.localeCompare(valorB);
+          if (this.campoOrden === 'rut') {
+            valorA = this.parsearRut(valorA);
+            valorB = this.parsearRut(valorB);
           } else {
-            return valorB.localeCompare(valorA);
+            valorA = valorA ? valorA.toString().toLowerCase() : '';
+            valorB = valorB ? valorB.toString().toLowerCase() : '';
           }
+
+          return this.orden === 'asc' ? (valorA > valorB ? 1 : -1) : (valorA < valorB ? 1 : -1);
         });
       },
       (error) => {
@@ -220,5 +223,10 @@ export class OITsComponent implements OnInit {
       }
     );
   }
+
+  parsearRut(rut: string): number {
+    return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
+  }
+
 
 }
