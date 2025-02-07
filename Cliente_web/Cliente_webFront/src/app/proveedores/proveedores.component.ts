@@ -93,19 +93,31 @@ export class ProveedoresComponent implements OnInit {
       representante: this.nuevoProveedor.representante ? formatearCampo(this.nuevoProveedor.representante, 4) : this.nuevoProveedor.representante,
     };
 
-    const url = 'http://localhost:8000/api/proveedores';
+    if(proveedor.rut && proveedor.razon_social && proveedor.direccion && proveedor.comuna && proveedor.telefono && proveedor.correo && proveedor.representante){
+      const url = 'http://localhost:8000/api/proveedores';
 
-    this.http.post(url, proveedor, { responseType: 'text' })
-      .subscribe(
-        response => {
-          console.log('Respuesta del servidor:', response);
-          this.obtenerProveedores(); // Actualizar la lista después de la creación
-          this.cerrarModalProveedorCrear(); // Cerrar el modal
-        },
-        error => {
-          console.error('Error al crear proveedor:', error);
-        }
-      );
+      this.http.post(url, proveedor, { responseType: 'text' })
+        .subscribe(
+          response => {
+            console.log('Respuesta del servidor:', response);
+            if(response == "No se enviaron todos los datos requeridos."){
+                alert("Un dato ingresado, no fue reconocido por el sistema")
+            }else {
+                alert("Proveedor creado con éxito")
+                this.obtenerProveedores(); // Actualizar la lista después de la creación
+                this.cerrarModalProveedorCrear(); // Cerrar el modal
+            }
+          },
+          error => {
+            console.error('Error al crear proveedor:', error);
+            alert("No se pudo crear el proveedor, hay un dato mal ingresado")
+          }
+        );
+    }
+    else{
+      alert("No están todos los datos ingresados")
+    }
+
   }
 
 
@@ -157,19 +169,31 @@ export class ProveedoresComponent implements OnInit {
     // Formatear representante a 4 dígitos
     if (proveedor.representante) datosActualizar.representante = formatearCampo(proveedor.representante, 4);
 
-    const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
 
-    this.http.patch(url, datosActualizar, { responseType: 'text' })
-      .subscribe(
-        (response) => {
-          console.log('Proveedor actualizado correctamente:', response);
-          this.showModalEditar = false;
-          this.obtenerProveedores(); // Actualizar la lista de proveedores
-        },
-        (error) => {
-          console.error('Error al actualizar proveedor:', error);
-        }
-      );
+    if(proveedor.rut && proveedor.razon_social && proveedor.direccion && proveedor.comuna && proveedor.telefono && proveedor.correo && proveedor.representante){
+      const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
+
+      this.http.patch(url, datosActualizar, { responseType: 'text' })
+        .subscribe(
+          (response) => {
+            if(response == "Se encontraron errores en los datos enviados."){
+                alert("Un dato ingresado, no fue reconocido por el sistema")
+            }else{
+              alert('Proveedor actualizado correctamente');
+              this.showModalEditar = false;
+              this.obtenerProveedores(); // Actualizar la lista de proveedores
+            }
+          },
+          (error) => {
+            console.error('Error al actualizar proveedor:', error);
+            alert("No se pudo actualizar el proveedor, hay un dato mal ingresado")
+          }
+        );
+    }else{
+      alert("No están todos los datos ingresados")
+    }
+
+
   }
 
 
@@ -199,6 +223,7 @@ export class ProveedoresComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
           console.log(`Proveedor con ID ${proveedor.id} eliminado:`, response);
+          alert("proveedor(es) eliminado(s) con éxito")
           this.obtenerProveedores(); // Actualizar la lista después de la eliminación
         },
         (error) => {
