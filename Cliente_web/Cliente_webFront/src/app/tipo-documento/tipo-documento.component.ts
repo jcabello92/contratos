@@ -61,17 +61,26 @@ export class TipoDeDocumentoComponent implements OnInit {
 
   agregarTipoDocumento(): void {
     const documento = { nombre: this.nuevoDocumento.nombre }; // Solo el nombre
+
     if (this.nuevoDocumento.nombre.trim()) {
       this.http.post('http://localhost:8000/api/tipos_documentos', documento, { responseType: 'text' }).subscribe(
         (response) => {
-          console.log(response); // Esto debería mostrar el mensaje "Tipo de documento registrado con éxito en el sistema."
-          this.obtenerTiposDeDocumento();
-          this.cerrarModal();
+          if(response=="No se enviaron todos los datos requeridos."){
+            alert("El dato ingresado, no fue reconocido por el sistema")
+          }else{
+            alert("Tipo de documento creado exitosamente")
+            console.log(response);
+            this.obtenerTiposDeDocumento();
+            this.cerrarModal();
+          }
         },
-        error => console.error('Error al agregar tipo de documento', error)
+        error => {
+          console.error('Error al agregar tipo de documento', error)
+          alert("No se pudo crear el tipo de documento, hay un dato mal ingresado")
+        }
       );
     } else {
-      console.log("El nombre del documento no es válido");
+      alert("El nombre del documento no es válido");
     }
   }
 
@@ -85,15 +94,22 @@ export class TipoDeDocumentoComponent implements OnInit {
       this.http.patch(`http://localhost:8000/api/tipos_documentos/${this.idAEditar}`, documento, { responseType: 'text' })
         .subscribe(
           (response) => {
-            console.log("Tipo de documento", documento);  // Aquí solo vemos el objeto con el campo 'nombre'
-            console.log("Respuesta del servidor:", response); // Mostramos la respuesta del backend
-            this.obtenerTiposDeDocumento();
-            this.cerrarModal();
+            if(response == "Se encontraron errores en los datos enviados."){
+                alert("El dato ingresado, no fue reconocido por el sistema")
+            }else {
+              alert("Tipo de documento actualizado correctamente")
+              console.log("Respuesta del servidor:", response);
+              this.obtenerTiposDeDocumento();
+              this.cerrarModal();
+            }
           },
-          error => console.error('Error al actualizar tipo de documento', error)
+          error => {
+            alert("No se pudo actualizar el tipo de documento, hay un dato mal ingresado")
+            console.error('Error al actualizar tipo de documento', error)
+          }
         );
     } else {
-      console.log("El formulario no es válido o el ID no está definido");
+      alert("No están todos los datos ingresados");
     }
   }
 
@@ -104,10 +120,14 @@ export class TipoDeDocumentoComponent implements OnInit {
         { responseType: 'text' })
         .subscribe(
           () => {
+            alert("Tipo de documento eliminado con éxito")
             this.obtenerTiposDeDocumento();
             this.cerrarModal();
           },
-          error => console.error('Error al eliminar tipo de documento', error)
+          error => {
+            alert("Error al eliminar un tipo de documento")
+            console.error('Error al eliminar tipo de documento', error)
+          }
         );
     }
   }
