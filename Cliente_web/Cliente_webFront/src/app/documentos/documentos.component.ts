@@ -166,8 +166,6 @@ export class DocumentosComponent implements OnInit {
     }else{
       alert("No están todos los datos ingresados")
     }
-
-
   }
 
 

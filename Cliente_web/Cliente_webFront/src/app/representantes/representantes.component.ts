@@ -82,19 +82,31 @@ export class RepresentantesComponent implements OnInit {
     params.set('telefono', this.nuevoRepresentante.telefono);
     params.set('correo', this.nuevoRepresentante.correo);
 
-    const url = `http://localhost:8000/api/representantes?${params.toString()}`;
 
-    this.http.post(url, {}, { responseType: 'text' }) // 👈 Esperamos respuesta de tipo texto
-      .subscribe(
-        response => {
-          console.log('Respuesta del servidor:', response);
-          this.obtenerRepresentantes(); // Actualizar la lista después de la creación
-          this.cerrarModalRepresentantesCrear(); // Cerrar el modal
-        },
-        error => {
-          console.error('Error al crear representante:', error);
-        }
-      );
+    if(this.nuevoRepresentante.rut && this.nuevoRepresentante.nombre && this.nuevoRepresentante.apellido && this.nuevoRepresentante.telefono && this.nuevoRepresentante.correo){
+
+      const url = `http://localhost:8000/api/representantes?${params.toString()}`;
+
+      this.http.post(url, {}, { responseType: 'text' }) // 👈 Esperamos respuesta de tipo texto
+        .subscribe(
+          response => {
+            if(response == "No se enviaron todos los datos requeridos."){
+              alert("Un dato ingresado, no fue reconocido por el sistema")
+            }else{
+              alert("El representante fue creado exitosamente")
+              console.log('Respuesta del servidor:', response);
+              this.obtenerRepresentantes(); // Actualizar la lista después de la creación
+              this.cerrarModalRepresentantesCrear(); // Cerrar el modal
+            }
+          },
+          error => {
+            console.error('Error al crear representante:', error);
+            alert("No se pudo crear el representante, hay un dato mal ingresado")
+          }
+        );
+    }else{
+      alert("No están todos los datos ingresados")
+    }
   }
 
 
@@ -140,17 +152,27 @@ export class RepresentantesComponent implements OnInit {
       url += params.join('&');
     }
 
-    // Aseguramos que la respuesta se maneje como texto si es necesario
-    this.http.patch(url, {}, { responseType: 'text' }).subscribe(
-      (response) => {
-        console.log('Representante actualizado correctamente:', response);
-        this.showModalEditar = false; // Cerrar el modal después de la actualización
-        this.obtenerRepresentantes(); // Actualizar la lista de representantes
-      },
-      (error) => {
-        console.error('Error al actualizar representante:', error);
-      }
-    );
+    if(representante.rut && representante.nombre && representante.apellido && representante.telefono &&representante.correo){
+      // Aseguramos que la respuesta se maneje como texto si es necesario
+      this.http.patch(url, {}, { responseType: 'text' }).subscribe(
+        (response) => {
+          if(response == "Se encontraron errores en los datos enviados."){
+            alert("Un dato ingresado, no fue reconocido por el sistema")
+          }else{
+            alert("Representante actualizado correctamente")
+            console.log('Representante actualizado correctamente:', response);
+            this.showModalEditar = false; // Cerrar el modal después de la actualización
+            this.obtenerRepresentantes(); // Actualizar la lista de representantes
+          }
+        },
+        (error) => {
+          console.error('Error al actualizar representante:', error);
+          alert("No se pudo actualizar el representante, hay un dato mal ingresado")
+        }
+      );
+    }else{
+      alert("No están todos los datos ingresados")
+    }
   }
 
   // Función para mostrar el modal de eliminación con los IDs seleccionados
@@ -187,10 +209,12 @@ export class RepresentantesComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
           console.log(`Representante con ID ${representante.id} eliminado:`, response);
+          alert("Representante(s) eliminado(s) con éxito")
           this.obtenerRepresentantes(); // Actualizar la lista después de la eliminación
         },
         (error) => {
           console.error(`Error al eliminar el representante con ID ${representante.id}:`, error);
+          alert("Error al eliminar un(os) representante(s)")
         }
       );
     });
