@@ -41,6 +41,10 @@ export class OITsComponent implements OnInit {
   campoOrden: string = 'rut'; // Valor predeterminado
   orden: string = 'asc'; // Valor predeterminado
 
+  //Páginación
+  ItosAObtener: number = 1;
+
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
@@ -59,15 +63,20 @@ export class OITsComponent implements OnInit {
   }
 
   obtenerItos() {
-    this.http.get<any>('http://localhost:8000/api/itos/pagina/1')
-      .subscribe(
-        data => {
+    const url = `http://localhost:8000/api/itos/pagina/${this.ItosAObtener}`;
+    this.http.get<any[]>(url).subscribe(
+      data => {
+        if (data.length > 0) {
           this.itos = data;
-        },
-        error => {
-          console.error('Error al obtener itos:', error);
+        } else {
+          alert('No hay más itos para continuar avanzando en la página');
+          this.ItosAObtener--; // Revertimos el cambio si no hay más datos
         }
-      );
+      },
+      error => {
+        console.error('Error al obtener itos:', error);
+      }
+    );
   }
 
   // Crear Ito
@@ -222,7 +231,7 @@ export class OITsComponent implements OnInit {
 
 
   filtrarItos() {
-    const url = `http://localhost:8000/api/itos/pagina/1`;
+    const url = `http://localhost:8000/api/itos/pagina/${this.ItosAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
       (data) => {
@@ -249,6 +258,40 @@ export class OITsComponent implements OnInit {
 
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
+  }
+
+  gestionPaginas(accion: string) {
+    if (accion === 'anterior') {
+      if (this.ItosAObtener > 1) {
+        this.ItosAObtener--;
+        this.obtenerItos();
+      } else {
+        alert('No hay una página anterior a esta.');
+      }
+    } else if (accion === 'siguiente') {
+      const paginaSiguiente = this.ItosAObtener + 1;
+      const url = `http://localhost:8000/api/itos/pagina/${paginaSiguiente}`;
+
+      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
+        response => {
+          if (Array.isArray(response) && response.length > 0) {
+            this.ItosAObtener++;
+            this.itos = response;
+          } else {
+            alert('No hay más itos disponibles.');
+          }
+        },
+        error => {
+          if (error.status === 200 && error.error?.text) {
+            // Caso donde la API devuelve un mensaje de error en texto plano
+            alert('No hay más itos disponibles.');
+          } else {
+            console.error('Error al obtener itos:', error);
+            alert('Ocurrió un error al obtener itos. Intente nuevamente.');
+          }
+        }
+      );
+    }
   }
 
 

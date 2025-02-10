@@ -41,6 +41,9 @@ export class ProveedoresComponent implements OnInit {
   campoOrden: string = 'rut'; // Valor predeterminado
   orden: string = 'asc'; // Valor predeterminado
 
+  //Páginación
+  proveedoresAObtener: number = 1;
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -60,15 +63,20 @@ export class ProveedoresComponent implements OnInit {
   }
 
   obtenerProveedores() {
-    this.http.get<any>('http://localhost:8000/api/proveedores/pagina/1')
-      .subscribe(
-        data => {
-          this.proveedores = data; // Asigna los datos obtenidos a la variable
-        },
-        error => {
-          console.error('Error al obtener proveedores:', error);
+    const url = `http://localhost:8000/api/proveedores/pagina/${this.proveedoresAObtener}`;
+    this.http.get<any[]>(url).subscribe(
+      data => {
+        if (data.length > 0) {
+          this.proveedores = data;
+        } else {
+          alert('No hay más proveedores para continuar avanzando en la página');
+          this.proveedoresAObtener--; // Revertimos el cambio si no hay más datos
         }
-      );
+      },
+      error => {
+        console.error('Error al obtener proveedores:', error);
+      }
+    );
   }
 
   // Crear Proveedor
@@ -237,7 +245,7 @@ export class ProveedoresComponent implements OnInit {
   }
 
   filtrarProveedores() {
-    const url = `http://localhost:8000/api/proveedores/pagina/1`;
+    const url = `http://localhost:8000/api/proveedores/pagina/${this.proveedoresAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
       (data) => {
@@ -265,5 +273,41 @@ export class ProveedoresComponent implements OnInit {
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
   }
+
+  gestionPaginas(accion: string) {
+    if (accion === 'anterior') {
+      if (this.proveedoresAObtener > 1) {
+        this.proveedoresAObtener--;
+        this.obtenerProveedores();
+      } else {
+        alert('No hay una página anterior a esta.');
+      }
+    } else if (accion === 'siguiente') {
+      const paginaSiguiente = this.proveedoresAObtener + 1;
+      const url = `http://localhost:8000/api/proveedores/pagina/${paginaSiguiente}`;
+
+      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
+        response => {
+          if (Array.isArray(response) && response.length > 0) {
+            this.proveedoresAObtener++;
+            this.proveedores = response;
+          } else {
+            alert('No hay más proveedores disponibles.');
+          }
+        },
+        error => {
+          if (error.status === 200 && error.error?.text) {
+            // Caso donde la API devuelve un mensaje de error en texto plano
+            alert('No hay más proveedores disponibles.');
+          } else {
+            console.error('Error al obtener proveedores:', error);
+            alert('Ocurrió un error al obtener proveedores. Intente nuevamente.');
+          }
+        }
+      );
+    }
+  }
+
+
 
 }

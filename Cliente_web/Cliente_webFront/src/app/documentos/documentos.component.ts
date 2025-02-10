@@ -35,6 +35,9 @@ export class DocumentosComponent implements OnInit {
   campoOrden: string = 'nombre'; // Valor predeterminado
   orden: string = 'asc'; // Valor predeterminado
 
+  //Páginación
+  DocumentosAObtener:number = 1 ;
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
@@ -42,9 +45,15 @@ export class DocumentosComponent implements OnInit {
   }
 
   obtenerDocumentos() {
-    this.http.get<any>('http://localhost:8000/api/documentos/pagina/1').subscribe(
+    const url = `http://localhost:8000/api/documentos/pagina/${this.DocumentosAObtener}`;
+    this.http.get<any[]>(url).subscribe(
       data => {
-        this.documentos = data;
+        if (data.length > 0) {
+          this.documentos = data;
+        } else {
+          alert('No hay más documentos para continuar avanzando en la página');
+          this.DocumentosAObtener--; // Revertimos el cambio si no hay más datos
+        }
       },
       error => {
         console.error('Error al obtener documentos:', error);
@@ -208,7 +217,7 @@ export class DocumentosComponent implements OnInit {
   }
 
   filtrarDocumentos() {
-    const url = `http://localhost:8000/api/documentos/pagina/1`;
+    const url = `http://localhost:8000/api/documentos/pagina/${this.DocumentosAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
       (data) => {
@@ -239,6 +248,41 @@ export class DocumentosComponent implements OnInit {
   parsearHora(hora: string): number {
     const [horas, minutos] = hora.split(':').map(Number);
     return horas * 60 + minutos;
+  }
+
+
+  gestionPaginas(accion: string) {
+    if (accion === 'anterior') {
+      if (this.DocumentosAObtener > 1) {
+        this.DocumentosAObtener--;
+        this.obtenerDocumentos();
+      } else {
+        alert('No hay una página anterior a esta.');
+      }
+    } else if (accion === 'siguiente') {
+      const paginaSiguiente = this.DocumentosAObtener + 1;
+      const url = `http://localhost:8000/api/documentos/pagina/${paginaSiguiente}`;
+
+      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
+        response => {
+          if (Array.isArray(response) && response.length > 0) {
+            this.DocumentosAObtener++;
+            this.documentos = response;
+          } else {
+            alert('No hay más documentos disponibles.');
+          }
+        },
+        error => {
+          if (error.status === 200 && error.error?.text) {
+            // Caso donde la API devuelve un mensaje de error en texto plano
+            alert('No hay más documentos disponibles.');
+          } else {
+            console.error('Error al obtener documentos:', error);
+            alert('Ocurrió un error al obtener documentos. Intente nuevamente.');
+          }
+        }
+      );
+    }
   }
 
 

@@ -41,6 +41,9 @@ export class RepresentantesComponent implements OnInit {
   campoOrden: string = 'rut'; // Valor predeterminado
   orden: string = 'asc'; // Valor predeterminado
 
+  //Páginación:
+  RepresentantesAObtener: number = 1;
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -62,15 +65,20 @@ export class RepresentantesComponent implements OnInit {
 
 
   obtenerRepresentantes() {
-    this.http.get<any>('http://localhost:8000/api/representantes/pagina/1')
-      .subscribe(
-        data => {
-          this.representantes = data; // Asigna los datos obtenidos a la variable
-        },
-        error => {
-          console.error('Error al obtener representantes:', error);
+    const url = `http://localhost:8000/api/representantes/pagina/${this.RepresentantesAObtener}`;
+    this.http.get<any[]>(url).subscribe(
+      data => {
+        if (data.length > 0) {
+          this.representantes = data;
+        } else {
+          alert('No hay más representantes para continuar avanzando en la página');
+          this.RepresentantesAObtener--; // Revertimos el cambio si no hay más datos
         }
-      );
+      },
+      error => {
+        console.error('Error al obtener proveedores:', error);
+      }
+    );
   }
 
   // Crear Representante
@@ -224,7 +232,7 @@ export class RepresentantesComponent implements OnInit {
   }
 
   filtrarRepresentantes() {
-    const url = `http://localhost:8000/api/representantes/pagina/1`;
+    const url = `http://localhost:8000/api/representantes/pagina/${this.RepresentantesAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
       (data) => {
@@ -251,6 +259,40 @@ export class RepresentantesComponent implements OnInit {
 
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
+  }
+
+  gestionPaginas(accion: string) {
+    if (accion === 'anterior') {
+      if (this.RepresentantesAObtener > 1) {
+        this.RepresentantesAObtener--;
+        this.obtenerRepresentantes();
+      } else {
+        alert('No hay una página anterior a esta.');
+      }
+    } else if (accion === 'siguiente') {
+      const paginaSiguiente = this.RepresentantesAObtener + 1;
+      const url = `http://localhost:8000/api/representantes/pagina/${paginaSiguiente}`;
+
+      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
+        response => {
+          if (Array.isArray(response) && response.length > 0) {
+            this.RepresentantesAObtener++;
+            this.representantes = response;
+          } else {
+            alert('No hay más representantes disponibles.');
+          }
+        },
+        error => {
+          if (error.status === 200 && error.error?.text) {
+            // Caso donde la API devuelve un mensaje de error en texto plano
+            alert('No hay más representantes disponibles.');
+          } else {
+            console.error('Error al obtener representantes:', error);
+            alert('Ocurrió un error al obtener representantes. Intente nuevamente.');
+          }
+        }
+      );
+    }
   }
 
 
