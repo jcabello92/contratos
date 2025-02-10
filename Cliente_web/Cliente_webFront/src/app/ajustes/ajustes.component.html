@@ -1,17 +1,36 @@
 <div class="main-container">
   <header class="search-bar">
-    <h1>Ajustes de Usuario </h1>
+    <h1>Ajustes de Usuario</h1>
     <button class="buttons" routerLink="/principalPage">Volver Principal</button>
   </header>
 
   <div class="content">
     <h1>Cambiar imagen de la pestaña principal</h1>
 
-    <label> Ingrese la nueva url de su imagen a elección: </label>
+    <label>Ingrese la nueva URL de su imagen a elección:</label>
     <input type="text">
     <div style="height: 20px"></div>
-    <button style="margin-left: 100px" class="buttons">Guardar nueva imagen</button>
+    <button class="buttons">Guardar nueva imagen</button>
 
+    <div style="height: 20px"></div>
+
+    <label>Añadir nueva imagen desde el escritorio:</label>
+    <div style="height: 10px"></div>
+
+    <!-- Vista previa de la imagen -->
+    <div *ngIf="imagenPreview" style="margin-top: 20px;">
+      <p>Imagen seleccionada:</p>
+      <img [src]="imagenPreview" alt="Vista previa" width="200">
+    </div>
+
+    <!-- Input oculto para subir archivos -->
+    <input type="file" #fileInput (change)="procesarArchivo($event)" accept="image/png, image/jpeg" style="display: none;">
+
+    <!-- Contenedor para los botones alineados -->
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <button class="buttons" (click)="seleccionarArchivo()">Subir nueva imagen</button>
+      <button class="buttons">Guardar imagen</button>
+    </div>
   </div>
 
   <footer class="footer">
@@ -19,4 +38,3 @@
     <h3>Este es el pie de página</h3>
   </footer>
 </div>
-
