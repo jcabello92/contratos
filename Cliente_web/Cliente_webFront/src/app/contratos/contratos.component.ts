@@ -37,7 +37,7 @@ export class ContratosComponent implements OnInit {
   idsContratosEliminar: string = '';
 
   //filtros
-  campoOrden: string = 'numero_contrato';
+  campoOrden: string = 'nombre';
   orden: string = 'asc';
 
   //paginación
@@ -210,5 +210,70 @@ export class ContratosComponent implements OnInit {
     this.cerrarModalEliminar();
   }
 
+
+  filtrarContratos() {
+    const url = `http://localhost:8000/api/contratos/pagina/${this.contratosAObtener}`;
+
+    this.http.get<any[]>(url).subscribe(
+      (data) => {
+        this.contratos = data.sort((a, b) => {
+          let valorA: any = a[this.campoOrden];
+          let valorB: any = b[this.campoOrden];
+
+          if (this.campoOrden === 'rut') {
+            valorA = this.parsearRut(valorA);
+            valorB = this.parsearRut(valorB);
+          } else {
+            valorA = valorA ? valorA.toString().toLowerCase() : '';
+            valorB = valorB ? valorB.toString().toLowerCase() : '';
+          }
+
+          return this.orden === 'asc' ? (valorA > valorB ? 1 : -1) : (valorA < valorB ? 1 : -1);
+        });
+      },
+      (error) => {
+        console.error('Error al filtrar proveedores:', error);
+      }
+    );
+  }
+
+  parsearRut(rut: string): number {
+    return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
+  }
+
+
+  gestionPaginas(accion: string) {
+    if (accion === 'anterior') {
+      if (this.contratosAObtener > 1) {
+        this.contratosAObtener--;
+        this.obtenerContratos();
+      } else {
+        alert('No hay una página anterior a esta.');
+      }
+    } else if (accion === 'siguiente') {
+      const paginaSiguiente = this.contratosAObtener + 1;
+      const url = `http://localhost:8000/api/contratos/pagina/${paginaSiguiente}`;
+
+      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
+        response => {
+          if (Array.isArray(response) && response.length > 0) {
+            this.contratosAObtener++;
+            this.contratos = response;
+          } else {
+            alert('No hay más contratos disponibles.');
+          }
+        },
+        error => {
+          if (error.status === 200 && error.error?.text) {
+            // Caso donde la API devuelve un mensaje de error en texto plano
+            alert('No hay más contratos disponibles.');
+          } else {
+            console.error('Error al obtener contratos :', error);
+            alert('Ocurrió un error al obtener los contratos . Intente nuevamente.');
+          }
+        }
+      );
+    }
+  }
 
 }
