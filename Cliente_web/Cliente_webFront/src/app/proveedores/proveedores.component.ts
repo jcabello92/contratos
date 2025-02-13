@@ -140,7 +140,6 @@ export class ProveedoresComponent implements OnInit {
     if (seleccionados.length === 1) {
       // Solo se puede actualizar un proveedor a la vez
       this.proveedorActual = seleccionados[0];
-      console.log(this.proveedorActual);
       this.showModalEditar = true;
     } else if (seleccionados.length > 1) {
       alert('Solo puedes seleccionar un proveedor para actualizar.');

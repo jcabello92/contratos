@@ -1,7 +1,8 @@
 table {
-  border: 1px solid black;
-  border-collapse: collapse; /* Para que no haya un dobles borde*/
+  width: auto; /* Evita que ocupe todo el ancho */
   margin: auto;
+  border: 1px solid black;
+  border-collapse: collapse;
 }
 
 td, th {
@@ -72,12 +73,344 @@ button.combo-box:hover {
 }
 
 .table-container {
-  max-height: calc(100vh - 150px); /* Ajusta según la altura del header y footer */
-  overflow-y: auto; /* Habilita el scroll vertical en la tabla */
-  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente si es necesario */
+  width: 100%;
 }
 
 .table-container table {
   width: 100%;
   border-collapse: collapse;
 }
+
+/*==================================================================*/
+
+.botonesCrud-container {
+  display: flex;
+  justify-content: center; /* Centra los botones horizontalmente */
+  gap: 15px; /* Espacio uniforme entre botones */
+  margin-top: 20px; /* Espaciado superior */
+}
+
+.botonesCrud {
+  min-width: 220px; /* Tamaño uniforme para los botones */
+  padding: 12px 20px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #0056b3;
+  color: white;
+  border: 2px solid white;
+  border-radius: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botonesCrud:hover {
+  background-color: #003d82;
+  transform: scale(1.05);
+}
+
+.botonesCrud:active {
+  transform: scale(0.95);
+}
+
+/*========================================================================*/
+.modal {
+  display: none;
+  position: fixed; /* Fijar el modal en la pantalla */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  max-height: 80vh;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  animation: scaleUp 0.2s ease-in-out forwards;
+
+  position: fixed; /* Asegura que siempre se mantenga centrado */
+  top:  0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes scaleUp {
+  from {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+.modal h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.cerrar {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.cerrar:hover {
+  color: red;
+}
+
+/* Diseño del formulario */
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal label {
+  font-weight: bold;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Contenedor para agrupar dos inputs en la misma línea */
+.fila {
+  display: flex;
+  gap: 10px;
+}
+
+.fila div {
+  flex: 1;
+}
+
+/* Botones alineados */
+.botones {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.botones button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botones button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.botones button:nth-child(1) {
+  background-color: #dc3545;
+}
+
+.botones button:nth-child(1):hover {
+  background-color: #a71d2a;
+}
+
+/*======================================================================*/
+
+/* Estilo para los checkboxes */
+input[type="checkbox"] {
+  accent-color: #FFD700; /* Color dorado para el checkbox */
+  width: 20px;
+  height: 20px;
+  margin: 0; /* Elimina el margen extra por defecto */
+}
+
+/* Estilo para las celdas de la tabla */
+th, td {
+  border: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 14px; /* Ajuste opcional para el tamaño de la fuente */
+}
+
+thead {
+  background-color: #f4f4f4; /* Color de fondo para la cabecera */
+}
+
+.encabezado {
+  font-weight: bold; /* Resalta la cabecera */
+}
+
+/* Opcional: agregar hover en las filas para mejorar la interactividad */
+tbody tr:hover {
+  background-color: #f9f9f9; /* Color al pasar el ratón por encima */
+}
+
+/*==========================================================*/
+/* Modal - se oculta por defecto */
+.modal {
+  display: none; /* Se oculta cuando no tiene la clase 'show' */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal visible cuando tiene la clase 'show' */
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.cerrar {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.cerrar:hover,
+.cerrar:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/**==========================================================*/
+
+/* Modal Editar */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+}
+
+.cerrar {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.cerrar:hover,
+.cerrar:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.botones button {
+  margin: 5px;
+}
+
+/*===============================================================================*/
+
+
+/* Modal Eliminar */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 20% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+}
+
+.cerrar {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.cerrar:hover,
+.cerrar:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.botones button {
+  margin: 5px;
+}
+
+
+
+
+
+
+

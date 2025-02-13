@@ -1,388 +1,101 @@
 <h1>Contratos</h1>
 
-<div style="display: flex; align-items: center; gap: 30px;">
-  <div>
-    <label for="opciones" style="margin-right: 10px;">Selecciona una opción:</label>
-    <select id="opciones" name="opciones" class="combo-box">
-      <option value="opcion1">Nombre</option>
-      <option value="opcion2">Fecha de Inicio</option>
-      <option value="opcion3">Fecha de Término</option>
-      <option value="opcion4">Proveedor</option>
-      </select>
-  </div>
-  <div>
-    <label for="opciones2" style="margin-right: 10px;">Seleccione la siguiente opción:</label>
-    <select id="opciones2" name="opciones2" class="combo-box">
-      <option value="opcion1">De Primero al Último</option>
-      <option value="opcion2">De Último al primero</option>
-    </select>
-  </div>
-  <button class="combo-box">Buscar</button>
+<div class="botonesCrud-container">
+  <button class="botonesCrud" (click)="abrirModalContratoCrear()">Crear Contrato</button>
+  <button class="botonesCrud" (click)="actualizarContrato()">Actualizar Contrato</button>
+  <button class="botonesCrud" (click)="eliminarContrato()">Eliminar Contrato</button>
 </div>
-
-<div style="height: 20px" class="table-container"></div>
 
 <table>
   <thead>
   <tr class="encabezado">
+    <td>Seleccionar</td>
+    <td>ID</td>
     <td>Nombre del contrato</td>
-    <td>Fecha de inicio</td>
-    <td>Fecha de término</td>
+    <td>Fecha de Inicio</td>
+    <td>Fecha de Término</td>
     <td>Proveedor</td>
-    <td>Acceso</td>
+    <td>Ito</td>
   </tr>
-
-  <tr>
-    <td>Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o no Mostrando algo un poco mas largo para ver si esta bien o no</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3 Mostrando algo 6 Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 4</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 5</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 6</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 7</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 8</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 9</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 10</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o no Mostrando algo un poco mas largo para ver si esta bien o no</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3 Mostrando algo 6 Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 4</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 5</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 6</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 7</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 8</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 9</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 10</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr><tr>
-    <td>Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o no Mostrando algo un poco mas largo para ver si esta bien o no</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3 Mostrando algo 6 Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 4</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 5</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 6</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 7</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 8</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 9</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 10</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr><tr>
-    <td>Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o no Mostrando algo un poco mas largo para ver si esta bien o no</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3 Mostrando algo 6 Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 4</td>
-    <td>Mostrando algo 2 con mayor saracatunga</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 5</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 6</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 7</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 8</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 9</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 10</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr><tr>
-    <td>Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o no Mostrando algo un poco mas largo para ver si esta bien o no</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3 Mostrando algo 6 Mostrando algo un poco mas largo para ver si esta bien o noMostrando algo un poco mas largo para ver si esta bien o noMostrando</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 4</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 5</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 6</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 7</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 8</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 9</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
-  <tr>
-    <td>Mostrando algo 10</td>
-    <td>Mostrando algo 2</td>
-    <td>Mostrando algo 3</td>
-    <td>Mostrando algo 4</td>
-  </tr>
-
   </thead>
+  <tbody>
+  <tr *ngFor="let contrato of contratos; let i = index">
+    <td>
+      <input type="checkbox" (change)="onCheckboxChange(i)" [checked]="contratoSeleccionado[i]" />
+    </td>
+    <td>{{ contrato.id }}</td>
+    <td>{{ contrato.nombre }}</td>
+    <td>{{ contrato.fecha_inicio }}</td>
+    <td>{{ contrato.fecha_termino }}</td>
+    <td>{{ contrato.proveedor }}</td>
+    <td>{{ contrato.ito }}</td>
+  </tr>
+  </tbody>
 </table>
 
-<div style="height: 20px"></div>
+<!-- ================================================          MODALES          =========================================================================-->
 
-<div style="display: flex; justify-content: space-between; width: 100%;">
-  <button class="buttons" style="flex: 1; margin-right: 10px;">Página Anterior</button>
-  <button class="buttons" style="flex: 1;">Página Siguiente</button>
+<!-- Modal Crear -->
+<div *ngIf="modalAbiertoCrear" class="modal show">
+  <div class="modal-content">
+    <span class="cerrar" (click)="cerrarModalContratoCrear()">&times;</span>
+    <h2>Crear Contrato</h2>
+    <label>Nombre del Contrato:</label>
+    <input type="text" [(ngModel)]="nuevoContrato.nombre">
+    <label>Fecha de Inicio:</label>
+    <input type="date" [(ngModel)]="nuevoContrato.fecha_inicio">
+    <label>Fecha de Término:</label>
+    <input type="date" [(ngModel)]="nuevoContrato.fecha_termino">
+    <label>Proveedor:</label>
+    <input type="text" [(ngModel)]="nuevoContrato.proveedor">
+    <label>Ito:</label>
+    <input type="text" [(ngModel)]="nuevoContrato.ito">
+
+    <button (click)="crearContrato()">Guardar</button>
+    <button (click)="cerrarModalContratoCrear()">Cancelar</button>
+  </div>
 </div>
+
+<!-- Modal Actualizar Contrato -->
+<div *ngIf="showModalEditar" class="modal show">
+  <div class="modal-content">
+    <span class="cerrar" (click)="cancelarActualizacion()">&times;</span>
+    <h2>Actualizar Contrato</h2>
+    <label>Nombre del Contrato:</label>
+    <input [(ngModel)]="contratoActual.nombre">
+
+    <label>Fecha de Inicio:</label>
+    <input type="date" [(ngModel)]="contratoActual.fecha_inicio">
+
+    <label>Fecha de Término:</label>
+    <input type="date" [(ngModel)]="contratoActual.fecha_termino">
+
+    <label>Proveedor:</label>
+    <input [(ngModel)]="contratoActual.proveedor">
+
+    <label>Ito:</label>
+    <input [(ngModel)]="contratoActual.ito">
+
+    <button (click)="actualizarElContrato()">Actualizar</button>
+    <button (click)="cancelarActualizacion()">Cancelar</button>
+  </div>
+</div>
+
+<!-- Modal Eliminar Contrato -->
+<div id="modalEliminarContrato" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">
+  <div class="modal-content">
+    <span class="cerrar" (click)="cerrarModalEliminar()">&times;</span>
+    <h2>¿Está seguro de que desea eliminar los siguientes contratos?</h2>
+
+    <ul>
+       (ID: {{ idsContratosEliminar }})
+    </ul>
+
+    <div class="botones">
+      <button type="button" (click)="cerrarModalEliminar()">Cancelar</button>
+      <button type="button" (click)="confirmarEliminacion()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 
