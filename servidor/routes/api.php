@@ -24,6 +24,7 @@ Route::patch('/usuarios/{id}', [UsuarioController::class, 'update']);
 Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy']);
 
 Route::get('/usuarios', [UsuarioController::class, 'login']);
+Route::patch('/usuarios/activar/{id}', [UsuarioController::class, 'activarUsuario']);
 
 # PROVEEDORES
 Route::get('/proveedores/pagina/{pagina}', [ProveedorController::class, 'index']);

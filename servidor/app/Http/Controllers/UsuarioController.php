@@ -264,4 +264,22 @@ class UsuarioController extends Controller
         
         return $usuario;
     }
+
+
+
+    public function activarUsuario(int $id)
+    {
+        $usuario = Usuario::find($id);
+
+        if(!$usuario)
+        {
+            return 'No se encontró el usuario registrado en el sistema.';
+        }
+
+        $usuario->estado = 1;
+
+        $usuario->save();
+
+        return 'Usuario activado con éxito en el sistema.';
+    }
 }
