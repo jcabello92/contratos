@@ -1,3 +1,5 @@
+<app-enviar-correo [enviarCorreoFn]="enviarCorreo"></app-enviar-correo>
+
 <div class="tabla-usuarios">
   <h1>Trabajar con los Usuarios</h1>
 
@@ -41,6 +43,9 @@
     </p>
   </div>
 </div>
+
+
+
 
 
 
@@ -117,11 +122,37 @@
       </div>
       <div class="modal-footer custom-modal-footer">
         <button type="button" class="btn custom-btn-cancel" (click)="closeModal()">Cancelar</button>
-        <button type="button" class="btn custom-btn-create" (click)="crearUsuario()">Crear</button>
+        <button type="button" class="btn custom-btn-create" (click)="enviarCorreo()">Crear</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal para ingresar el código de verificación -->
+<div class="modal" tabindex="-1" [ngClass]="{ 'show': showModalCodigo }" [ngStyle]="{ display: showModalCodigo ? 'block' : 'none' }">
+  <div class="modal-dialog">
+    <div class="modal-content custom-modal-content">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modalTitulo">Introduzca el código de creación</h5>
+        <button type="button" class="btn-close custom-btn-close" aria-label="Close" (click)="closeModalCodigo()"></button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="codigo" class="form-label">Código de verificación: </label>
+            <input type="text" class="form-control" id="codigo" [(ngModel)]="codigoIngresado" name="codigo" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer custom-modal-footer">
+        <button type="button" class="btn custom-btn-cancel" (click)="closeModalCodigo()">Cancelar</button>
+        <button type="button" class="btn custom-btn-create" (click)="crearUsuario()">Crear Usuario</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- Primer Modal: Selección de usuario -->
 <div class="modal" *ngIf="mostrarPrimerModalActualizar">

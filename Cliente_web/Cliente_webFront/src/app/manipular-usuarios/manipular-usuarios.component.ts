@@ -3,6 +3,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Md5 } from 'ts-md5';
+import emailjs from '@emailjs/browser';
+import {EnviarCorreoComponent} from '../enviar-correo/enviar-correo.component';
 
 @Component({
   selector: 'app-manipular-usuarios',
@@ -13,6 +15,7 @@ import { Md5 } from 'ts-md5';
     HttpClientModule,
     NgIf,
     NgForOf,
+    EnviarCorreoComponent,
   ],
   templateUrl: './manipular-usuarios.component.html',
   standalone: true,
@@ -39,6 +42,10 @@ export class ManipularUsuariosComponent implements OnInit{
   protected usuarios: any[] = [];
   usuarioSeleccionado: number | null = null;
 
+  codigoDeCreacion: number = 0;  // Inicializar con un valor predeterminado
+  codigoIngresado: string = '';  // Inicializar con un valor predeterminado
+  showModalCodigo: boolean = false;
+
   usuarioDetalle = {
     id: null,
     usuario: '',
@@ -49,6 +56,7 @@ export class ManipularUsuariosComponent implements OnInit{
     correo: '',
     rol: ''
   };
+
 
   constructor(private http: HttpClient) {}
 
@@ -109,25 +117,30 @@ export class ManipularUsuariosComponent implements OnInit{
 
     console.log('URL generada:', url); // Registro en consola para depuración
 
-    if(this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena && this.nuevoUsuario.rut && this.nuevoUsuario.nombre && this.nuevoUsuario.apellido && this.nuevoUsuario.telefono && this.nuevoUsuario.correo && this.nuevoUsuario.rol){
-      this.http.post(url, null, { responseType: 'text' }).subscribe({
-        next: (response) => {
-          if(response == "Se encontraron errores en los datos enviados."){
-            alert("Un dato ingresado, no fue reconocido por el sistema")
-          }else {
-            alert("El documento fue creado exitosamente")
-            console.log('Usuario creado exitosamente:', response);
-            this.closeModal();
-            this.ObtenerUsuarios()
-          }
-        },
-        error: (error) => {
-          console.error('Error al crear el usuario:', error);
-          alert("No se pudo crear el usuario, hay un dato mal ingresado")
-        },
-      });
-    }else{
-      alert("No están todos los datos ingresados")
+    if (this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena && this.nuevoUsuario.rut && this.nuevoUsuario.nombre && this.nuevoUsuario.apellido && this.nuevoUsuario.telefono && this.nuevoUsuario.correo && this.nuevoUsuario.rol) {
+      if (this.validarCodigo()) {  // Aquí llamamos a validarCodigo antes de proceder
+        this.http.post(url, null, { responseType: 'text' }).subscribe({
+          next: (response) => {
+            if (response == "Se encontraron errores en los datos enviados.") {
+              alert("Un dato ingresado, no fue reconocido por el sistema");
+            } else {
+              alert("El usuario fue creado exitosamente");
+              console.log('Usuario creado exitosamente:', response);
+              this.closeModal();
+              this.closeModalCodigo();
+              this.ObtenerUsuarios();
+            }
+          },
+          error: (error) => {
+            console.error('Error al crear el usuario:', error);
+            alert("No se pudo crear el usuario, hay un dato mal ingresado");
+          },
+        });
+      } else {
+        alert("Los códigos no eran exactamente iguales, intente nuevamente");
+      }
+    } else {
+      alert("No están todos los datos ingresados");
     }
   }
 
@@ -294,6 +307,43 @@ export class ManipularUsuariosComponent implements OnInit{
     );
   }
 
+  enviarCorreo() {
+    // Generar un código aleatorio de 4 dígitos
+    const codigoGenerado = Math.floor(1000 + Math.random() * 9000);  // Genera un número de 4 dígitos
+
+    // Guardar el código generado en la variable temporal
+    this.codigoDeCreacion = codigoGenerado;
+
+    const templateParams = {
+      nombre: this.nuevoUsuario.nombre,
+      email: this.nuevoUsuario.correo,
+      from_email: 'NoContestar@gmail.com',
+      codigo: this.codigoDeCreacion,  // Enviar el código generado al correo
+    };
+
+    emailjs.send('service_uxe4xlr', 'template_dy8romm', templateParams, '5t3e8VdfQtWUUB3qM')
+      .then(response => {
+        console.log('Correo enviado:', response);
+        alert('Correo enviado correctamente. Revisa tu bandeja de entrada para el código de confirmación.');
+        this.showModalCodigo = true;  // Mostrar el modal para ingresar el código
+      })
+      .catch(error => {
+        console.error('Error al enviar el correo:', error);
+      });
+  }
+
+  validarCodigo(): boolean {
+    // Verificar si el código ingresado es correcto
+    if (this.codigoIngresado === this.codigoDeCreacion.toString()) {
+      return true;  // Los códigos coinciden
+    } else {
+      return false;  // Los códigos no coinciden
+    }
+  }
+
+  closeModalCodigo() {
+    this.showModalCodigo = false;
+  }
 
 
 
