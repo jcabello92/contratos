@@ -63,7 +63,21 @@ export class ContratosComponent implements OnInit {
     this.http.get<any[]>(url).subscribe(
       data => {
         if (data.length > 0) {
-          this.contratos = data;
+          const fechaActual = new Date();
+
+          this.contratos = data.sort((a, b) => {
+            // Convertir fechas de término a objetos Date asegurándonos del formato correcto
+            const fechaTerminoA = new Date(a.fecha_termino.replace(/-/g, '/')).getTime();
+            const fechaTerminoB = new Date(b.fecha_termino.replace(/-/g, '/')).getTime();
+
+            const estaVencidoA = fechaTerminoA < fechaActual.getTime();
+            const estaVencidoB = fechaTerminoB < fechaActual.getTime();
+
+            if (estaVencidoA && !estaVencidoB) return 1;  // `a` está vencido, moverlo abajo
+            if (!estaVencidoA && estaVencidoB) return -1; // `b` está vencido, moverlo abajo
+
+            return fechaTerminoA - fechaTerminoB; // Ordenar del más próximo al más lejano
+          });
         } else {
           alert('No hay más contratos disponibles.');
           this.contratosAObtener--;
@@ -72,6 +86,9 @@ export class ContratosComponent implements OnInit {
       error => console.error('Error al obtener contratos:', error)
     );
   }
+
+
+
 
   crearContrato() {
     const formatearCampo = (campo: string, longitud: number) => {
@@ -283,5 +300,14 @@ export class ContratosComponent implements OnInit {
       );
     }
   }
+
+  getEstadoContrato(fechaTermino: string): string {
+    const fechaActual = new Date().getTime();
+    const fechaTerminoTime = new Date(fechaTermino.replace(/-/g, '/')).getTime();
+
+    return fechaTerminoTime < fechaActual ? 'Vencido' : 'En Proceso';
+  }
+
+
 
 }

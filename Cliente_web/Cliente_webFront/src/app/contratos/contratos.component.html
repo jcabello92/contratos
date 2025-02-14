@@ -42,6 +42,7 @@
     <td>Fecha de Término</td>
     <td>Proveedor</td>
     <td>Ito</td>
+    <td>Estado del Contrato</td>
   </tr>
   </thead>
   <tbody>
@@ -55,9 +56,14 @@
     <td>{{ contrato.fecha_termino }}</td>
     <td>{{ contrato.proveedor }}</td>
     <td>{{ contrato.ito }}</td>
+    <td [ngClass]="getEstadoContrato(contrato.fecha_termino) === 'Vencido' ? 'estado-vencido' : 'estado-proceso'">
+      {{ getEstadoContrato(contrato.fecha_termino) }}
+    </td>
   </tr>
   </tbody>
 </table>
+
+
 
 <div style="height: 50px"></div>
 

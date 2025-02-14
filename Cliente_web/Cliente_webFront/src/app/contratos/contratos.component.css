@@ -408,7 +408,17 @@ tbody tr:hover {
   margin: 5px;
 }
 
+/*=======================================================*/
 
+.estado-vencido {
+  color: red;
+  font-weight: bold;
+}
+
+.estado-proceso {
+  color: green;
+  font-weight: bold;
+}
 
 
 
