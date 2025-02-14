@@ -87,25 +87,29 @@ export class ContratosComponent implements OnInit {
     };
 
     if (contrato.nombre && contrato.fecha_termino && contrato.fecha_inicio && contrato.proveedor && contrato.ito) {
-      const url = 'http://localhost:8000/api/contratos';
+      if(new Date(contrato.fecha_inicio) <= new Date(contrato.fecha_termino)){
+        const url = 'http://localhost:8000/api/contratos';
 
-      this.http.post(url, contrato, { responseType: 'text' })
-        .subscribe(
-          response => {
-            console.log('Respuesta del servidor:', response);
-            if(response =="No se enviaron todos los datos requeridos."){
-               alert("Un dato ingresado, no fue reconocido por el sistema")
-            }else{
-              alert("Contrato creado con éxito");
-              this.obtenerContratos();
-              this.cerrarModalContratoCrear();
+        this.http.post(url, contrato, { responseType: 'text' })
+          .subscribe(
+            response => {
+              console.log('Respuesta del servidor:', response);
+              if(response =="No se enviaron todos los datos requeridos."){
+                alert("Un dato ingresado, no fue reconocido por el sistema")
+              }else{
+                alert("Contrato creado con éxito");
+                this.obtenerContratos();
+                this.cerrarModalContratoCrear();
+              }
+            },
+            error => {
+              console.error('Error al crear contrato:', error);
+              alert("No se pudo crear el contrato, hay un dato mal ingresado");
             }
-          },
-          error => {
-            console.error('Error al crear contrato:', error);
-            alert("No se pudo crear el contrato, hay un dato mal ingresado");
-          }
-        );
+          );
+      }else{
+        alert("La fecha de término del contrato no puede ser anterior a la fecha de inicio del contrato")
+      }
     }
     else {
       alert("No están todos los datos ingresados");
