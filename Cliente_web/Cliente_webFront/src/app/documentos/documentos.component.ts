@@ -222,21 +222,21 @@ export class DocumentosComponent implements OnInit {
     this.http.get<any[]>(url).subscribe(
       (data) => {
         this.documentos = data.sort((a, b) => {
-          let valorA: any = a[this.campoOrden];
-          let valorB: any = b[this.campoOrden];
+          // Convertir fecha a objetos Date
+          let fechaA = a.fecha_subida ? new Date(a.fecha_subida) : new Date(0);
+          let fechaB = b.fecha_subida ? new Date(b.fecha_subida) : new Date(0);
 
-          if (this.campoOrden === 'fecha_subida') {
-            valorA = new Date(valorA);
-            valorB = new Date(valorB);
-          } else if (this.campoOrden === 'hora_subida') {
-            valorA = this.parsearHora(valorA);
-            valorB = this.parsearHora(valorB);
-          } else {
-            valorA = valorA ? valorA.toString().toLowerCase() : '';
-            valorB = valorB ? valorB.toString().toLowerCase() : '';
+          // Convertir hora correctamente
+          let horaA = a.hora_subida ? this.parsearHora(a.hora_subida) : 0;
+          let horaB = b.hora_subida ? this.parsearHora(b.hora_subida) : 0;
+
+          // Primero ordenamos por fecha
+          if (fechaA.getTime() !== fechaB.getTime()) {
+            return this.orden === 'asc' ? fechaA.getTime() - fechaB.getTime() : fechaB.getTime() - fechaA.getTime();
           }
 
-          return this.orden === 'asc' ? (valorA > valorB ? 1 : -1) : (valorA < valorB ? 1 : -1);
+          // Si las fechas son iguales, ordenamos por hora
+          return this.orden === 'asc' ? horaA - horaB : horaB - horaA;
         });
       },
       (error) => {
@@ -245,9 +245,25 @@ export class DocumentosComponent implements OnInit {
     );
   }
 
+
   parsearHora(hora: string): number {
-    const [horas, minutos] = hora.split(':').map(Number);
-    return horas * 60 + minutos;
+    if (!hora) return 0;
+
+    let horas = 0, minutos = 0;
+
+    if (hora.includes(':')) {
+      // Maneja el formato correcto (ejemplo: "14:40" o "1:13")
+      let partes = hora.split(':').map(Number);
+      horas = partes[0];
+      minutos = partes[1];
+    } else if (hora.includes('.')) {
+      // Maneja formato incorrecto como "14.40" convirtiéndolo a "14:40"
+      let partes = hora.split('.').map(Number);
+      horas = partes[0];
+      minutos = partes[1];
+    }
+
+    return horas * 60 + minutos; // Convierte todo a minutos
   }
 
 

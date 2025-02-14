@@ -223,6 +223,9 @@ export class ContratosComponent implements OnInit {
           if (this.campoOrden === 'rut') {
             valorA = this.parsearRut(valorA);
             valorB = this.parsearRut(valorB);
+          } else if (this.campoOrden === 'fecha_inicio' || this.campoOrden === 'fecha_termino') {
+            valorA = valorA ? new Date(valorA) : new Date(0); // Fecha mínima si es null
+            valorB = valorB ? new Date(valorB) : new Date(0);
           } else {
             valorA = valorA ? valorA.toString().toLowerCase() : '';
             valorB = valorB ? valorB.toString().toLowerCase() : '';
@@ -232,10 +235,11 @@ export class ContratosComponent implements OnInit {
         });
       },
       (error) => {
-        console.error('Error al filtrar proveedores:', error);
+        console.error('Error al filtrar contratos:', error);
       }
     );
   }
+
 
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
