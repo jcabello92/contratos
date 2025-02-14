@@ -25,7 +25,7 @@ class ComunaController extends Controller
             'provincia'
         ];
 
-        $comunas = Comuna::select($campos)->where('estado', 1)->skip($pagina)->limit(50)->get();
+        $comunas = Comuna::select($campos)->skip($pagina)->limit(50)->get();
 
         if($comunas->isEmpty())
         {
@@ -48,7 +48,7 @@ class ComunaController extends Controller
             'provincia'
         ];
 
-        $comuna = Comuna::select($campos)->where('id', $id)->where('estado', 1)->limit(1)->get();
+        $comuna = Comuna::select($campos)->where('id', $id)->limit(1)->get();
 
         if($comuna->isEmpty())
         {

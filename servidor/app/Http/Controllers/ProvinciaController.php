@@ -25,7 +25,7 @@ class ProvinciaController extends Controller
             'region'
         ];
 
-        $provincias = Provincia::select($campos)->where('estado', 1)->skip($pagina)->limit(50)->get();
+        $provincias = Provincia::select($campos)->skip($pagina)->limit(50)->get();
 
         if($provincias->isEmpty())
         {
@@ -48,7 +48,7 @@ class ProvinciaController extends Controller
             'region'
         ];
 
-        $provincia = Provincia::select($campos)->where('id', $id)->where('estado', 1)->limit(1)->get();
+        $provincia = Provincia::select($campos)->where('id', $id)->limit(1)->get();
 
         if($provincia->isEmpty())
         {

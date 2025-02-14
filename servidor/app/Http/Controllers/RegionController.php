@@ -26,7 +26,7 @@ class RegionController extends Controller
             'capital'
         ];
 
-        $regiones = Region::select($campos)->where('estado', 1)->skip($pagina)->limit(50)->get();
+        $regiones = Region::select($campos)->skip($pagina)->limit(50)->get();
 
         if($regiones->isEmpty())
         {
@@ -50,7 +50,7 @@ class RegionController extends Controller
             'capital'
         ];
 
-        $region = Region::select($campos)->where('id', $id)->where('estado', 1)->limit(1)->get();
+        $region = Region::select($campos)->where('id', $id)->limit(1)->get();
 
         if($region->isEmpty())
         {
