@@ -128,7 +128,11 @@ export class ManipularUsuariosComponent implements OnInit{
               console.log('Usuario creado exitosamente:', response);
               this.closeModal();
               this.closeModalCodigo();
-              this.ObtenerUsuarios();
+
+              setTimeout(() => {
+                this.ObtenerUsuarios();
+              }, 2000);
+            
             }
           },
           error: (error) => {
@@ -234,7 +238,6 @@ export class ManipularUsuariosComponent implements OnInit{
     };
   }
 
-  // Actualizar usuario
 // Actualizar usuario
   actualizarUsuario(): void {
     if (this.usuarioDetalle && this.usuarioDetalle.id) {
@@ -333,18 +336,39 @@ export class ManipularUsuariosComponent implements OnInit{
   }
 
   validarCodigo(): boolean {
-    // Verificar si el código ingresado es correcto
     if (this.codigoIngresado === this.codigoDeCreacion.toString()) {
-      return true;  // Los códigos coinciden
-    } else {
-      return false;  // Los códigos no coinciden
+      // Obtener la lista de usuarios con estado 2
+      this.http.get<any[]>('http://localhost:8000/api/usuarios/activar/pagina/1')
+        .subscribe(
+          (usuarios) => {
+            console.log("Usuarios obtenidos:", usuarios); // ✅ Verificar la lista completa
+
+            if (Array.isArray(usuarios)) {
+              usuarios.forEach(usuario => {
+                console.log(`Intentando activar usuario ID: ${usuario.id}`); // 🔍 Depuración
+
+                if (usuario.id) {
+                  console.log("IdLocura:",usuario.id)
+                  this.http.patch(`http://localhost:8000/api/usuarios/activar/${usuario.id}`, {}, { responseType: 'text' })
+                    .subscribe(
+                      () => console.log(`✅ Usuario ${usuario.id} activado`),
+                      (error) => console.error(`❌ Error activando usuario ${usuario.id}:`, error)
+                    );
+                }
+              });
+            }
+          },
+          (error) => console.error('❌ Error obteniendo usuarios con estado 2:', error)
+        );
+
+      return true;
     }
+
+    return false;
   }
 
   closeModalCodigo() {
     this.showModalCodigo = false;
   }
-
-
 
 }
