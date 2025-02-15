@@ -132,7 +132,7 @@ export class ManipularUsuariosComponent implements OnInit{
               setTimeout(() => {
                 this.ObtenerUsuarios();
               }, 2000);
-            
+
             }
           },
           error: (error) => {

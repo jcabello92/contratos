@@ -54,8 +54,53 @@
 
     <!-- Apartados extra-->
     <div class="extra-links">
-      <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
+      <a href="javascript:void(0)" (click)="abrirPrimerModal()">¿Olvidaste tu contraseña?</a>
       <br>
     </div>
   </form>
+</div>
+
+<!-- =========================================================       MODALES       ======================================================================-->
+
+<!-- Modal 1: ¿Quieres recuperar tu contraseña? -->
+<div *ngIf="mostrarPrimerModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>¿Quieres recuperar tu contraseña?</h2>
+    <label for="nombreUsuario">Ingresa tu nombre de usuario:</label>
+    <input type="text" id="nombreUsuario" [(ngModel)]="usuarioIngresado" placeholder="Nombre de usuario">
+    <div class="modal-actions">
+      <button (click)="cerrarModales()">Cancelar</button>
+      <button (click)="verificarUsuario()">Verificar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Ingresa el código que te ha llegado al correo -->
+<div *ngIf="mostrarSegundoModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Ingresa el código que te ha llegado al correo</h2>
+    <input type="text" id="codigoVerificacion" [(ngModel)]="codigoIngresado" placeholder="Código de verificación">
+    <div class="modal-actions">
+      <button (click)="cerrarModales()">Cancelar</button>
+      <button (click)="verificarCodigo()">Verificar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal 3: Ingrese su nueva contraseña -->
+<div *ngIf="mostrarTercerModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Ingrese su nueva contraseña</h2>
+    <label for="nuevaContrasena">Nueva contraseña:</label>
+    <input type="password" id="nuevaContrasena" [(ngModel)]="nuevaContrasena" placeholder="Nueva contraseña">
+
+    <label for="confirmarContrasena">Confirmar nueva contraseña:</label>
+    <input type="password" id="confirmarContrasena" [(ngModel)]="confirmarContrasena" placeholder="Confirmar contraseña">
+
+    <div class="modal-actions">
+      <button (click)="cerrarModales()">Cancelar</button>
+      <button (click)="actualizarContrasena()">Actualizar contraseña</button>
+    </div>
+  </div>
 </div>
