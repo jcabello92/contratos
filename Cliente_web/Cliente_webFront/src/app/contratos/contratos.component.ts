@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import {convertToParamMap, Router} from '@angular/router';
 import {getXHRResponse} from 'rxjs/internal/ajax/getXHRResponse';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-contratos',
@@ -35,6 +36,7 @@ export class ContratosComponent implements OnInit {
   showModalEditar = false;
   modalAbiertoEliminar: boolean = false;
   idsContratosEliminar: string = '';
+  contratosAEliminar: any[] =[];
 
   //filtros
   campoOrden: string = 'nombre';
@@ -288,14 +290,40 @@ export class ContratosComponent implements OnInit {
     const seleccionados = this.contratos.filter((_, index) => this.contratoSeleccionado[index]);
 
     if (seleccionados.length > 0) {
+      const idsSeleccionados = seleccionados.map((contrato) => contrato.id);
 
-      const idsSeleccionados = seleccionados.map((contrato) => contrato.id).join(', ');
-      this.idsContratosEliminar = idsSeleccionados;
+      // Llamar a la API para obtener los contratos completos
+      this.obtenerContratosParaEliminar(idsSeleccionados);
+
       this.modalAbiertoEliminar = true;
     } else {
       alert('Ningún contrato fue seleccionado para eliminar');
     }
   }
+
+  obtenerContratosParaEliminar(ids: number[]) {
+    const apiUrl = 'http://localhost:8000/api/contratos/id/';
+
+    const requests = ids.map(id => {
+      return this.http.get(`${apiUrl}${id}`);
+    });
+
+    // Suscribirse a los Observables
+    forkJoin(requests).subscribe(
+      (respuestas: any[]) => {
+        console.log('Respuestas de la API:', respuestas);  // Verifica la respuesta ahora
+
+        // Extraemos el contrato de cada array de la respuesta
+        this.contratosAEliminar = respuestas.map(respuesta => respuesta[0]); // Accede al primer contrato
+
+        console.log('Contratos a eliminar:', this.contratosAEliminar);  // Verifica los contratos extraídos
+      },
+      (error) => {
+        console.error('Error al obtener los contratos:', error);
+      }
+    );
+  }
+
 
   cerrarModalEliminar() {
     this.modalAbiertoEliminar = false;
@@ -314,11 +342,12 @@ export class ContratosComponent implements OnInit {
           alert("Contrato(s) eliminado(s) con éxito");
           this.obtenerContratos();
         },
-        error => {
+        (error) => {
           console.error(`Error al eliminar el contrato con ID ${contrato.id}:`, error);
-          alert("Error al eliminar uno o más contratos");
+          alert(`Error al eliminar uno o más contratos: ${error.message}`);
         }
       );
+
     });
     this.cerrarModalEliminar();
   }
