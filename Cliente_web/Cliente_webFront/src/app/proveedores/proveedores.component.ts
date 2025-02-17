@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -44,12 +44,19 @@ export class ProveedoresComponent implements OnInit {
   //Páginación
   proveedoresAObtener: number = 1;
 
+  //Para los combobox del crud
+  comunas: any[] = [];
+  representantes: any[] = [];
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  ngOnInit() {
-    this.obtenerProveedores(); // Cargar datos al iniciar el componente
+  async ngOnInit() {
+    await this.obtenerComunas();
+    await this.obtenerRepresentantes();
+    this.obtenerProveedores();
   }
+
 
   // Abrir Modal
   abrirModalProveedorCrear() {
@@ -62,12 +69,16 @@ export class ProveedoresComponent implements OnInit {
     this.nuevoProveedor = { rut: '', razonSocial: '', direccion: '', comuna: '', telefono: '', correo: '', representante: '' }; // Reiniciar campos
   }
 
-  obtenerProveedores() {
+  async obtenerProveedores() {
     const url = `http://localhost:8000/api/proveedores/pagina/${this.proveedoresAObtener}`;
+
     this.http.get<any[]>(url).subscribe(
-      data => {
+      async data => {
         if (data.length > 0) {
           this.proveedores = data;
+
+          // Hacer el match de comunas y representantes
+          await this.asignarComunaYRepresentante();
         } else {
           alert('No hay más proveedores para continuar avanzando en la página');
           this.proveedoresAObtener--; // Revertimos el cambio si no hay más datos
@@ -78,6 +89,80 @@ export class ProveedoresComponent implements OnInit {
       }
     );
   }
+
+  async asignarComunaYRepresentante() {
+    try {
+      this.proveedores.forEach(proveedor => {
+        // Buscar la comuna correspondiente
+        const comunaEncontrada = this.comunas.find(comuna => comuna.id === proveedor.comuna);
+        proveedor.comuna = comunaEncontrada ? comunaEncontrada.nombre : "Desconocida";
+
+        // Buscar el representante correspondiente
+        const representanteEncontrado = this.representantes.find(representante => representante.id === proveedor.representante);
+        proveedor.representante = representanteEncontrado
+          ? `${representanteEncontrado.nombre} ${representanteEncontrado.apellido}`
+          : "Desconocido";
+      });
+    } catch (error) {
+      console.error('Error al asignar comuna y representante:', error);
+    }
+  }
+
+
+  async obtenerComunas() {
+    let pagina = 1;
+    this.comunas = []; // Reiniciamos el array
+    let continuar = true;
+
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/comunas/pagina/${pagina}`).toPromise();
+
+        if (!respuesta || (typeof respuesta === 'string' && respuesta.includes('No se encontraron comunas registradas'))) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.comunas = [...this.comunas, ...respuesta];
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de comunas:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener comunas:', error);
+        continuar = false;
+      }
+    }
+  }
+
+  async obtenerRepresentantes() {
+    let pagina = 1;
+    this.representantes = []; // Reiniciamos el array
+    let continuar = true;
+
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/representantes/pagina/${pagina}`).toPromise();
+
+        if (!respuesta || (typeof respuesta === 'string' && respuesta.includes('No se encontraron representantes registrados'))) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.representantes = [...this.representantes, ...respuesta];
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de representantes:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener representantes:', error);
+        continuar = false;
+      }
+    }
+  }
+
+
+
+
+  /*=================================================================================================*/
 
   // Crear Proveedor
   crearProveedor() {
@@ -273,11 +358,11 @@ export class ProveedoresComponent implements OnInit {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
   }
 
-  gestionPaginas(accion: string) {
+  async gestionPaginas(accion: string) {
     if (accion === 'anterior') {
       if (this.proveedoresAObtener > 1) {
         this.proveedoresAObtener--;
-        this.obtenerProveedores();
+        await this.obtenerProveedores();
       } else {
         alert('No hay una página anterior a esta.');
       }
@@ -285,27 +370,33 @@ export class ProveedoresComponent implements OnInit {
       const paginaSiguiente = this.proveedoresAObtener + 1;
       const url = `http://localhost:8000/api/proveedores/pagina/${paginaSiguiente}`;
 
-      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
-        response => {
-          if (Array.isArray(response) && response.length > 0) {
-            this.proveedoresAObtener++;
-            this.proveedores = response;
-          } else {
-            alert('No hay más proveedores disponibles.');
-          }
-        },
-        error => {
-          if (error.status === 200 && error.error?.text) {
-            // Caso donde la API devuelve un mensaje de error en texto plano
+      try {
+        const response = await this.http.get<any>(url).toPromise();
+
+        if (Array.isArray(response) && response.length > 0) {
+          this.proveedoresAObtener++;
+          this.proveedores = response;
+          await this.asignarComunaYRepresentante();
+        } else {
+          alert('No hay más proveedores disponibles.');
+        }
+      } catch (error: unknown) {
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 200 && typeof error.error === 'string') {
             alert('No hay más proveedores disponibles.');
           } else {
             console.error('Error al obtener proveedores:', error);
             alert('Ocurrió un error al obtener proveedores. Intente nuevamente.');
           }
+        } else {
+          console.error('Error inesperado:', error);
+          alert('Ocurrió un error inesperado.');
         }
-      );
+      }
     }
   }
+
+
 
 
 
