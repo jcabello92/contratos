@@ -60,24 +60,26 @@ export class ContratosComponent implements OnInit {
 
   obtenerContratos() {
     const url = `http://localhost:8000/api/contratos/pagina/${this.contratosAObtener}`;
+
     this.http.get<any[]>(url).subscribe(
-      data => {
+      async data => {
         if (data.length > 0) {
           const fechaActual = new Date();
 
           this.contratos = data.sort((a, b) => {
-            // Convertir fechas de término a objetos Date asegurándonos del formato correcto
             const fechaTerminoA = new Date(a.fecha_termino.replace(/-/g, '/')).getTime();
             const fechaTerminoB = new Date(b.fecha_termino.replace(/-/g, '/')).getTime();
-
             const estaVencidoA = fechaTerminoA < fechaActual.getTime();
             const estaVencidoB = fechaTerminoB < fechaActual.getTime();
 
-            if (estaVencidoA && !estaVencidoB) return 1;  // `a` está vencido, moverlo abajo
-            if (!estaVencidoA && estaVencidoB) return -1; // `b` está vencido, moverlo abajo
+            if (estaVencidoA && !estaVencidoB) return 1;
+            if (!estaVencidoA && estaVencidoB) return -1;
 
-            return fechaTerminoA - fechaTerminoB; // Ordenar del más próximo al más lejano
+            return fechaTerminoA - fechaTerminoB;
           });
+
+          // Obtener nombres de proveedores e itos
+          await this.ObtenerProveedoresEItosEnContratos();
         } else {
           alert('No hay más contratos disponibles.');
           this.contratosAObtener--;
@@ -86,6 +88,42 @@ export class ContratosComponent implements OnInit {
       error => console.error('Error al obtener contratos:', error)
     );
   }
+
+  async ObtenerProveedoresEItosEnContratos() {
+    try {
+      const peticiones = this.contratos.map(async (contrato) => {
+        try {
+          const proveedorUrl = `http://localhost:8000/api/proveedores/id/${contrato.proveedor}`;
+          const itoUrl = `http://localhost:8000/api/itos/id/${contrato.ito}`;
+
+          const [proveedorData, itoData] = await Promise.all([
+            this.http.get<any[]>(proveedorUrl).toPromise().catch(() => []), // Evitar undefined
+            this.http.get<any[]>(itoUrl).toPromise().catch(() => []) // Evitar undefined
+          ]);
+
+          // Asignar datos obtenidos con validación de arrays
+          contrato.proveedor = (Array.isArray(proveedorData) && proveedorData.length > 0)
+            ? proveedorData[0].razon_social
+            : 'Desconocido';
+
+          contrato.ito = (Array.isArray(itoData) && itoData.length > 0)
+            ? `${itoData[0].nombre} ${itoData[0].apellido}`
+            : 'Desconocido';
+
+        } catch (error) {
+          console.error(`Error al obtener datos para contrato ID ${contrato.id}:`, error);
+        }
+      });
+
+      await Promise.all(peticiones);
+
+    } catch (error) {
+      console.error('Error en ObtenerProveedoresEItosEnContratos:', error);
+    }
+  }
+
+
+
 
 
 
