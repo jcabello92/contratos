@@ -80,27 +80,42 @@
   <div class="modal-content">
     <span class="cerrar" (click)="cerrarModalContratoCrear()">&times;</span>
     <h2>Crear Contrato</h2>
+
     <label>Nombre del Contrato:</label>
     <input type="text" [(ngModel)]="nuevoContrato.nombre">
+
     <label>Fecha de Inicio:</label>
     <input type="date" [(ngModel)]="nuevoContrato.fecha_inicio">
+
     <label>Fecha de Término:</label>
     <input type="date" [(ngModel)]="nuevoContrato.fecha_termino">
+
     <label>Proveedor:</label>
-    <input type="text" [(ngModel)]="nuevoContrato.proveedor">
+    <select [(ngModel)]="nuevoContrato.proveedor">
+      <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+        {{ proveedor.razon_social }} - {{ proveedor.rut }}
+      </option>
+    </select>
+
     <label>Ito:</label>
-    <input type="text" [(ngModel)]="nuevoContrato.ito">
+    <select [(ngModel)]="nuevoContrato.ito">
+      <option *ngFor="let ito of itos" [value]="ito.id">
+        {{ ito.nombre }} {{ ito.apellido }} - {{ ito.rut }}
+      </option>
+    </select>
 
     <button (click)="crearContrato()">Guardar</button>
     <button (click)="cerrarModalContratoCrear()">Cancelar</button>
   </div>
 </div>
 
+
 <!-- Modal Actualizar Contrato -->
 <div *ngIf="showModalEditar" class="modal show">
   <div class="modal-content">
     <span class="cerrar" (click)="cancelarActualizacion()">&times;</span>
     <h2>Actualizar Contrato</h2>
+
     <label>Nombre del Contrato:</label>
     <input [(ngModel)]="contratoActual.nombre">
 
@@ -110,16 +125,28 @@
     <label>Fecha de Término:</label>
     <input type="date" [(ngModel)]="contratoActual.fecha_termino">
 
-    <label>Proveedor:</label>
-    <input [(ngModel)]="contratoActual.proveedor">
+    <label for="proveedor">Proveedor Actual: {{contratoActual.proveedor}}</label>
+    <select id="proveedor" [(ngModel)]="contratoActual.proveedor">
+      <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+        {{ proveedor.razon_social }} - {{ proveedor.rut }}
+      </option>
+    </select>
 
-    <label>Ito:</label>
-    <input [(ngModel)]="contratoActual.ito">
+    <label for="ito">Ito Actual: {{contratoActual.ito}}</label>
+    <select id="ito" [(ngModel)]="contratoActual.ito">
+      <option *ngFor="let ito of itos" [value]="ito.id">
+        {{ ito.nombre }} {{ ito.apellido }} - {{ ito.rut }}
+      </option>
+    </select>
+
+
 
     <button (click)="actualizarElContrato()">Actualizar</button>
     <button (click)="cancelarActualizacion()">Cancelar</button>
   </div>
 </div>
+
+
 
 <!-- Modal Eliminar Contrato -->
 <div id="modalEliminarContrato" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">

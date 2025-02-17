@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import {convertToParamMap, Router} from '@angular/router';
 import {getXHRResponse} from 'rxjs/internal/ajax/getXHRResponse';
 
 @Component({
@@ -43,10 +43,16 @@ export class ContratosComponent implements OnInit {
   //paginación
   contratosAObtener: number = 1;
 
+  //Para los combobox de los crud
+  proveedores: any[] = [];
+  itos: any[] = [];
+
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.obtenerContratos();
+    this.obtenerProveedores();
+    this.obtenerItos();
   }
 
   abrirModalContratoCrear() {
@@ -122,9 +128,57 @@ export class ContratosComponent implements OnInit {
     }
   }
 
+  //=========================================================================
 
+  async obtenerProveedores() {
+    let pagina = 1;
+    this.proveedores = []; // Reinicia la lista antes de empezar
+    let continuar = true;
 
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/proveedores/pagina/${pagina}`).toPromise();
 
+        if (!respuesta || typeof respuesta === 'string' && respuesta.includes('No se encontraron proveedores')) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.proveedores = [...this.proveedores, ...respuesta]; // Concatenar de forma segura
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de proveedores:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener proveedores:', error);
+        continuar = false;
+      }
+    }
+  }
+
+  async obtenerItos() {
+    let pagina = 1;
+    this.itos = []; // Reinicia la lista antes de empezar
+    let continuar = true;
+
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/itos/pagina/${pagina}`).toPromise();
+
+        if (!respuesta || typeof respuesta === 'string' && respuesta.includes('No se encontraron itos')) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.itos = [...this.itos, ...respuesta]; // Concatenar de forma segura
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de itos:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener itos:', error);
+        continuar = false;
+      }
+    }
+  }
 
 
 
@@ -134,27 +188,27 @@ export class ContratosComponent implements OnInit {
     };
 
     const contrato = {
-      nombre :this.nuevoContrato.nombre,
-      fecha_inicio:this.nuevoContrato.fecha_inicio,
-      fecha_termino:this.nuevoContrato.fecha_termino,
-      proveedor:this.nuevoContrato.proveedor ? formatearCampo(this.nuevoContrato.proveedor, 4) : this.nuevoContrato.proveedor ,
-      ito:this.nuevoContrato.ito ? formatearCampo(this.nuevoContrato.ito, 3) : this.nuevoContrato.ito
+      nombre: this.nuevoContrato.nombre,
+      fecha_inicio: this.nuevoContrato.fecha_inicio,
+      fecha_termino: this.nuevoContrato.fecha_termino,
+      proveedor: this.nuevoContrato.proveedor ? formatearCampo(this.nuevoContrato.proveedor, 4) : this.nuevoContrato.proveedor,
+      ito: this.nuevoContrato.ito ? formatearCampo(this.nuevoContrato.ito, 3) : this.nuevoContrato.ito
     };
 
     if (contrato.nombre && contrato.fecha_termino && contrato.fecha_inicio && contrato.proveedor && contrato.ito) {
-      if(new Date(contrato.fecha_inicio) <= new Date(contrato.fecha_termino)){
+      if (new Date(contrato.fecha_inicio) <= new Date(contrato.fecha_termino)) {
         const url = 'http://localhost:8000/api/contratos';
 
         this.http.post(url, contrato, { responseType: 'text' })
           .subscribe(
             response => {
               console.log('Respuesta del servidor:', response);
-              if(response =="No se enviaron todos los datos requeridos."){
-                alert("Un dato ingresado, no fue reconocido por el sistema")
-              }else{
+              if (response == "No se enviaron todos los datos requeridos.") {
+                alert("Un dato ingresado no fue reconocido por el sistema");
+              } else {
                 alert("Contrato creado con éxito");
-                this.obtenerContratos();
                 this.cerrarModalContratoCrear();
+                this,this.obtenerContratos()
               }
             },
             error => {
@@ -162,11 +216,10 @@ export class ContratosComponent implements OnInit {
               alert("No se pudo crear el contrato, hay un dato mal ingresado");
             }
           );
-      }else{
-        alert("La fecha de término del contrato no puede ser anterior a la fecha de inicio del contrato")
+      } else {
+        alert("La fecha de término del contrato no puede ser anterior a la fecha de inicio");
       }
-    }
-    else {
+    } else {
       alert("No están todos los datos ingresados");
     }
   }
@@ -203,18 +256,18 @@ export class ContratosComponent implements OnInit {
     if (contrato.nombre) datosActualizar.nombre = contrato.nombre;
     if (contrato.fecha_inicio) datosActualizar.fecha_inicio = contrato.fecha_inicio;
     if (contrato.fecha_termino) datosActualizar.fecha_termino = contrato.fecha_termino;
-    if (contrato.proveedor) datosActualizar.proveedor = formatearCampo(contrato.proveedor,4);
-    if (contrato.ito) datosActualizar.ito = formatearCampo(contrato.ito,3);
+    if (contrato.proveedor) datosActualizar.proveedor = formatearCampo(contrato.proveedor, 4);
+    if (contrato.ito) datosActualizar.ito = formatearCampo(contrato.ito, 3);
 
-    if (contrato.nombre && contrato.fecha_inicio && contrato.fecha_termino && contrato.proveedor && contrato.ito) {
+    if (Object.keys(datosActualizar).length > 0) {
       const url = `http://localhost:8000/api/contratos/${contrato.id}`;
 
       this.http.patch(url, datosActualizar, { responseType: 'text' })
         .subscribe(
           (response) => {
-            if(response== "Se encontraron errores en los datos enviados."){
-              alert("Un dato ingresado, no fue reconocido por el sistema")
-            }else{
+            if (response == "Se encontraron errores en los datos enviados.") {
+              alert("Un dato ingresado no fue reconocido por el sistema");
+            } else {
               alert('Contrato actualizado correctamente');
               this.showModalEditar = false;
               this.obtenerContratos();
@@ -229,6 +282,7 @@ export class ContratosComponent implements OnInit {
       alert("No hay cambios para actualizar");
     }
   }
+
 
   eliminarContrato() {
     const seleccionados = this.contratos.filter((_, index) => this.contratoSeleccionado[index]);
@@ -347,5 +401,5 @@ export class ContratosComponent implements OnInit {
   }
 
 
-
+  protected readonly convertToParamMap = convertToParamMap;
 }
