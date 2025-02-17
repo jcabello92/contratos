@@ -4,6 +4,7 @@ import {NgClass, NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-proveedores',
@@ -232,11 +233,11 @@ export class ProveedoresComponent implements OnInit {
     this.proveedorSeleccionado[index] = !this.proveedorSeleccionado[index];
   }
 
+  // Método para actualizar proveedor
   actualizarProveedor() {
     const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
 
     if (seleccionados.length === 1) {
-      // Solo se puede actualizar un proveedor a la vez
       this.proveedorActual = seleccionados[0];
       this.showModalEditar = true;
     } else if (seleccionados.length > 1) {
@@ -250,55 +251,49 @@ export class ProveedoresComponent implements OnInit {
     this.showModalEditar = false; // Cierra el modal sin realizar cambios
   }
 
+  // Método para enviar la actualización del proveedor
+  // Método para enviar la actualización del proveedor
   actualizarElProveedor() {
     const proveedor = this.proveedorActual;
+    const datosActualizar: any = {};
 
     // Función para agregar ceros a la izquierda hasta completar la longitud requerida
     const formatearCampo = (campo: string, longitud: number) => {
       return String(campo).padStart(longitud, '0');
     };
 
-    // Solo enviar los campos que han cambiado
-    const datosActualizar: any = {};
-
     if (proveedor.rut) datosActualizar.rut = proveedor.rut;
     if (proveedor.razon_social) datosActualizar.razon_social = proveedor.razon_social;
     if (proveedor.direccion) datosActualizar.direccion = proveedor.direccion;
 
-    // Formatear comuna a 3 dígitos
-    if (proveedor.comuna) datosActualizar.comuna = formatearCampo(proveedor.comuna, 3);
-
+    // Usar formatearCampo para la comuna y representante
+    if (proveedor.comuna) datosActualizar.comuna = formatearCampo(proveedor.comuna.id, 3); // Comuna formateada a 3 dígitos
     if (proveedor.telefono) datosActualizar.telefono = proveedor.telefono;
     if (proveedor.correo) datosActualizar.correo = proveedor.correo;
+    if (proveedor.representante) datosActualizar.representante = formatearCampo(proveedor.representante.id, 4); // Representante formateado a 4 dígitos
 
-    // Formatear representante a 4 dígitos
-    if (proveedor.representante) datosActualizar.representante = formatearCampo(proveedor.representante, 4);
-
-
-    if(proveedor.rut && proveedor.razon_social && proveedor.direccion && proveedor.comuna && proveedor.telefono && proveedor.correo && proveedor.representante){
+    // Verificar si hay datos para actualizar
+    if (Object.keys(datosActualizar).length > 0) {
       const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
 
-      this.http.patch(url, datosActualizar, { responseType: 'text' })
-        .subscribe(
-          (response) => {
-            if(response == "Se encontraron errores en los datos enviados."){
-                alert("Un dato ingresado, no fue reconocido por el sistema")
-            }else{
-              alert('Proveedor actualizado correctamente');
-              this.showModalEditar = false;
-              this.obtenerProveedores(); // Actualizar la lista de proveedores
-            }
-          },
-          (error) => {
-            console.error('Error al actualizar proveedor:', error);
-            alert("No se pudo actualizar el proveedor, hay un dato mal ingresado")
+      this.http.patch(url, datosActualizar, { responseType: 'text' }).subscribe(
+        (response) => {
+          if (response === 'Se encontraron errores en los datos enviados.') {
+            alert('Un dato ingresado, no fue reconocido por el sistema');
+          } else {
+            alert('Proveedor actualizado correctamente');
+            this.showModalEditar = false;
+            this.obtenerProveedores(); // Actualizar la lista de proveedores
           }
-        );
-    }else{
-      alert("No están todos los datos ingresados")
+        },
+        (error) => {
+          console.error('Error al actualizar proveedor:', error);
+          alert('No se pudo actualizar el proveedor, hay un dato mal ingresado');
+        }
+      );
+    } else {
+      alert('No hay cambios para actualizar');
     }
-
-
   }
 
 
@@ -306,13 +301,40 @@ export class ProveedoresComponent implements OnInit {
     const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
 
     if (seleccionados.length > 0) {
-      const idsSeleccionados = seleccionados.map((proveedor) => proveedor.id).join(', ');
-      this.idsProveedoresEliminar = idsSeleccionados;
+      const idsSeleccionados = seleccionados.map((proveedor) => proveedor.id);
+
+      // Llamar a la API para obtener los proveedores completos
+      this.obtenerProveedoresParaEliminar(idsSeleccionados);
+
       this.modalAbiertoEliminar = true;
     } else {
       alert('Ningún proveedor fue seleccionado para eliminar');
     }
   }
+
+  obtenerProveedoresParaEliminar(ids: number[]) {
+    const apiUrl = 'http://localhost:8000/api/proveedores/id/';
+
+    const requests = ids.map(id => {
+      return this.http.get(`${apiUrl}${id}`);
+    });
+
+    // Suscribirse a los Observables
+    forkJoin(requests).subscribe(
+      (respuestas: any[]) => {
+        console.log('Respuestas de la API:', respuestas); // Verifica la respuesta ahora
+
+        // Extraemos el proveedor de cada array de la respuesta
+        this.proveedoresParaEliminar = respuestas.map(respuesta => respuesta[0]); // Cambié el nombre aquí
+
+        console.log('Proveedores a eliminar:', this.proveedoresParaEliminar); // Verifica los proveedores extraídos
+      },
+      (error) => {
+        console.error('Error al obtener los proveedores:', error);
+      }
+    );
+  }
+
 
   cerrarModalEliminar() {
     this.modalAbiertoEliminar = false;
@@ -322,24 +344,25 @@ export class ProveedoresComponent implements OnInit {
   confirmarEliminacion() {
     const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
 
-    seleccionados.forEach((proveedor) => {
+    seleccionados.forEach(proveedor => {
       const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
 
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
           console.log(`Proveedor con ID ${proveedor.id} eliminado:`, response);
-          alert("proveedor(es) eliminado(s) con éxito")
+          alert("Proveedor(es) eliminado(s) con éxito");
           this.obtenerProveedores(); // Actualizar la lista después de la eliminación
         },
         (error) => {
           console.error(`Error al eliminar el proveedor con ID ${proveedor.id}:`, error);
-          alert("Error al eliminar un(os) proveedor(s)")
+          alert("Error al eliminar un(os) proveedor(s)");
         }
       );
     });
 
     this.cerrarModalEliminar();
   }
+
 
   filtrarProveedores() {
     const url = `http://localhost:8000/api/proveedores/pagina/${this.proveedoresAObtener}`;

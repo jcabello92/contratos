@@ -118,7 +118,7 @@
 </div>
 
 
-<!-- Modal Editar -->
+<!-- Modal Editar Proveedor -->
 <div id="modalEditar" class="modal" [ngClass]="{'show': showModalEditar}">
   <div class="modal-content">
     <span class="cerrar" (click)="actualizarProveedor()">&times;</span>
@@ -133,8 +133,10 @@
       <label>Dirección:</label>
       <input type="text" [(ngModel)]="proveedorActual.direccion" name="direccion" required>
 
-      <label>Comuna:</label>
-      <input type="text" [(ngModel)]="proveedorActual.comuna" name="comuna" required>
+      <label>Comuna Actual: {{proveedorActual.comuna}}</label>
+      <select [(ngModel)]="proveedorActual.comuna" name="comuna" required>
+        <option *ngFor="let comuna of comunas" [ngValue]="comuna">{{ comuna.nombre }}</option>
+      </select>
 
       <label>Teléfono:</label>
       <input type="tel" [(ngModel)]="proveedorActual.telefono" name="telefono" required>
@@ -142,8 +144,10 @@
       <label>Correo:</label>
       <input type="email" [(ngModel)]="proveedorActual.correo" name="correo" required>
 
-      <label>Representante:</label>
-      <input type="text" [(ngModel)]="proveedorActual.representante" name="representante" required>
+      <label>Representante Actual: {{proveedorActual.representante}}</label>
+      <select [(ngModel)]="proveedorActual.representante" name="representante" required>
+        <option *ngFor="let representante of representantes" [ngValue]="representante">{{ representante.nombre }} {{ representante.apellido }}</option>
+      </select>
 
       <div class="botones">
         <button type="button" (click)="cancelarActualizacion()">Cancelar</button>
@@ -157,12 +161,20 @@
 <!-- Modal Eliminar -->
 <div id="modalEliminar" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">
   <div class="modal-content">
-    <span class="cerrar" (click)="eliminarProveedor()">&times;</span>
+    <span class="cerrar" (click)="cerrarModalEliminar()">&times;</span>
     <h2>¿Estás seguro de que deseas eliminar los siguientes proveedores?</h2>
-    <p>{{ idsProveedoresEliminar }}</p>
+
+    <!-- Mostrar los nombres de los proveedores a eliminar -->
+    <ul>
+      <li *ngFor="let proveedor of proveedoresParaEliminar"> <!-- Cambié el nombre aquí -->
+        (Proveedor: {{ proveedor.razon_social }})
+      </li>
+    </ul>
+
     <div class="botones">
       <button type="button" (click)="cerrarModalEliminar()">Cancelar</button>
       <button type="button" (click)="confirmarEliminacion()">Confirmar</button>
     </div>
   </div>
 </div>
+
