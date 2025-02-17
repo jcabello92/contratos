@@ -82,7 +82,7 @@
   <div class="modal-content">
     <span class="cerrar" (click)="cerrarModalProveedorCrear()">&times;</span>
     <h2>Crear Proveedor</h2>
-    <!-- Formulario -->
+
     <label>RUT:</label>
     <input type="text" [(ngModel)]="nuevoProveedor.rut" name="rut" required>
 
@@ -92,8 +92,11 @@
     <label>Dirección:</label>
     <input type="text" [(ngModel)]="nuevoProveedor.direccion" name="direccion" required>
 
+    <!-- Comuna con combobox -->
     <label>Comuna:</label>
-    <input type="text" [(ngModel)]="nuevoProveedor.comuna" name="comuna" required>
+    <select [(ngModel)]="nuevoProveedor.comuna" name="comuna" required>
+      <option *ngFor="let comuna of comunas" [ngValue]="comuna">{{ comuna.nombre }}</option>
+    </select>
 
     <label>Teléfono:</label>
     <input type="tel" [(ngModel)]="nuevoProveedor.telefono" name="telefono" required>
@@ -101,8 +104,11 @@
     <label>Correo:</label>
     <input type="email" [(ngModel)]="nuevoProveedor.correo" name="correo" required>
 
+    <!-- Representante con combobox -->
     <label>Representante:</label>
-    <input type="text" [(ngModel)]="nuevoProveedor.representante" name="representante" required>
+    <select [(ngModel)]="nuevoProveedor.representante" name="representante" required>
+      <option *ngFor="let representante of representantes" [ngValue]="representante">{{ representante.nombre }} {{ representante.apellido }}</option>
+    </select>
 
     <div class="botones">
       <button type="button" (click)="cerrarModalProveedorCrear()">Cancelar</button>

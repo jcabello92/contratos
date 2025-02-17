@@ -24,11 +24,14 @@ export class ProveedoresComponent implements OnInit {
     rut: '',
     razonSocial: '',
     direccion: '',
-    comuna: '',
+    comuna: { id: 0, nombre: '' },  // Inicializado con un objeto vacío
     telefono: '',
     correo: '',
-    representante: ''
+    representante: { id: 0, nombre: '', apellido: '' }  // Inicializado con un objeto vacío
   };
+
+
+
 
   proveedorSeleccionado: boolean[] = [];
   proveedorActual: any = {};
@@ -66,8 +69,17 @@ export class ProveedoresComponent implements OnInit {
   // Cerrar Modal
   cerrarModalProveedorCrear() {
     this.modalAbiertoCrear = false;
-    this.nuevoProveedor = { rut: '', razonSocial: '', direccion: '', comuna: '', telefono: '', correo: '', representante: '' }; // Reiniciar campos
+    this.nuevoProveedor = {
+      rut: '',
+      razonSocial: '',
+      direccion: '',
+      comuna: { id: 0, nombre: '' },  // Inicializado con un objeto vacío
+      telefono: '',
+      correo: '',
+      representante: { id: 0, nombre: '', apellido: '' }  // Inicializado con un objeto vacío
+    };
   }
+
 
   async obtenerProveedores() {
     const url = `http://localhost:8000/api/proveedores/pagina/${this.proveedoresAObtener}`;
@@ -164,27 +176,29 @@ export class ProveedoresComponent implements OnInit {
 
   /*=================================================================================================*/
 
-  // Crear Proveedor
+  // Función para crear proveedor
   crearProveedor() {
-    // Función para agregar ceros a la izquierda hasta completar la longitud requerida
     const formatearCampo = (campo: string, longitud: number) => {
       return String(campo).padStart(longitud, '0');
     };
+
 
     const proveedor = {
       rut: this.nuevoProveedor.rut,
       razon_social: this.nuevoProveedor.razonSocial,
       direccion: this.nuevoProveedor.direccion,
 
-      // Formatear comuna a 3 dígitos
-      comuna: this.nuevoProveedor.comuna ? formatearCampo(this.nuevoProveedor.comuna, 3) : this.nuevoProveedor.comuna,
+      // Comuna: Verificar que 'comuna' no sea null y obtener su 'id'
+      comuna: this.nuevoProveedor.comuna ? this.nuevoProveedor.comuna.id.toString().padStart(3, '0') : null,
 
       telefono: this.nuevoProveedor.telefono,
       correo: this.nuevoProveedor.correo,
 
-      // Formatear representante a 4 dígitos
-      representante: this.nuevoProveedor.representante ? formatearCampo(this.nuevoProveedor.representante, 4) : this.nuevoProveedor.representante,
+      // Representante: Verificar que 'representante' no sea null y obtener su 'id'
+      representante: this.nuevoProveedor.representante ? this.nuevoProveedor.representante.id.toString().padStart(4, '0') : null,
     };
+
+
 
     if(proveedor.rut && proveedor.razon_social && proveedor.direccion && proveedor.comuna && proveedor.telefono && proveedor.correo && proveedor.representante){
       const url = 'http://localhost:8000/api/proveedores';
@@ -193,25 +207,24 @@ export class ProveedoresComponent implements OnInit {
         .subscribe(
           response => {
             console.log('Respuesta del servidor:', response);
-            if(response == "No se enviaron todos los datos requeridos."){
-                alert("Un dato ingresado, no fue reconocido por el sistema")
-            }else {
-                alert("Proveedor creado con éxito")
-                this.obtenerProveedores(); // Actualizar la lista después de la creación
-                this.cerrarModalProveedorCrear(); // Cerrar el modal
+            if(response == "No se enviaron todos los datos requeridos.") {
+              alert("Un dato ingresado, no fue reconocido por el sistema");
+            } else {
+              alert("Proveedor creado con éxito");
+              this.obtenerProveedores(); // Actualizar la lista después de la creación
+              this.cerrarModalProveedorCrear(); // Cerrar el modal
             }
           },
           error => {
             console.error('Error al crear proveedor:', error);
-            alert("No se pudo crear el proveedor, hay un dato mal ingresado")
+            alert("No se pudo crear el proveedor, hay un dato mal ingresado");
           }
         );
+    } else {
+      alert("No están todos los datos ingresados");
     }
-    else{
-      alert("No están todos los datos ingresados")
-    }
-
   }
+
 
 
   // Maneja el cambio de los checkboxes
