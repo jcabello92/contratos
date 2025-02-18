@@ -38,18 +38,28 @@ export class DocumentosComponent implements OnInit {
   //Páginación
   DocumentosAObtener:number = 1 ;
 
+  //Para los combobox del crud
+  tiposDocumentos: any[] = [];
+  contratos: any[] = [];
+
+
   constructor(private http: HttpClient, private router: Router) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.obtenerTiposDocumentos();
+    await this.obtenerContratos();
     this.obtenerDocumentos();
   }
 
-  obtenerDocumentos() {
+  async obtenerDocumentos() {
     const url = `http://localhost:8000/api/documentos/pagina/${this.DocumentosAObtener}`;
     this.http.get<any[]>(url).subscribe(
-      data => {
+      async data => {
         if (data.length > 0) {
           this.documentos = data;
+
+          // Hacer el match de tipo_documento y contrato
+          await this.asignarTipoDocumentoYContrato();
         } else {
           alert('No hay más documentos para continuar avanzando en la página');
           this.DocumentosAObtener--; // Revertimos el cambio si no hay más datos
@@ -59,6 +69,72 @@ export class DocumentosComponent implements OnInit {
         console.error('Error al obtener documentos:', error);
       }
     );
+  }
+
+  async asignarTipoDocumentoYContrato() {
+    try {
+      this.documentos.forEach(documento => {
+        // Buscar el tipo de documento correspondiente
+        const tipoDocumentoEncontrado = this.tiposDocumentos.find(tipo => tipo.id === documento.tipo_documento);
+        documento.tipo_documento = tipoDocumentoEncontrado ? tipoDocumentoEncontrado.nombre : "Desconocido";
+
+        // Buscar el contrato correspondiente
+        const contratoEncontrado = this.contratos.find(contrato => contrato.id === documento.contrato);
+        documento.contrato = contratoEncontrado ? contratoEncontrado.nombre : "Desconocido";
+      });
+    } catch (error) {
+      console.error('Error al asignar tipo de documento y contrato:', error);
+    }
+  }
+
+  async obtenerTiposDocumentos() {
+    let pagina = 1;
+    this.tiposDocumentos = []; // Reiniciamos el array
+    let continuar = true;
+
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/tipos_documentos/pagina/${pagina}`).toPromise();
+
+        if (!respuesta || (typeof respuesta === 'string' && respuesta.includes('No se encontraron tipos de documentos registrados'))) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.tiposDocumentos = [...this.tiposDocumentos, ...respuesta];
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de tipos de documentos:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener tipos de documentos:', error);
+        continuar = false;
+      }
+    }
+  }
+
+  async obtenerContratos() {
+    let pagina = 1;
+    this.contratos = []; // Reiniciamos el array
+    let continuar = true;
+
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/contratos/pagina/${pagina}`).toPromise();
+
+        if (!respuesta || (typeof respuesta === 'string' && respuesta.includes('No se encontraron contratos registrados'))) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.contratos = [...this.contratos, ...respuesta];
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de contratos:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener contratos:', error);
+        continuar = false;
+      }
+    }
   }
 
   abrirModalDocumentosCrear() {
