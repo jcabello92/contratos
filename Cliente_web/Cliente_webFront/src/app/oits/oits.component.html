@@ -73,18 +73,28 @@
 <div *ngIf="modalAbiertoCrear" class="modal">
   <div class="modal-content">
     <h2>Crear nuevo Ito</h2>
+
     <label for="rut">RUT:</label>
     <input id="rut" [(ngModel)]="nuevoIto.rut" />
+
     <label for="nombre">Nombre:</label>
     <input id="nombre" [(ngModel)]="nuevoIto.nombre" />
+
     <label for="apellido">Apellido:</label>
     <input id="apellido" [(ngModel)]="nuevoIto.apellido" />
+
     <label for="telefono">Teléfono:</label>
     <input id="telefono" [(ngModel)]="nuevoIto.telefono" />
+
     <label for="correo">Correo:</label>
     <input id="correo" [(ngModel)]="nuevoIto.correo" />
-    <label for="area">Area:</label>
-    <input id="area" [(ngModel)]="nuevoIto.area" />
+
+    <!-- Área con combobox -->
+    <label for="area">Área:</label>
+    <select id="area" [(ngModel)]="nuevoIto.area" name="area" required>
+      <option *ngFor="let area of areas" [ngValue]="area">{{ area.nombre }}</option>
+    </select>
+
     <div class="modal-buttons">
       <button (click)="crearIto()" class="boton-crear">Crear</button>
       <button (click)="cerrarModalItoCrear()" class="boton-cancelar">Cerrar</button>
@@ -92,22 +102,31 @@
   </div>
 </div>
 
-<!-- Modal para Editar ito -->
+
+<!-- Modal para Editar ITO -->
 <div *ngIf="showModalEditar" class="modal">
   <div class="modal-content">
-    <h2>Actualizar Ito</h2>
+    <h2>Actualizar ITO</h2>
+
     <label for="rutEdit">RUT:</label>
     <input id="rutEdit" [(ngModel)]="itoActual.rut" disabled/>
+
     <label for="nombreEdit">Nombre:</label>
-    <input id="nombreEdit" [(ngModel)]="itoActual.nombre" />
+    <input id="nombreEdit" [(ngModel)]="itoActual.nombre" required/>
+
     <label for="apellidoEdit">Apellido:</label>
-    <input id="apellidoEdit" [(ngModel)]="itoActual.apellido" />
+    <input id="apellidoEdit" [(ngModel)]="itoActual.apellido" required/>
+
     <label for="telefonoEdit">Teléfono:</label>
-    <input id="telefonoEdit" [(ngModel)]="itoActual.telefono" />
+    <input id="telefonoEdit" [(ngModel)]="itoActual.telefono" required/>
+
     <label for="correoEdit">Correo:</label>
-    <input id="correoEdit" [(ngModel)]="itoActual.correo" />
-    <label for="areaEdit">Area:</label>
-    <input id="areaEdit" [(ngModel)]="itoActual.area" />
+    <input id="correoEdit" [(ngModel)]="itoActual.correo" required/>
+
+    <label for="areaEdit">Área Actual: {{itoActual.area}}</label>
+    <select id="areaEdit" [(ngModel)]="itoActual.area" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let area of areas" [ngValue]="area">{{ area.nombre }}</option>
+    </select>
 
     <div class="modal-buttons">
       <button (click)="actualizarElIto()" class="boton-crear">Actualizar</button>
@@ -116,14 +135,24 @@
   </div>
 </div>
 
+
 <!-- Modal para Eliminar ito -->
-<div *ngIf="modalAbiertoEliminar" class="modal">
+<div id="modalEliminar" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">
   <div class="modal-content">
-    <h2>Confirmar Eliminación</h2>
-    <p>¿Estás seguro de que deseas eliminar los siguientes ID(s): {{ idsParaEliminar }}?</p>
-    <div class="modal-buttons">
-      <button (click)="confirmarEliminacion()" class="boton-crear">Confirmar</button>
-      <button (click)="cerrarModalEliminar()" class="boton-cancelar">Cancelar</button>
+    <span class="cerrar" (click)="cerrarModalEliminar()">&times;</span>
+    <h2>¿Estás seguro de que deseas eliminar los siguientes ID(s):</h2>
+
+    <!-- Mostrar los nombres de los itos a eliminar -->
+    <ul>
+      <li *ngFor="let ito of itosParaEliminar">
+        (Ito ID: {{ ito.id }})
+      </li>
+    </ul>
+
+    <div class="botones">
+      <button type="button" (click)="cerrarModalEliminar()">Cancelar</button>
+      <button type="button" (click)="confirmarEliminacion()">Confirmar</button>
     </div>
   </div>
 </div>
+

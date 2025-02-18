@@ -252,7 +252,6 @@ export class ProveedoresComponent implements OnInit {
   }
 
   // Método para enviar la actualización del proveedor
-  // Método para enviar la actualización del proveedor
   actualizarElProveedor() {
     const proveedor = this.proveedorActual;
     const datosActualizar: any = {};

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { NgForOf, NgIf } from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-oits',
@@ -13,7 +14,8 @@ import { Router } from '@angular/router';
     NgForOf,
     HttpClientModule,
     FormsModule,
-    NgIf
+    NgIf,
+    NgClass
   ],
   standalone: true
 })
@@ -21,14 +23,22 @@ export class OITsComponent implements OnInit {
   itos: any[] = []; // Lista para almacenar los datos de la API
   modalAbiertoCrear: boolean = false; // Controla la visibilidad del modal
 
-  nuevoIto = {
+  nuevoIto: {
+    rut: string;
+    nombre: string;
+    apellido: string;
+    telefono: string;
+    correo: string;
+    area: { id: number; nombre: string } | null;
+  } = {
     rut: '',
     nombre: '',
     apellido: '',
     telefono: '',
     correo: '',
-    area:''
+    area: null
   };
+
 
   itoSeleccionado: boolean[] = [];
   itoActual: any = {};
@@ -63,7 +73,7 @@ export class OITsComponent implements OnInit {
   // Cerrar Modal
   cerrarModalItoCrear() {
     this.modalAbiertoCrear = false;
-    this.nuevoIto = { rut: '', nombre: '', apellido: '', telefono: '', correo: '' ,area: ''}; // Reiniciar campos
+    this.nuevoIto = { rut: '', nombre: '', apellido: '', telefono: '', correo: '' ,area: null}; // Reiniciar campos
   }
 
   async obtenerItos() {
@@ -129,40 +139,43 @@ export class OITsComponent implements OnInit {
 
   // Crear Ito
   crearIto() {
-    const areaConTresDigitos = this.nuevoIto.area.padStart(3, '0');
+    const formatearCampo = (campo: string, longitud: number) => {
+      return String(campo).padStart(longitud, '0');
+    };
 
-    const params = new URLSearchParams();
-    params.set('rut', this.nuevoIto.rut);
-    params.set('nombre', this.nuevoIto.nombre);
-    params.set('apellido', this.nuevoIto.apellido);
-    params.set('telefono', this.nuevoIto.telefono);
-    params.set('correo', this.nuevoIto.correo);
-    params.set('area', areaConTresDigitos);  // Usamos el área con 3 dígitos
+    const ito = {
+      rut: this.nuevoIto.rut,
+      nombre: this.nuevoIto.nombre,
+      apellido: this.nuevoIto.apellido,
+      telefono: this.nuevoIto.telefono,
+      correo: this.nuevoIto.correo,
+      area: this.nuevoIto.area ? formatearCampo(this.nuevoIto.area.id.toString(), 3) : null
+    };
 
-    if(this.nuevoIto.rut && this.nuevoIto.nombre && this.nuevoIto.apellido && this.nuevoIto.telefono && this.nuevoIto.correo && areaConTresDigitos){
-      const url = `http://localhost:8000/api/itos?${params.toString()}`;
+    if (ito.rut && ito.nombre && ito.apellido && ito.telefono && ito.correo && ito.area) {
+      const url = 'http://localhost:8000/api/itos';
 
-      this.http.post(url, {}, { responseType: 'text' })
-        .subscribe(
-          response => {
-            if(response=="No se enviaron todos los datos requeridos."){
-              alert("Un dato ingresado, no fue reconocido por el sistema")
-            }else{
-              alert("El ito fue creado exitosamente")
-              console.log('Respuesta del servidor:', response);
-              this.obtenerItos();
-              this.cerrarModalItoCrear();
-            }
-          },
-          error => {
-            console.error('Error al crear ito:', error);
-            alert("No se pudo crear el ito, hay un dato mal ingresado")
+      this.http.post(url, ito, { responseType: 'text' }).subscribe(
+        response => {
+          if (response == "No se enviaron todos los datos requeridos.") {
+            alert("Un dato ingresado no fue reconocido por el sistema");
+          } else {
+            alert("El ito fue creado exitosamente");
+            console.log('Respuesta del servidor:', response);
+            this.obtenerItos();
+            this.cerrarModalItoCrear();
           }
-        );
-    }else{
-      alert("No están todos los datos ingresados")
+        },
+        error => {
+          console.error('Error al crear ito:', error);
+          alert("No se pudo crear el ito, hay un dato mal ingresado");
+        }
+      );
+    } else {
+      alert("No están todos los datos ingresados");
     }
   }
+
 
   // Maneja el cambio de los checkboxes
   onCheckboxChange(index: number) {
@@ -173,88 +186,110 @@ export class OITsComponent implements OnInit {
     const seleccionados = this.itos.filter((_, index) => this.itoSeleccionado[index]);
 
     if (seleccionados.length === 1) {
-      // Solo se puede actualizar un ito a la vez
-      this.itoActual = seleccionados[0];
-      console.log(this.itoActual)
+      // Solo se permite actualizar un ITO a la vez
+      this.itoActual = { ...seleccionados[0] }; // Copia para evitar modificar directamente la lista
+      console.log('ITO seleccionado para actualizar:', this.itoActual);
       this.showModalEditar = true;
     } else if (seleccionados.length > 1) {
-      // Mostrar alerta si se seleccionaron varios itos
-      alert('Solo puedes seleccionar un ito para actualizar.');
+      alert('Solo puedes seleccionar un ITO para actualizar.');
     } else {
-      // Mostrar alerta si no se seleccionó ningún ito
-      alert('Por favor selecciona un ito para actualizar.');
+      alert('Por favor selecciona un ITO para actualizar.');
     }
   }
 
   cancelarActualizacion() {
-    this.showModalEditar = false; // Cierra el modal sin realizar cambios
+    this.showModalEditar = false; // Cierra el modal sin cambios
   }
 
   actualizarElIto() {
     const ito = this.itoActual;
 
-    // Aseguramos que el área sea una cadena y tenga 3 dígitos, agregando ceros a la izquierda si es necesario
-    const areaConTresDigitos = ito.area ? String(ito.area).padStart(3, '0') : '';
+    // Verificar que `ito.area` tenga un objeto con `id`
+    const areaConTresDigitos = ito.area ? String(ito.area.id).padStart(3, '0') : null;
 
-    let url = `http://localhost:8000/api/itos/${ito.id}?`;
+    const datosActualizar: any = {};
 
-    const params: string[] = [];
-    if (ito.rut) params.push(`rut=${ito.rut}`);
-    if (ito.nombre) params.push(`nombre=${ito.nombre}`);
-    if (ito.apellido) params.push(`apellido=${ito.apellido}`);
-    if (ito.telefono) params.push(`telefono=${ito.telefono}`);
-    if (ito.correo) params.push(`correo=${ito.correo}`);
-    if (areaConTresDigitos) params.push(`area=${areaConTresDigitos}`);  // Usamos el área con 3 dígitos
+    if (ito.rut) datosActualizar.rut = ito.rut;
+    if (ito.nombre) datosActualizar.nombre = ito.nombre;
+    if (ito.apellido) datosActualizar.apellido = ito.apellido;
+    if (ito.telefono) datosActualizar.telefono = ito.telefono;
+    if (ito.correo) datosActualizar.correo = ito.correo;
+    if (areaConTresDigitos) datosActualizar.area = areaConTresDigitos;
 
-    if (params.length > 0) {
-      url += params.join('&');
-    }
+    if (Object.keys(datosActualizar).length > 0) {
+      const url = `http://localhost:8000/api/itos/${ito.id}`;
 
-    if(ito.rut && ito.nombre && ito.apellido && ito.telefono && ito.correo && areaConTresDigitos){
-      this.http.patch(url, {}, { responseType: 'text' }).subscribe(
+      this.http.patch(url, datosActualizar, { responseType: 'text' }).subscribe(
         (response) => {
-          if(response=="Se encontraron errores en los datos enviados."){
-            alert("Un dato ingresado, no fue reconocido por el sistema")
-          }else{
-            alert("Ito actualizado correctamente")
-            console.log('Ito actualizado correctamente:', response);
-            this.showModalEditar = false; // Cerrar el modal después de la actualización
-            this.obtenerItos(); // Actualizar la lista de itos
+          if (response === 'Se encontraron errores en los datos enviados.') {
+            alert('Un dato ingresado no fue reconocido por el sistema.');
+          } else {
+            alert('ITO actualizado correctamente');
+            console.log('ITO actualizado correctamente:', response);
+            this.showModalEditar = false; // Cerrar el modal
+            this.obtenerItos(); // Refrescar la lista de ITOs
           }
         },
         (error) => {
-          console.error('Error al actualizar ito:', error);
-          alert("No se pudo actualizar el ito, hay un dato mal ingresado")
+          console.error('Error al actualizar ITO:', error);
+          alert('No se pudo actualizar el ITO, hay un dato mal ingresado.');
         }
       );
-    }else{
-      alert("No están todos los datos ingresados")
-
+    } else {
+      alert('No hay cambios para actualizar.');
     }
   }
 
 
 
-  // Función para mostrar el modal de eliminación con los IDs seleccionados
+
+// Función para mostrar el modal de eliminación con los IDs seleccionados
   eliminarIto() {
     const seleccionados = this.itos.filter((_, index) => this.itoSeleccionado[index]);
 
     if (seleccionados.length > 0) {
-      const idsSeleccionados = seleccionados.map((ito) => ito.id).join(', ');
-      this.idsParaEliminar = idsSeleccionados;
+      const idsSeleccionados = seleccionados.map((ito) => ito.id);
+
+      // Llamar a la API para obtener los itos completos
+      this.obtenerItosParaEliminar(idsSeleccionados);
+
       this.modalAbiertoEliminar = true;
     } else {
       console.log('Ningún ito seleccionado para eliminar');
     }
   }
 
-  // Función para cerrar el modal de eliminación
+// Función para obtener los itos completos antes de eliminarlos
+  obtenerItosParaEliminar(ids: number[]) {
+    const apiUrl = 'http://localhost:8000/api/itos/id/';
+
+    const requests = ids.map(id => {
+      return this.http.get(`${apiUrl}${id}`);
+    });
+
+    // Suscribirse a los Observables
+    forkJoin(requests).subscribe(
+      (respuestas: any[]) => {
+        console.log('Respuestas de la API:', respuestas);
+
+        // Extraemos los itos de cada respuesta
+        this.itosParaEliminar = respuestas.map(respuesta => respuesta[0]);
+
+        console.log('Itos a eliminar:', this.itosParaEliminar);
+      },
+      (error) => {
+        console.error('Error al obtener los itos:', error);
+      }
+    );
+  }
+
+// Función para cerrar el modal de eliminación
   cerrarModalEliminar() {
     this.modalAbiertoEliminar = false;
     this.idsParaEliminar = '';
   }
 
-  // Función para confirmar la eliminación de los itos seleccionados
+// Función para confirmar la eliminación de los itos seleccionados
   confirmarEliminacion() {
     const seleccionados = this.itos.filter((_, index) => this.itoSeleccionado[index]);
 
@@ -264,18 +299,19 @@ export class OITsComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
           console.log(`Ito con ID ${ito.id} eliminado:`, response);
-          alert("Ito(s) eliminado(s) con éxito")
+          alert("Ito(s) eliminado(s) con éxito");
           this.obtenerItos(); // Actualizar la lista después de la eliminación
         },
         (error) => {
           console.error(`Error al eliminar el ito con ID ${ito.id}:`, error);
-          alert("Error al eliminar un(os) ito(s)")
+          alert("Error al eliminar un(os) ito(s)");
         }
       );
     });
 
     this.cerrarModalEliminar();
   }
+
 
 
   filtrarItos() {
