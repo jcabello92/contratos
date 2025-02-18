@@ -4,6 +4,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-documentos',
@@ -258,20 +259,39 @@ export class DocumentosComponent implements OnInit {
     const seleccionados = this.documentos.filter((_, index) => this.documentoSeleccionado[index]);
 
     if (seleccionados.length > 0) {
-      this.idsParaEliminar = seleccionados.map(doc => doc.id).join(', ');
+      const idsSeleccionados = seleccionados.map(doc => doc.id);
+      this.obtenerDocumentosParaEliminar(idsSeleccionados);
       this.modalAbiertoEliminar = true;
     } else {
-      console.log('Ningún documento seleccionado para eliminar');
+      alert('Ningún documento fue seleccionado para eliminar');
     }
   }
+
+  obtenerDocumentosParaEliminar(ids: number[]) {
+    const apiUrl = 'http://localhost:8000/api/documentos/id/';
+
+    const requests = ids.map(id => this.http.get(`${apiUrl}${id}`));
+
+    forkJoin(requests).subscribe(
+      (respuestas: any[]) => {
+        this.documentosParaEliminar = respuestas.map(respuesta => respuesta[0]);
+        console.log('Documentos a eliminar:', this.documentosParaEliminar);
+      },
+      error => {
+        console.error('Error al obtener los documentos:', error);
+      }
+    );
+  }
+
 
   cerrarModalEliminar() {
     this.modalAbiertoEliminar = false;
     this.idsParaEliminar = '';
+    this.documentosParaEliminar = [];
   }
 
   confirmarEliminacion() {
-    const seleccionados = this.documentos.filter((_, index) => this.documentoSeleccionado[index]);
+    const seleccionados = this.documentosParaEliminar;
 
     seleccionados.forEach(doc => {
       const url = `http://localhost:8000/api/documentos/${doc.id}`;
@@ -279,12 +299,12 @@ export class DocumentosComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         response => {
           console.log(`Documento con ID ${doc.id} eliminado:`, response);
-          alert("documento(s) eliminado(s) con éxito")
+          alert('Documento(s) eliminado(s) con éxito');
           this.obtenerDocumentos();
         },
         error => {
           console.error(`Error al eliminar el documento con ID ${doc.id}:`, error);
-          alert("Error al eliminar un(os) documento(s)")
+          alert('Error al eliminar un(os) documento(s)');
         }
       );
     });

@@ -129,8 +129,16 @@
 <!-- Modal de eliminación de documentos -->
 <div *ngIf="modalAbiertoEliminar" class="modal">
   <div class="modal-content">
-    <h3>¿Está seguro que desea eliminar los documentos con los ID: {{ idsParaEliminar }}?</h3>
-    <button (click)="confirmarEliminacion()">Confirmar</button>
-    <button (click)="cerrarModalEliminar()">Cancelar</button>
+    <h2>¿Está seguro que desea eliminar los siguientes documentos?</h2>
+    <ul>
+      <li *ngFor="let documento of documentosParaEliminar">
+        (Documento: {{ documento.nombre }})
+      </li>
+    </ul>
+    <div class="botones">
+      <button (click)="cerrarModalEliminar()">Cancelar</button>
+      <button (click)="confirmarEliminacion()">Confirmar</button>
+    </div>
   </div>
 </div>
+
