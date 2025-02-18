@@ -137,15 +137,15 @@
 
 
 <!-- Modal para Eliminar ito -->
-<div id="modalEliminar" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">
+<div *ngIf="modalAbiertoEliminar" id="modalEliminar" class="modal">
   <div class="modal-content">
     <span class="cerrar" (click)="cerrarModalEliminar()">&times;</span>
-    <h2>¿Estás seguro de que deseas eliminar los siguientes ID(s):</h2>
+    <h2>¿Estás seguro de que deseas eliminar los siguientes ID(s)?</h2>
 
     <!-- Mostrar los nombres de los itos a eliminar -->
     <ul>
       <li *ngFor="let ito of itosParaEliminar">
-        (Ito ID: {{ ito.id }})
+        Nombre: {{ ito.nombre}} {{ito.apellido}}
       </li>
     </ul>
 
@@ -155,4 +155,3 @@
     </div>
   </div>
 </div>
-

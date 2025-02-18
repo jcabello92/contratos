@@ -14,8 +14,7 @@ import {forkJoin} from 'rxjs';
     NgForOf,
     HttpClientModule,
     FormsModule,
-    NgIf,
-    NgClass
+    NgIf
   ],
   standalone: true
 })
@@ -259,29 +258,30 @@ export class OITsComponent implements OnInit {
     }
   }
 
-// Función para obtener los itos completos antes de eliminarlos
   obtenerItosParaEliminar(ids: number[]) {
     const apiUrl = 'http://localhost:8000/api/itos/id/';
 
-    const requests = ids.map(id => {
-      return this.http.get(`${apiUrl}${id}`);
-    });
+    const requests = ids.map(id => this.http.get(`${apiUrl}${id}`));
 
-    // Suscribirse a los Observables
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
         console.log('Respuestas de la API:', respuestas);
 
-        // Extraemos los itos de cada respuesta
+        // Extraemos el primer objeto de cada array en respuestas
         this.itosParaEliminar = respuestas.map(respuesta => respuesta[0]);
 
         console.log('Itos a eliminar:', this.itosParaEliminar);
+
+        // Ahora que los datos están listos, abrir el modal
+        this.modalAbiertoEliminar = true;
       },
       (error) => {
         console.error('Error al obtener los itos:', error);
       }
     );
   }
+
+
 
 // Función para cerrar el modal de eliminación
   cerrarModalEliminar() {
