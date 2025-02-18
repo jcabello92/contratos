@@ -44,12 +44,16 @@ export class OITsComponent implements OnInit {
   //Páginación
   ItosAObtener: number = 1;
 
+  //Para los combobox del crud
+  areas: any[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  ngOnInit() {
-    this.obtenerItos(); // Cargar datos al iniciar el componente
+  async ngOnInit() {
+    await this.obtenerAreas();
+    this.obtenerItos();
   }
+
 
   // Abrir Modal
   abrirModalItoCrear() {
@@ -62,12 +66,16 @@ export class OITsComponent implements OnInit {
     this.nuevoIto = { rut: '', nombre: '', apellido: '', telefono: '', correo: '' ,area: ''}; // Reiniciar campos
   }
 
-  obtenerItos() {
+  async obtenerItos() {
     const url = `http://localhost:8000/api/itos/pagina/${this.ItosAObtener}`;
+
     this.http.get<any[]>(url).subscribe(
-      data => {
+      async data => {
         if (data.length > 0) {
           this.itos = data;
+
+          // Hacer el match de áreas
+          await this.asignarAreaAItos();
         } else {
           alert('No hay más itos para continuar avanzando en la página');
           this.ItosAObtener--; // Revertimos el cambio si no hay más datos
@@ -78,6 +86,46 @@ export class OITsComponent implements OnInit {
       }
     );
   }
+
+
+  async asignarAreaAItos() {
+    try {
+      this.itos.forEach(ito => {
+        // Buscar el área correspondiente
+        const areaEncontrada = this.areas.find(area => area.id === ito.area);
+        ito.area = areaEncontrada ? areaEncontrada.nombre : "Desconocida";
+      });
+    } catch (error) {
+      console.error('Error al asignar área a los Itos:', error);
+    }
+  }
+
+
+  async obtenerAreas() {
+    let pagina = 1;
+    this.areas = []; // Reiniciamos el array
+    let continuar = true;
+
+    while (continuar) {
+      try {
+        const respuesta: any = await this.http.get(`http://localhost:8000/api/areas/pagina/${pagina}`).toPromise();
+
+        if (!respuesta || (typeof respuesta === 'string' && respuesta.includes('No se encontraron áreas registradas'))) {
+          continuar = false;
+        } else if (Array.isArray(respuesta)) {
+          this.areas = [...this.areas, ...respuesta];
+          pagina++;
+        } else {
+          console.warn("Formato inesperado en la respuesta de áreas:", respuesta);
+          continuar = false;
+        }
+      } catch (error) {
+        console.error('Error al obtener áreas:', error);
+        continuar = false;
+      }
+    }
+  }
+
 
   // Crear Ito
   crearIto() {
