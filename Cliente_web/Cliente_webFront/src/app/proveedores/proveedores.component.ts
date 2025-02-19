@@ -394,7 +394,7 @@ export class ProveedoresComponent implements OnInit {
       }
     );
   }
-  
+
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
   }

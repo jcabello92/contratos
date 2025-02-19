@@ -314,21 +314,34 @@ export class OITsComponent implements OnInit {
 
 
 
-  filtrarItos() {
+  async filtrarItos() {
     const url = `http://localhost:8000/api/itos/pagina/${this.ItosAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
-      (data) => {
-        this.itos = data.sort((a, b) => {
-          let valorA: any = a[this.campoOrden];
-          let valorB: any = b[this.campoOrden];
+      async (data) => {
+        this.itos = data;
+
+        // Esperamos que los nombres de las áreas sean asignados
+        await this.asignarAreaAItos();
+
+        // Ahora ordenamos los datos con los valores correctos
+        this.itos.sort((a, b) => {
+          let valorA: any, valorB: any;
 
           if (this.campoOrden === 'rut') {
-            valorA = this.parsearRut(valorA);
-            valorB = this.parsearRut(valorB);
+            valorA = this.parsearRut(a.rut);
+            valorB = this.parsearRut(b.rut);
+          } else if (this.campoOrden === 'nombre') {
+            valorA = a.nombre.toLowerCase();
+            valorB = b.nombre.toLowerCase();
+          } else if (this.campoOrden === 'apellido') {
+            valorA = a.apellido.toLowerCase();
+            valorB = b.apellido.toLowerCase();
+          } else if (this.campoOrden === 'area') {
+            valorA = a.area.toLowerCase();
+            valorB = b.area.toLowerCase();
           } else {
-            valorA = valorA ? valorA.toString().toLowerCase() : '';
-            valorB = valorB ? valorB.toString().toLowerCase() : '';
+            return 0; // Si el campo no es válido, no hacemos nada
           }
 
           return this.orden === 'asc' ? (valorA > valorB ? 1 : -1) : (valorA < valorB ? 1 : -1);
@@ -339,6 +352,7 @@ export class OITsComponent implements OnInit {
       }
     );
   }
+
 
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);

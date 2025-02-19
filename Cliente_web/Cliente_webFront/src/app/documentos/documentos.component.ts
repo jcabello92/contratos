@@ -312,27 +312,34 @@ export class DocumentosComponent implements OnInit {
     this.cerrarModalEliminar();
   }
 
-  filtrarDocumentos() {
+  async filtrarDocumentos() {
     const url = `http://localhost:8000/api/documentos/pagina/${this.DocumentosAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
-      (data) => {
-        this.documentos = data.sort((a, b) => {
-          // Convertir fecha a objetos Date
-          let fechaA = a.fecha_subida ? new Date(a.fecha_subida) : new Date(0);
-          let fechaB = b.fecha_subida ? new Date(b.fecha_subida) : new Date(0);
+      async (data) => {
+        this.documentos = data;
 
-          // Convertir hora correctamente
-          let horaA = a.hora_subida ? this.parsearHora(a.hora_subida) : 0;
-          let horaB = b.hora_subida ? this.parsearHora(b.hora_subida) : 0;
+        // Esperamos que los nombres de tipo_documento y contrato sean asignados
+        await this.asignarTipoDocumentoYContrato();
 
-          // Primero ordenamos por fecha
-          if (fechaA.getTime() !== fechaB.getTime()) {
-            return this.orden === 'asc' ? fechaA.getTime() - fechaB.getTime() : fechaB.getTime() - fechaA.getTime();
+        // Ahora ordenamos los datos con los valores correctos
+        this.documentos.sort((a, b) => {
+          let valorA: any, valorB: any;
+
+          if (this.campoOrden === 'nombre') {
+            valorA = a.nombre.toLowerCase();
+            valorB = b.nombre.toLowerCase();
+          } else if (this.campoOrden === 'FechaSubida') {
+            valorA = a.fecha_subida ? new Date(a.fecha_subida) : new Date(0);
+            valorB = b.fecha_subida ? new Date(b.fecha_subida) : new Date(0);
+          } else if (this.campoOrden === 'HoraSubida') {
+            valorA = a.hora_subida ? this.parsearHora(a.hora_subida) : 0;
+            valorB = b.hora_subida ? this.parsearHora(b.hora_subida) : 0;
+          } else {
+            return 0; // Si el campo no es válido, no hacemos nada
           }
 
-          // Si las fechas son iguales, ordenamos por hora
-          return this.orden === 'asc' ? horaA - horaB : horaB - horaA;
+          return this.orden === 'asc' ? (valorA > valorB ? 1 : -1) : (valorA < valorB ? 1 : -1);
         });
       },
       (error) => {
@@ -340,6 +347,7 @@ export class DocumentosComponent implements OnInit {
       }
     );
   }
+
 
 
   parsearHora(hora: string): number {
