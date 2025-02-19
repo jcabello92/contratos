@@ -51,10 +51,10 @@ export class ContratosComponent implements OnInit {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.obtenerProveedores();
+    await this.obtenerItos();
     this.obtenerContratos();
-    this.obtenerProveedores();
-    this.obtenerItos();
   }
 
   abrirModalContratoCrear() {
@@ -353,12 +353,15 @@ export class ContratosComponent implements OnInit {
   }
 
 
-  filtrarContratos() {
+  async filtrarContratos() {
     const url = `http://localhost:8000/api/contratos/pagina/${this.contratosAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
-      (data) => {
-        this.contratos = data.sort((a, b) => {
+      async (data) => {
+        this.contratos = data; // Asignamos los contratos antes de la transformación
+        await this.ObtenerProveedoresEItosEnContratos(); // Esperamos a que se reemplacen los IDs
+
+        this.contratos = this.contratos.sort((a, b) => {
           let valorA: any = a[this.campoOrden];
           let valorB: any = b[this.campoOrden];
 
@@ -366,7 +369,7 @@ export class ContratosComponent implements OnInit {
             valorA = this.parsearRut(valorA);
             valorB = this.parsearRut(valorB);
           } else if (this.campoOrden === 'fecha_inicio' || this.campoOrden === 'fecha_termino') {
-            valorA = valorA ? new Date(valorA) : new Date(0); // Fecha mínima si es null
+            valorA = valorA ? new Date(valorA) : new Date(0);
             valorB = valorB ? new Date(valorB) : new Date(0);
           } else {
             valorA = valorA ? valorA.toString().toLowerCase() : '';
@@ -381,6 +384,7 @@ export class ContratosComponent implements OnInit {
       }
     );
   }
+
 
 
   parsearRut(rut: string): number {

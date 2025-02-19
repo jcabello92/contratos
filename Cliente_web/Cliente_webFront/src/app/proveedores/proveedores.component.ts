@@ -363,12 +363,18 @@ export class ProveedoresComponent implements OnInit {
   }
 
 
-  filtrarProveedores() {
+  async filtrarProveedores() {
     const url = `http://localhost:8000/api/proveedores/pagina/${this.proveedoresAObtener}`;
 
     this.http.get<any[]>(url).subscribe(
-      (data) => {
-        this.proveedores = data.sort((a, b) => {
+      async (data) => {
+        this.proveedores = data;
+
+        // Esperar a que los nombres de comuna y representante sean asignados
+        await this.asignarComunaYRepresentante();
+
+        // Ahora ordenamos con los valores ya transformados
+        this.proveedores.sort((a, b) => {
           let valorA: any = a[this.campoOrden];
           let valorB: any = b[this.campoOrden];
 
@@ -388,7 +394,7 @@ export class ProveedoresComponent implements OnInit {
       }
     );
   }
-
+  
   parsearRut(rut: string): number {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
   }
