@@ -1,17 +1,44 @@
 <div class="main-container">
   <header class="search-bar">
-    <h1>Notificaciones del Usuario </h1>
+    <h1>Notificaciones de Administrador </h1>
     <button class="buttons" routerLink="/principalPage">Volver Principal</button>
   </header>
 
   <div class="content">
-    <p>Este solo es otro print de prueba</p>
-    <h3>Al igual que este</h3>
+    <div class="content">
+      <h2>Estos son los contratos más próximos a vencer:</h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr class="encabezado">
+            <th>Nombre del contrato</th>
+            <th>Fecha de Inicio</th>
+            <th>Fecha de Término</th>
+            <th>Proveedor</th>
+            <th>Ito</th>
+            <th>Tiempo restante del Contrato</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let contrato of contratos">
+            <td>{{ contrato.nombre }}</td>
+            <td>{{ contrato.fecha_inicio }}</td>
+            <td>{{ contrato.fecha_termino }}</td>
+            <td>{{ contrato.proveedor }}</td>
+            <td>{{ contrato.ito }}</td>
+            <td>{{ contrato.diasRestantes }} días</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <footer class="footer">
-    <p>Footer</p>
-    <h3>Este es el pie de página</h3>
+    <p>Página municipal de contratos</p>
+    <h3>Desarrollado por el Departamento de informática</h3>
   </footer>
 </div>
 

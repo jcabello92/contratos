@@ -1,24 +1,25 @@
 <div class="main-container">
   <header class="search-bar">
-    <h1>Gestionar tu cuenta de usuario: [Nombre del usuario loggeado]</h1>
+    <h1>Gestión del usuario</h1>
     <button class="buttons" routerLink="/principalPageUsers">Volver</button>
   </header>
 
+  <h2>Bienvenido {{ usuarioActual?.usuario || 'Cargando...' }}, aquí podrás actualizar tus datos</h2>
+
   <div class="content">
-    <h1>Cambio de Contraseña</h1>
-    <h2>¿Desea realizar el cambio de su contraseña?</h2>
+    <h1>Cambio de Contraseña:</h1>
 
     <label style="margin-left: 30px"> Ingrese su nueva contraseña: </label>
-    <input type="text">
+    <input type="password" [(ngModel)]="nuevaContrasena">
 
     <div style="height: 20px"></div>
 
-    <label style="margin-left: 70px"> Ingresela nuevamente: </label>
-    <input type="text">
+    <label style="margin-left: 70px"> Ingrésela nuevamente: </label>
+    <input type="password" [(ngModel)]="repetirContrasena">
 
     <div style="height: 20px"></div>
 
-    <button style="margin-left: 100px" class="buttons"> Guardar nueva contraseña </button>
+    <button style="margin-left: 100px" class="buttons" (click)="cambiarContrasena()"> Guardar nueva contraseña </button>
 
     <div style="height: 50px"></div>
 
@@ -26,7 +27,7 @@
   </div>
 
   <footer class="footer">
-    <p>Footer</p>
-    <h3>Este es el pie de página</h3>
+    <p>Página municipal de contratos</p>
+    <h3>Desarrollado por el Departamento de informática</h3>
   </footer>
 </div>
