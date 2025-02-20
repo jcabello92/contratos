@@ -38,7 +38,6 @@ export class PrincipalPageUsersComponent implements OnInit, OnDestroy{
     this.routerSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.urlAfterRedirects; // Actualizamos la ruta actual
-        this.adjustDashboardHeight();
       }
     });
   }
@@ -55,36 +54,5 @@ export class PrincipalPageUsersComponent implements OnInit, OnDestroy{
     const parts = url.split('/').filter(part => part);
     this.breadcrumb = parts.slice(1);
   }
-
-
-  adjustDashboardHeight(): void {
-    const dashboard = document.querySelector('.dashboard') as HTMLElement;
-    const content = document.querySelector('.dynamic-content') as HTMLElement;
-    const footer = document.querySelector('.footer') as HTMLElement;
-
-    const routeHeights: { [key: string]: number } = {
-      "/principalPage/Contratos": 788,
-      "/principalPage/Proveedores": 788,
-      "/principalPage/Documentos": 788,
-      "/principalPage/OIT": 788,
-      "/principalPage/Representantes": 788,
-    };
-
-    if (dashboard && content && footer) {
-      const totalContentHeight = content.offsetHeight + footer.offsetHeight;
-      const viewportHeight = window.innerHeight;
-
-      // Lógica para la primera ejecución
-      if (this.isFirstTime) {
-        // @ts-ignore
-        const additionalHeight = routeHeights[this.currentRoute] || 0;
-        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight) + additionalHeight}px`;
-        this.isFirstTime = false; // Cambiar a false después de la primera ejecución
-      } else {
-        dashboard.style.height = `${Math.max(totalContentHeight, viewportHeight)+67}px`;
-      }
-    }
-  }
-
 
 }
