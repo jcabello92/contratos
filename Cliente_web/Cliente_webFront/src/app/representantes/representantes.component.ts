@@ -76,7 +76,7 @@ export class RepresentantesComponent implements OnInit {
         }
       },
       error => {
-        console.error('Error al obtener proveedores:', error);
+        console.error('Error al obtener representantes:', error);
       }
     );
   }

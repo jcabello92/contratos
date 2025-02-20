@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { NgForOf, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -383,17 +383,25 @@ export class DocumentosComponent implements OnInit {
       const paginaSiguiente = this.DocumentosAObtener + 1;
       const url = `http://localhost:8000/api/documentos/pagina/${paginaSiguiente}`;
 
-      this.http.get<any>(url, { responseType: 'json' as 'json' }).subscribe(
+      this.http.get<string>(url, { responseType: 'text' as 'json' }).subscribe(
         response => {
-          if (Array.isArray(response) && response.length > 0) {
-            this.DocumentosAObtener++;
-            this.documentos = response;
-          } else {
+          try {
+            // Intentamos parsear como JSON
+            const jsonResponse = JSON.parse(response);
+
+            if (Array.isArray(jsonResponse) && jsonResponse.length > 0) {
+              this.DocumentosAObtener++;
+              this.documentos = jsonResponse;
+            } else {
+              alert('No hay más documentos disponibles.');
+            }
+          } catch (e) {
+            // Si falla el JSON.parse, significa que la respuesta era texto plano
             alert('No hay más documentos disponibles.');
           }
         },
         error => {
-          if (error.status === 200 && error.error?.text) {
+          if (error instanceof HttpErrorResponse && typeof error.error === 'string') {
             // Caso donde la API devuelve un mensaje de error en texto plano
             alert('No hay más documentos disponibles.');
           } else {
@@ -402,6 +410,7 @@ export class DocumentosComponent implements OnInit {
           }
         }
       );
+
     }
   }
 

@@ -412,16 +412,25 @@ export class ProveedoresComponent implements OnInit {
       const url = `http://localhost:8000/api/proveedores/pagina/${paginaSiguiente}`;
 
       try {
-        const response = await this.http.get<any>(url).toPromise();
+        const response = await this.http.get<string>(url, { responseType: 'text' as 'json' }).toPromise();
 
-        if (Array.isArray(response) && response.length > 0) {
+        let jsonResponse: any;
+        try {
+          if (typeof response === "string") {
+            jsonResponse = JSON.parse(response);
+          }
+        } catch {
+          jsonResponse = response; // Si no es JSON, es texto plano.
+        }
+
+        if (Array.isArray(jsonResponse) && jsonResponse.length > 0) {
           this.proveedoresAObtener++;
-          this.proveedores = response;
+          this.proveedores = jsonResponse;
           await this.asignarComunaYRepresentante();
         } else {
           alert('No hay más proveedores disponibles.');
         }
-      } catch (error: unknown) {
+      } catch (error: any) {
         if (error instanceof HttpErrorResponse) {
           if (error.status === 200 && typeof error.error === 'string') {
             alert('No hay más proveedores disponibles.');
@@ -436,6 +445,7 @@ export class ProveedoresComponent implements OnInit {
       }
     }
   }
+
 
 
 

@@ -239,7 +239,7 @@ export class ContratosComponent implements OnInit {
     } else if (seleccionados.length > 1){
       alert('Solo puedes seleccionar un contrato para actualizar.');
     } else {
-      alert('Por favor selecciona un proveedor para actualizar.');
+      alert('Por favor selecciona un contrato para actualizar.');
     }
   }
 
@@ -410,7 +410,7 @@ export class ContratosComponent implements OnInit {
             this.contratosAObtener++;
             this.contratos = response;
           } else {
-            alert('No hay más contratos disponibles.');
+            alert('No hay más contratos disponibles para cargar en pantalla');
           }
         },
         error => {
