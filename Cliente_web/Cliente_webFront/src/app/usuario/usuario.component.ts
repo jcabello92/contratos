@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import {HttpClient, HttpClientModule} from '@angular/common/http';
@@ -15,7 +15,7 @@ import {Md5} from 'ts-md5';
   standalone: true,
   styleUrl: './usuario.component.css'
 })
-export class UsuarioComponent {
+export class UsuarioComponent implements OnInit{
   usuarioActual: any = null;
   nuevaContrasena: string = '';
   repetirContrasena: string = '';

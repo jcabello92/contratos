@@ -1,4 +1,4 @@
-import {Component, contentChild} from '@angular/core';
+import {Component, contentChild, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -14,7 +14,7 @@ import {NgIf} from '@angular/common';
   imports: [FormsModule, HttpClientModule, NgIf],
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   user: string = '';
   password: string = '';
   showPassword: boolean = false;
@@ -36,6 +36,10 @@ export class LoginComponent {
 
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+
+  ngOnInit(): void {
+    localStorage.removeItem('loggedInUser');
   }
 
   // Función de login
