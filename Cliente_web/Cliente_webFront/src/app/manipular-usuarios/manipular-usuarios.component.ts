@@ -24,9 +24,7 @@ import {EnviarCorreoComponent} from '../enviar-correo/enviar-correo.component';
 export class ManipularUsuariosComponent implements OnInit{
   showModal: boolean = false;
   mostrarPrimerModalEliminar: boolean = false;
-  mostrarPrimerModalActualizar: boolean = false;
   mostrarSegundoModalEliminar: boolean = false;
-  mostrarSegundoModalActualizar: boolean = false;
 
   nuevoUsuario = {
     usuario: '',
@@ -40,23 +38,13 @@ export class ManipularUsuariosComponent implements OnInit{
   };
 
   protected usuarios: any[] = [];
-  usuarioSeleccionado: number | null = null;
+  usuarioSeleccionado: boolean[] = [];
+  usuarioDetalle: any = {}; // Datos del usuario seleccionado
+  showModalEditar: boolean = false; // Control del modal
 
   codigoDeCreacion: number = 0;  // Inicializar con un valor predeterminado
   codigoIngresado: string = '';  // Inicializar con un valor predeterminado
   showModalCodigo: boolean = false;
-
-  usuarioDetalle = {
-    id: null,
-    usuario: '',
-    rut: '',
-    nombre: '',
-    apellido: '',
-    telefono: '',
-    correo: '',
-    rol: ''
-  };
-
 
   constructor(private http: HttpClient) {}
 
@@ -161,116 +149,67 @@ export class ManipularUsuariosComponent implements OnInit{
     );
   }
 
-  // Abrir el primer modal
-  abrirPrimerModalActualizar(): void {
-    this.mostrarPrimerModalActualizar = true;
+  // Manejar selección con checkboxes
+  onCheckboxChange(index: number) {
+    this.usuarioSeleccionado[index] = !this.usuarioSeleccionado[index];
   }
 
-  // Cerrar el primer modal
-  cerrarPrimerModal(): void {
-    this.mostrarPrimerModalActualizar = false;
-    this.usuarioSeleccionado = null;
+  // Método para actualizar usuario
+  actualizarUsuario() {
+    const seleccionados = this.usuarios.filter((_, index) => this.usuarioSeleccionado[index]);
+
+    if (seleccionados.length === 1) {
+      this.usuarioDetalle = { ...seleccionados[0] }; // Copiar datos del usuario seleccionado
+      this.showModalEditar = true;
+    } else if (seleccionados.length > 1) {
+      alert('Solo puedes seleccionar un usuario para actualizar.');
+    } else {
+      alert('Por favor selecciona un usuario para actualizar.');
+    }
   }
 
-  // Seleccionar usuario
-  seleccionarUsuario(id: number): void {
-    this.usuarioSeleccionado = id;
+  // Cerrar modal
+  cancelarActualizacion() {
+    this.showModalEditar = false;
   }
 
-  // Abrir el segundo modal
-  abrirSegundoModal(): void {
-    if (this.usuarioSeleccionado) {
-      console.log('ID seleccionado:', this.usuarioSeleccionado);
+  // Enviar actualización a la API
+  actualizarElUsuario() {
+    if (!this.usuarioDetalle.id) {
+      alert("El usuario seleccionado no tiene un ID válido.");
+      return;
+    }
 
-      this.http.get(`http://localhost:8000/api/usuarios/id/${this.usuarioSeleccionado}`).subscribe(
-        (data: any) => {
-          console.log('Respuesta de la API:', data);
-
-          // Si data es un array y tiene al menos un elemento
-          if (Array.isArray(data) && data.length > 0) {
-            const usuario = data[0]; // Tomar el primer elemento del array
-
-            if (usuario && usuario.id) {
-              this.usuarioDetalle = {
-                id: usuario.id || null,
-                usuario: usuario.usuario || '',
-                rut: usuario.rut || '',
-                nombre: usuario.nombre || '',
-                apellido: usuario.apellido || '',
-                telefono: usuario.telefono || '',
-                correo: usuario.correo || '',
-                rol: usuario.rol || '',
-              };
-              this.mostrarPrimerModalActualizar = false;
-              this.mostrarSegundoModalActualizar = true;
-            } else {
-              console.error('El usuario recibido no tiene un ID válido.');
-              console.log('Usuario:', usuario);
-            }
+    const url = `http://localhost:8000/api/usuarios/${this.usuarioDetalle.id}`;
+    this.http.patch(url, this.usuarioDetalle, { responseType: 'text' })
+      .subscribe(
+        (response) => {
+          if (response === "Se encontraron errores en los datos enviados.") {
+            alert("Un dato ingresado no fue reconocido por el sistema");
           } else {
-            console.error('La respuesta de la API no contiene un usuario válido.');
-            console.log('Respuesta completa:', data);
+            alert('Usuario actualizado correctamente');
+            this.showModalEditar = false;
+            this.ObtenerUsuarios(); // Recargar lista de usuarios
           }
         },
         (error) => {
-          console.error('Error al obtener los datos del usuario:', error);
+          console.error('Error al actualizar usuario:', error);
+          alert("No se pudo actualizar el usuario, hay un dato mal ingresado");
         }
       );
-    } else {
-      console.error('No se seleccionó un usuario');
-    }
   }
-
-
-  // Cerrar el segundo modal
-  cerrarSegundoModal(): void {
-    this.mostrarSegundoModalActualizar = false;
-    // Reiniciar usuarioDetalle con una estructura vacía
-    this.usuarioDetalle = {
-      id: null,
-      usuario: '',
-      rut: '',
-      nombre: '',
-      apellido: '',
-      telefono: '',
-      correo: '',
-      rol: '',
-    };
-  }
-
-// Actualizar usuario
-  actualizarUsuario(): void {
-    if (this.usuarioDetalle && this.usuarioDetalle.id) {
-      this.http
-        .patch(`http://localhost:8000/api/usuarios/${this.usuarioDetalle.id}`, this.usuarioDetalle, { responseType: 'text' })
-        .subscribe(
-          (response) => {
-            console.log('Respuesta del servidor:', response);
-            alert('Usuario actualizado correctamente');
-            this.mostrarSegundoModalActualizar = false;
-            this.ObtenerUsuarios();
-          },
-          (error) => {
-            console.error('Error al actualizar el usuario:', error);
-            console.log('Datos enviados en el PATCH:', this.usuarioDetalle);
-          }
-        );
-    } else {
-      console.error('El ID del usuario no está definido');
-    }
-  }
-
 
 
   abrirModalEliminar(): void {
     this.mostrarPrimerModalEliminar = true;
-    this.usuarioSeleccionado = null;
+    this.usuarioSeleccionado = new Array(this.usuarios.length).fill(false);
   }
 
   cerrarModalEliminar(): void {
     this.mostrarPrimerModalEliminar = false;
     this.mostrarSegundoModalEliminar = false;
-    this.usuarioSeleccionado = null;
+    this.usuarioSeleccionado = new Array(this.usuarios.length).fill(false);
+
   }
 
   validarUsuarioEliminar(): void {

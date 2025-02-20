@@ -1,12 +1,12 @@
 <app-enviar-correo [enviarCorreoFn]="enviarCorreo"></app-enviar-correo>
 
 <div class="tabla-usuarios">
-  <h1>Trabajar con los Usuarios</h1>
+  <h1>Gestionar Usuarios</h1>
 
   <!-- Botones de acción -->
   <div class="botones-usuarios">
     <button (click)="openModal()">Crear Usuario</button>
-    <button (click)="abrirPrimerModalActualizar()">Actualizar un usuario</button>
+    <button (click)="actualizarUsuario()">Actualizar un usuario</button>
     <button class="btn btn-danger" (click)="abrirModalEliminar()">Borrar un Usuario</button>
   </div>
 
@@ -15,6 +15,7 @@
     <table *ngIf="usuarios.length > 0">
       <thead>
       <tr>
+        <th>Seleccionar</th>
         <th>ID</th>
         <th>Usuario</th>
         <th>RUT</th>
@@ -26,14 +27,17 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let usuario of usuarios">
+      <tr *ngFor="let usuario of usuarios; let i = index">
+        <td>
+          <input type="checkbox" (change)="onCheckboxChange(i)" [checked]="usuarioSeleccionado[i]">
+        </td>
         <td>{{ usuario.id }}</td>
         <td>{{ usuario.usuario }}</td>
         <td>{{ usuario.rut }}</td>
         <td>{{ usuario.nombre }}</td>
-        <td>{{ usuario.apellido}}</td>
+        <td>{{ usuario.apellido }}</td>
         <td>{{ usuario.correo }}</td>
-        <td>{{ usuario.telefono}}</td>
+        <td>{{ usuario.telefono }}</td>
         <td>{{ usuario.rol }}</td>
       </tr>
       </tbody>
@@ -152,64 +156,63 @@
   </div>
 </div>
 
+<!-- Modal Actualizar Usuario -->
+<div *ngIf="showModalEditar" class="modal-actualizar">
+  <div class="modal-actualizar-dialog">
+    <!-- Modal Header -->
+    <div class="modal-actualizar-header">
+      <h2>Actualizar Usuario</h2>
+    </div>
 
+    <!-- Modal Body -->
+    <div class="modal-actualizar-body">
+      <div class="form-group-actualizar">
+        <label>Usuario:</label>
+        <input [(ngModel)]="usuarioDetalle.usuario" type="text" class="form-control">
+      </div>
 
-<!-- Primer Modal: Selección de usuario -->
-<div class="modal" *ngIf="mostrarPrimerModalActualizar">
-  <div class="modal-contenido">
-    <h2>Selecciona un usuario: </h2>
-    <ul>
-      <li *ngFor="let usuario of usuarios" (click)="seleccionarUsuario(usuario.id)">
-        {{ usuario.nombre }} - {{ usuario.correo }}
-      </li>
-    </ul>
-    <div class="modal-botones">
-      <button (click)="cerrarPrimerModal()">Cancelar</button>
-      <button [disabled]="!usuarioSeleccionado" (click)="abrirSegundoModal()">Actualizar</button>
+      <div class="form-group-actualizar">
+        <label>RUT:</label>
+        <input [(ngModel)]="usuarioDetalle.rut" type="text" class="form-control">
+      </div>
+
+      <div class="form-group-actualizar">
+        <label>Nombre:</label>
+        <input [(ngModel)]="usuarioDetalle.nombre" type="text" class="form-control">
+      </div>
+
+      <div class="form-group-actualizar">
+        <label>Apellido:</label>
+        <input [(ngModel)]="usuarioDetalle.apellido" type="text" class="form-control">
+      </div>
+
+      <div class="form-group-actualizar">
+        <label>Teléfono:</label>
+        <input [(ngModel)]="usuarioDetalle.telefono" type="tel" class="form-control">
+      </div>
+
+      <div class="form-group-actualizar">
+        <label>Correo:</label>
+        <input [(ngModel)]="usuarioDetalle.correo" type="email" class="form-control">
+      </div>
+
+      <div class="form-group-actualizar">
+        <label>Rol:</label>
+        <input [(ngModel)]="usuarioDetalle.rol" type="text" class="form-control">
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-actualizar-footer">
+      <button class="btn-actualizar-primary" (click)="actualizarElUsuario()">Actualizar</button>
+      <button class="btn-actualizar-secondary" (click)="cancelarActualizacion()">Cancelar</button>
     </div>
   </div>
 </div>
 
-<!-- Segundo Modal: Detalle del usuario -->
-<div class="modal-container" *ngIf="mostrarSegundoModalActualizar">
-  <div class="modalOscuro">
-    <h2 class="modal-title">Actualizar Usuario</h2>
-    <div class="modal-grid">
-      <label>
-        <span>Usuario:</span>
-        <input type="text" [(ngModel)]="usuarioDetalle.usuario" class="input-field" />
-      </label>
-      <label>
-        <span>Rut:</span>
-        <input type="text" [(ngModel)]="usuarioDetalle.rut" class="input-field" />
-      </label>
-      <label>
-        <span>Nombre:</span>
-        <input type="text" [(ngModel)]="usuarioDetalle.nombre" class="input-field" />
-      </label>
-      <label>
-        <span>Apellido:</span>
-        <input type="text" [(ngModel)]="usuarioDetalle.apellido" class="input-field" />
-      </label>
-      <label>
-        <span>Teléfono:</span>
-        <input type="text" [(ngModel)]="usuarioDetalle.telefono" class="input-field" />
-      </label>
-      <label>
-        <span>Correo:</span>
-        <input type="email" [(ngModel)]="usuarioDetalle.correo" class="input-field" />
-      </label>
-      <label class="grid-span">
-        <span>Rol:</span>
-        <input type="text" [(ngModel)]="usuarioDetalle.rol" class="input-field" />
-      </label>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" (click)="cerrarSegundoModal()">Cancelar</button>
-      <button class="btn-submit" (click)="actualizarUsuario()">Actualizar Usuario</button>
-    </div>
-  </div>
-</div>
+
+
+
 
 <!-- Primer modal para ingresar el ID -->
 <div
