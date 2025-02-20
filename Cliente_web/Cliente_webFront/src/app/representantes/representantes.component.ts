@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
@@ -220,10 +220,24 @@ export class RepresentantesComponent implements OnInit {
           alert("Representante(s) eliminado(s) con éxito")
           this.obtenerRepresentantes(); // Actualizar la lista después de la eliminación
         },
-        (error) => {
-          console.error(`Error al eliminar el representante con ID ${representante.id}:`, error);
-          alert("Error al eliminar un(os) representante(s)")
+        (error: any) => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 500) {
+              // Si es error 500 (Internal Server Error)
+              console.error(`Error 500 al eliminar el representante con ID ${representante.id}:`, error);
+              alert("ERROR: No se puede eliminar uno o más representante(s) porque tiene un proveedor asociado.");
+            } else {
+              // Si es otro error diferente a 500
+              console.error(`Error al eliminar el representante con ID ${representante.id}:`, error);
+              alert(`Error al eliminar uno o más representante(s)`);
+            }
+          } else {
+            // Si el error no es un HttpErrorResponse (error inesperado)
+            console.error(`Error inesperado al eliminar el representante con ID ${representante.id}:`, error);
+            alert("Ocurrió un error inesperado al eliminar uno o más representante(s).");
+          }
         }
+
       );
     });
 

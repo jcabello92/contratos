@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule, HttpErrorResponse} from '@angular/common/http';
 import {FormBuilder, FormGroup, FormsModule, Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -124,10 +124,27 @@ export class TipoDeDocumentoComponent implements OnInit {
             this.obtenerTiposDeDocumento();
             this.cerrarModal();
           },
-          error => {
-            alert("Error al eliminar un tipo de documento")
-            console.error('Error al eliminar tipo de documento', error)
+          (error: any) => {
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === 500) {
+                // Si es error 500 (Internal Server Error)
+                console.error('Error 500 al eliminar tipo de documento:', error);
+                alert('ERROR: No se puede eliminar este tipo de documento porque está siendo utilizado para algún documento.');
+                this.cerrarModal();
+              } else {
+                // Si es otro error diferente a 500
+                console.error('Error al eliminar tipo de documento:', error);
+                alert(`Error al eliminar el tipo de documento`);
+                this.cerrarModal();
+              }
+            } else {
+              // Si el error no es un HttpErrorResponse (error inesperado)
+              console.error('Error inesperado al eliminar tipo de documento:', error);
+              alert('Ocurrió un error inesperado al eliminar el tipo de documento.');
+              this.cerrarModal();
+            }
           }
+
         );
     }
   }

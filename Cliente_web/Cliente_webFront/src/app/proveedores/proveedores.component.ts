@@ -352,10 +352,24 @@ export class ProveedoresComponent implements OnInit {
           alert("Proveedor(es) eliminado(s) con éxito");
           this.obtenerProveedores(); // Actualizar la lista después de la eliminación
         },
-        (error) => {
-          console.error(`Error al eliminar el proveedor con ID ${proveedor.id}:`, error);
-          alert("Error al eliminar un(os) proveedor(s)");
+        (error: any) => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 500) {
+              // Si es error 500 (Internal Server Error)
+              console.error(`Error 500 al eliminar el proveedor con ID ${proveedor.id}:`, error);
+              alert("ERROR: No se puede eliminar uno o más proveedor(es) porque tiene un contrato asociado.");
+            } else {
+              // Si es otro error diferente a 500
+              console.error(`Error al eliminar el proveedor con ID ${proveedor.id}:`, error);
+              alert(`Error al eliminar uno o más proveedor(es)`);
+            }
+          } else {
+            // Si el error no es un HttpErrorResponse (error inesperado)
+            console.error(`Error inesperado al eliminar el proveedor con ID ${proveedor.id}:`, error);
+            alert("Ocurrió un error inesperado al eliminar uno o más proveedor(es).");
+          }
         }
+
       );
     });
 

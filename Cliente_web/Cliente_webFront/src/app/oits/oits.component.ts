@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -302,10 +302,24 @@ export class OITsComponent implements OnInit {
           alert("Ito(s) eliminado(s) con éxito");
           this.obtenerItos(); // Actualizar la lista después de la eliminación
         },
-        (error) => {
-          console.error(`Error al eliminar el ito con ID ${ito.id}:`, error);
-          alert("Error al eliminar un(os) ito(s)");
+        (error: any) => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 500) {
+              // Si es error 500 (Internal Server Error)
+              console.error(`Error 500 al eliminar el ito con ID ${ito.id}:`, error);
+              alert("ERROR: No se puede eliminar uno o más ito(s) porque tiene un contrato asociado.");
+            } else {
+              // Si es otro error diferente a 500
+              console.error(`Error al eliminar el ito con ID ${ito.id}:`, error);
+              alert(`Error al eliminar uno o más ito(s)`);
+            }
+          } else {
+            // Si el error no es un HttpErrorResponse (error inesperado)
+            console.error(`Error inesperado al eliminar el ito con ID ${ito.id}:`, error);
+            alert("Ocurrió un error inesperado al eliminar uno o más ito(s).");
+          }
         }
+
       );
     });
 

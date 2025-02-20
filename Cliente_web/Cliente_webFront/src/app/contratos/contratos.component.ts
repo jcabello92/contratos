@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -342,10 +342,24 @@ export class ContratosComponent implements OnInit {
           alert("Contrato(s) eliminado(s) con éxito");
           this.obtenerContratos();
         },
-        (error) => {
-          console.error(`Error al eliminar el contrato con ID ${contrato.id}:`, error);
-          alert(`Error al eliminar uno o más contratos: ${error.message}`);
+        (error: any) => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 500) {
+              // Si es error 500 (Internal Server Error)
+              console.error(`Error 500 al eliminar el contrato con ID ${contrato.id}:`, error);
+              alert(`ERROR al eliminar uno o más contratos. \nUno de los contratos seleccionados tiene un documento asociado, lo que impide eliminarlo`);
+            } else {
+              // Si es otro error diferente a 500
+              console.error(`Error al eliminar el contrato con ID ${contrato.id}:`, error);
+              alert(`Error al eliminar uno o más contratos: ${error.message}`);
+            }
+          } else {
+            // Si el error no es un HttpErrorResponse (error inesperado)
+            console.error(`Error inesperado al eliminar el contrato con ID ${contrato.id}:`, error);
+            alert(`Ocurrió un error inesperado al eliminar el contrato.`);
+          }
         }
+
       );
 
     });
