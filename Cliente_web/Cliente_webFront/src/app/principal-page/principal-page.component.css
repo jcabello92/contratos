@@ -1,16 +1,16 @@
 .main-layout {
-  display: flex;
-  height: 100vh;
-  margin:-10px;
+  display: flex;          /* Para alinear dashboard y contenido en columnas */
+  align-items: stretch;   /* Cada columna se estira a la altura máxima */
+  min-height: 100vh;      /* Que al menos ocupe todo el alto de la ventana */
+  margin: -10px;
   padding: 0;
 }
 
 .dashboard {
-  width: 300px; /* Ancho fijo del dashboard */
-  background-color: #3CB371;
+  width: 300px;           /* Ajusta el ancho según tu diseño */
+  background-color: #3CB371; /* Color de fondo para que se vea claramente */
+  color: #fff;            /* Texto blanco */
   padding: 20px;
-  font-family: 'Times New Roman', Times, serif;
-  overflow-y: auto; /* Habilita scroll si el contenido del dashboard excede su altura */
 }
 
 .dashboard .logo {
@@ -41,11 +41,9 @@
 
 
 .content-layout {
-  flex: 1;
+  flex: 1;                /* Ocupar el espacio restante */
   display: flex;
-  flex-direction: column;
-  margin:0;
-  min-height: 100vh;
+  flex-direction: column; /* Para que header, main y footer vayan apilados verticalmente */
 }
 
 .search-bar {
@@ -118,9 +116,10 @@
 
 /*Este usa el main*/
 .dynamic-content {
-  flex: 1;
-  padding: 20px;
+  flex: 1;                /* Se expande para ocupar el espacio vertical sobrante */
+  padding: 1rem;          /* Ejemplo de margen interior */
   background-color: #fff;
+  /* background: #f5f5f5;  Si quieres un color distinto */
 }
 
 .footer {
