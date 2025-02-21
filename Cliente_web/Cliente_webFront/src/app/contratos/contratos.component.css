@@ -118,15 +118,14 @@ button.combo-box:hover {
 }
 
 /*========================================================================*/
-.modal {
-  display: none;
+.modal-crear {
+  display: flex;
   position: fixed; /* Fijar el modal en la pantalla */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
   justify-content: center;
   align-items: center;
   animation: fadeIn 0.3s ease-in-out;
@@ -141,7 +140,7 @@ button.combo-box:hover {
   }
 }
 
-.modal-content {
+.modal-crear-content {
   background-color: white;
   padding: 25px;
   border-radius: 12px;
@@ -152,7 +151,7 @@ button.combo-box:hover {
   animation: scaleUp 0.2s ease-in-out forwards;
 
   position: fixed; /* Asegura que siempre se mantenga centrado */
-  top:  0%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -166,13 +165,12 @@ button.combo-box:hover {
   }
 }
 
-
-.modal h2 {
+.modal-crear h2 {
   margin-bottom: 15px;
   font-size: 20px;
 }
 
-.cerrar {
+.cerrar-crear {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -183,30 +181,66 @@ button.combo-box:hover {
   transition: color 0.3s ease;
 }
 
-.cerrar:hover {
+.cerrar-crear:hover {
   color: red;
 }
 
 /* Diseño del formulario */
-.modal form {
+.modal-crear form {
   display: flex;
   flex-direction: column;
 }
 
-.modal label {
+.modal-crear label {
   font-weight: bold;
   text-align: left;
   margin-top: 10px;
 }
 
-.modal input,
-.modal select {
+.modal-crear input,
+.modal-crear select {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+buttonCrear {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+buttonCrear:hover {
+  transform: scale(1.05);
+}
+
+/* Botón Guardar - Verde */
+buttonCrear.guardar {
+  background-color: #28a745;
+  color: white;
+}
+
+buttonCrear.guardar:hover {
+  background-color: #218838;
+}
+
+/* Botón Cancelar - Rojo */
+buttonCrear.cerrar {
+  background-color: #dc3545;
+  color: white;
+}
+
+buttonCrear.cerrar:hover {
+  background-color: #c82333;
+}
+
+
+
 
 /* Contenedor para agrupar dos inputs en la misma línea */
 .fila {
@@ -323,46 +357,104 @@ tbody tr:hover {
 
 /**==========================================================*/
 
-/* Modal Editar */
-.modal {
+/* Estilos generales del modal */
+.modalEditar {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.modal.show {
-  display: block;
+.modalEditar.show {
+  display: flex;
 }
 
-.modal-content {
+/* Contenedor del modal */
+.modalEditar-content {
   background-color: #fff;
-  margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 70%;
+  border-radius: 8px;
+  width: 50%;
+  max-width: 600px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.cerrar {
-  color: #aaa;
-  font-size: 28px;
+/* Botón de cerrar */
+.cerrarEditar {
+  float: right;
+  font-size: 24px;
   font-weight: bold;
-}
-
-.cerrar:hover,
-.cerrar:focus {
-  color: black;
-  text-decoration: none;
   cursor: pointer;
 }
 
-.botones button {
-  margin: 5px;
+.cerrarEditar:hover {
+  color: red;
 }
+
+/* Cuerpo del formulario */
+.modalEditar-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+/* Grupos de formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Botones */
+.botonesEditar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn.actualizar {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn.cancelar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
 
 /*===============================================================================*/
 

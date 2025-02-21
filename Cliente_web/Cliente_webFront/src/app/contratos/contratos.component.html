@@ -76,9 +76,8 @@
 <!-- ================================================          MODALES          =========================================================================-->
 
 <!-- Modal Crear -->
-<div *ngIf="modalAbiertoCrear" class="modal show">
-  <div class="modal-content">
-    <span class="cerrar" (click)="cerrarModalContratoCrear()">&times;</span>
+<div *ngIf="modalAbiertoCrear" class="modal-crear show">
+  <div class="modal-crear-content">
     <h2>Crear Contrato</h2>
 
     <label>Nombre del Contrato:</label>
@@ -104,54 +103,65 @@
       </option>
     </select>
 
-    <button (click)="crearContrato()">Guardar</button>
-    <button (click)="cerrarModalContratoCrear()">Cancelar</button>
+    <div style="height: 10px"></div>
+
+    <button class="buttons" (click)="crearContrato()">Guardar</button>
+    <button class="buttons" (click)="cerrarModalContratoCrear()">Cancelar</button>
   </div>
 </div>
 
 
 <!-- Modal Actualizar Contrato -->
-<div *ngIf="showModalEditar" class="modal show">
-  <div class="modal-content">
-    <span class="cerrar" (click)="cancelarActualizacion()">&times;</span>
+<div *ngIf="showModalEditar" class="modalEditar show">
+  <div class="modalEditar-content">
+    <span class="cerrarEditar" (click)="cancelarActualizacion()">&times;</span>
     <h2>Actualizar Contrato</h2>
 
-    <label>Nombre del Contrato:</label>
-    <input [(ngModel)]="contratoActual.nombre">
+    <div class="modalEditar-body">
+      <div class="form-group">
+        <label>Nombre del Contrato:</label>
+        <input type="text" [(ngModel)]="contratoActual.nombre">
+      </div>
 
-    <label>Fecha de Inicio:</label>
-    <input type="date" [(ngModel)]="contratoActual.fecha_inicio">
+      <div class="form-group">
+        <label>Fecha de Inicio:</label>
+        <input type="date" [(ngModel)]="contratoActual.fecha_inicio">
+      </div>
 
-    <label>Fecha de Término:</label>
-    <input type="date" [(ngModel)]="contratoActual.fecha_termino">
+      <div class="form-group">
+        <label>Fecha de Término:</label>
+        <input type="date" [(ngModel)]="contratoActual.fecha_termino">
+      </div>
 
-    <label for="proveedor">Proveedor Actual: {{contratoActual.proveedor}}</label>
-    <select id="proveedor" [(ngModel)]="contratoActual.proveedor">
-      <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
-        {{ proveedor.razon_social }} - {{ proveedor.rut }}
-      </option>
-    </select>
+      <div class="form-group">
+        <label>Proveedor Actual:</label>
+        <select [(ngModel)]="contratoActual.proveedor">
+          <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+            {{ proveedor.razon_social }} - {{ proveedor.rut }}
+          </option>
+        </select>
+      </div>
 
-    <label for="ito">Ito Actual: {{contratoActual.ito}}</label>
-    <select id="ito" [(ngModel)]="contratoActual.ito">
-      <option *ngFor="let ito of itos" [value]="ito.id">
-        {{ ito.nombre }} {{ ito.apellido }} - {{ ito.rut }}
-      </option>
-    </select>
+      <div class="form-group">
+        <label>ITO Actual:</label>
+        <select [(ngModel)]="contratoActual.ito">
+          <option *ngFor="let ito of itos" [value]="ito.id">
+            {{ ito.nombre }} {{ ito.apellido }} - {{ ito.rut }}
+          </option>
+        </select>
+      </div>
+    </div>
 
-
-
-    <button (click)="actualizarElContrato()">Actualizar</button>
-    <button (click)="cancelarActualizacion()">Cancelar</button>
+    <div class="botonesEditar">
+      <button class="btn actualizar" (click)="actualizarElContrato()">Actualizar</button>
+      <button class="btn cancelar" (click)="cancelarActualizacion()">Cancelar</button>
+    </div>
   </div>
 </div>
-
-
 
 <!-- Modal Eliminar Contrato -->
 <div id="modalEliminarContrato" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">
   <div class="modal-content">
-    <span class="cerrar" (click)="cerrarModalEliminar()">&times;</span>
     <h2>¿Está seguro de que desea eliminar los siguientes contratos?</h2>
 
     <!-- Mostrar los nombres de los contratos a eliminar -->
