@@ -106,13 +106,19 @@ export class OITsComponent implements OnInit {
         }
         // Buscar el área correspondiente usando el ID original
         const areaEncontrada = this.areas.find(area => area.id === ito.areaId);
-        ito.areaNombre = areaEncontrada ? areaEncontrada.nombre : "Desconocida";
-        // (Opcional) Puedes conservar ito.area con el nombre, o utilizar areaNombre en la vista
+        const areaNombre = areaEncontrada ? areaEncontrada.nombre : "Desconocida";
+
+        // Guardar el nombre en una propiedad para el modal (y otros usos)
+        ito.areaNombre = areaNombre;
+
+        // También actualizamos la propiedad 'area' para que la tabla muestre el nombre
+        ito.area = areaNombre;
       });
     } catch (error) {
       console.error('Error al asignar área a los Itos:', error);
     }
   }
+
 
 
 
