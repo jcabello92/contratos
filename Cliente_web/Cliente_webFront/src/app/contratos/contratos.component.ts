@@ -101,34 +101,45 @@ export class ContratosComponent implements OnInit {
     try {
       const peticiones = this.contratos.map(async (contrato) => {
         try {
+          // Guardamos los IDs originales para actualización
+          contrato.proveedorId = contrato.proveedor;
+          contrato.itoId = contrato.ito;
+
           const proveedorUrl = `http://localhost:8000/api/proveedores/id/${contrato.proveedor}`;
           const itoUrl = `http://localhost:8000/api/itos/id/${contrato.ito}`;
 
           const [proveedorData, itoData] = await Promise.all([
-            this.http.get<any[]>(proveedorUrl).toPromise().catch(() => []), // Evitar undefined
-            this.http.get<any[]>(itoUrl).toPromise().catch(() => []) // Evitar undefined
+            this.http.get<any[]>(proveedorUrl).toPromise().catch(() => []),
+            this.http.get<any[]>(itoUrl).toPromise().catch(() => [])
           ]);
 
-          // Asignar datos obtenidos con validación de arrays
-          contrato.proveedor = (Array.isArray(proveedorData) && proveedorData.length > 0)
+          // Obtener los nombres con validación
+          const nombreProveedor = (Array.isArray(proveedorData) && proveedorData.length > 0)
             ? proveedorData[0].razon_social
             : 'Desconocido';
 
-          contrato.ito = (Array.isArray(itoData) && itoData.length > 0)
+          const nombreIto = (Array.isArray(itoData) && itoData.length > 0)
             ? `${itoData[0].nombre} ${itoData[0].apellido}`
             : 'Desconocido';
 
+          // Para el CRUD de lectura, sobrescribimos los campos para mostrar el nombre
+          contrato.proveedor = nombreProveedor;
+          contrato.ito = nombreIto;
+
+          // Además, guardamos estos nombres en propiedades adicionales (opcional)
+          contrato.proveedorNombre = nombreProveedor;
+          contrato.itoNombre = nombreIto;
         } catch (error) {
           console.error(`Error al obtener datos para contrato ID ${contrato.id}:`, error);
         }
       });
 
       await Promise.all(peticiones);
-
     } catch (error) {
       console.error('Error en ObtenerProveedoresEItosEnContratos:', error);
     }
   }
+
 
   //=========================================================================
 
@@ -235,7 +246,10 @@ export class ContratosComponent implements OnInit {
     const seleccionados = this.contratos.filter((_, index) => this.contratoSeleccionado[index]);
 
     if (seleccionados.length === 1) {
-      this.contratoActual = seleccionados[0];
+      this.contratoActual = { ...seleccionados[0] };
+      // Inicializamos las propiedades para selección nueva
+      this.contratoActual.nuevoProveedor = null;
+      this.contratoActual.nuevoIto = null;
       this.showModalEditar = true;
     } else if (seleccionados.length > 1){
       alert('Solo puedes seleccionar un contrato para actualizar.');
@@ -259,8 +273,13 @@ export class ContratosComponent implements OnInit {
     if (contrato.nombre) datosActualizar.nombre = contrato.nombre;
     if (contrato.fecha_inicio) datosActualizar.fecha_inicio = contrato.fecha_inicio;
     if (contrato.fecha_termino) datosActualizar.fecha_termino = contrato.fecha_termino;
-    if (contrato.proveedor) datosActualizar.proveedor = formatearCampo(contrato.proveedor, 4);
-    if (contrato.ito) datosActualizar.ito = formatearCampo(contrato.ito, 3);
+
+    // Si se seleccionó un nuevo proveedor/ito se usa ese valor; de lo contrario, se conserva el ID original
+    const proveedor = contrato.nuevoProveedor ? contrato.nuevoProveedor : contrato.proveedorId;
+    const ito = contrato.nuevoIto ? contrato.nuevoIto : contrato.itoId;
+
+    if (proveedor) datosActualizar.proveedor = formatearCampo(proveedor, 4);
+    if (ito) datosActualizar.ito = formatearCampo(ito, 3);
 
     if (Object.keys(datosActualizar).length > 0) {
       const url = `http://localhost:8000/api/contratos/${contrato.id}`;

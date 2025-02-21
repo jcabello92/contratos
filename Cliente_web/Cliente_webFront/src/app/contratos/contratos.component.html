@@ -110,7 +110,6 @@
   </div>
 </div>
 
-
 <!-- Modal Actualizar Contrato -->
 <div *ngIf="showModalEditar" class="modalEditar show">
   <div class="modalEditar-content">
@@ -133,18 +132,24 @@
         <input type="date" [(ngModel)]="contratoActual.fecha_termino">
       </div>
 
+      <!-- Proveedor -->
       <div class="form-group">
-        <label>Proveedor Actual:</label>
-        <select [(ngModel)]="contratoActual.proveedor">
+        <label>Proveedor Actual: {{ contratoActual.proveedorNombre }}</label>
+        <label>Seleccione Nuevo Proveedor (opcional):</label>
+        <select [(ngModel)]="contratoActual.nuevoProveedor">
+          <option value="">-- Seleccione --</option>
           <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
             {{ proveedor.razon_social }} - {{ proveedor.rut }}
           </option>
         </select>
       </div>
 
+      <!-- ITO -->
       <div class="form-group">
-        <label>ITO Actual:</label>
-        <select [(ngModel)]="contratoActual.ito">
+        <label>ITO Actual: {{ contratoActual.itoNombre }}</label>
+        <label>Seleccione Nuevo ITO (opcional):</label>
+        <select [(ngModel)]="contratoActual.nuevoIto">
+          <option value="">-- Seleccione --</option>
           <option *ngFor="let ito of itos" [value]="ito.id">
             {{ ito.nombre }} {{ ito.apellido }} - {{ ito.rut }}
           </option>
@@ -152,12 +157,14 @@
       </div>
     </div>
 
-    <div class="botonesEditar">
-      <button class="btn actualizar" (click)="actualizarElContrato()">Actualizar</button>
-      <button class="btn cancelar" (click)="cancelarActualizacion()">Cancelar</button>
+    <div class="modalEditar-footer">
+      <button (click)="actualizarElContrato()">Actualizar</button>
+      <button (click)="cancelarActualizacion()">Cancelar</button>
     </div>
   </div>
 </div>
+
+
 
 <!-- Modal Eliminar Contrato -->
 <div id="modalEliminarContrato" class="modal" [ngClass]="{'show': modalAbiertoEliminar}">
