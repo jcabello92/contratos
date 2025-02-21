@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
     //console.log('%c🔍 [AuthGuard] Verificando autenticación...', 'color: blue; font-weight: bold;');
 
     const loggedInUser = localStorage.getItem('loggedInUser');
-    console.log('🔹 Usuario en localStorage:', loggedInUser);
+    //console.log('🔹 Usuario en localStorage:', loggedInUser);
 
     if (!loggedInUser) {
       //console.log('%c⛔ Usuario NO autenticado. Redirigiendo a login.', 'color: red; font-weight: bold;');
