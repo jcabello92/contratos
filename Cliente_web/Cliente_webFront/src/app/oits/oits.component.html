@@ -123,9 +123,11 @@
     <label for="correoEdit">Correo:</label>
     <input id="correoEdit" [(ngModel)]="itoActual.correo" required/>
 
-    <label for="areaEdit">Área Actual: {{itoActual.area}}</label>
-    <select id="areaEdit" [(ngModel)]="itoActual.area" [ngModelOptions]="{standalone: true}">
-      <option *ngFor="let area of areas" [ngValue]="area">{{ area.nombre }}</option>
+    <!-- Mostrar el área actual usando la propiedad areaNombre -->
+    <label for="areaEdit">Área Actual: {{itoActual.areaNombre}}</label>
+    <select id="areaEdit" [(ngModel)]="itoActual.nuevaArea" [ngModelOptions]="{standalone: true}">
+      <option value="">-- Seleccione --</option>
+      <option *ngFor="let area of areas" [ngValue]="area.id">{{ area.nombre }}</option>
     </select>
 
     <div class="modal-buttons">
@@ -134,6 +136,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- Modal para Eliminar ito -->

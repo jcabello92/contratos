@@ -100,14 +100,20 @@ export class OITsComponent implements OnInit {
   async asignarAreaAItos() {
     try {
       this.itos.forEach(ito => {
-        // Buscar el área correspondiente
-        const areaEncontrada = this.areas.find(area => area.id === ito.area);
-        ito.area = areaEncontrada ? areaEncontrada.nombre : "Desconocida";
+        // Si no se ha almacenado ya el ID original, se guarda en areaId
+        if (!ito.areaId) {
+          ito.areaId = ito.area; // Aquí, originalmente, ito.area es el ID
+        }
+        // Buscar el área correspondiente usando el ID original
+        const areaEncontrada = this.areas.find(area => area.id === ito.areaId);
+        ito.areaNombre = areaEncontrada ? areaEncontrada.nombre : "Desconocida";
+        // (Opcional) Puedes conservar ito.area con el nombre, o utilizar areaNombre en la vista
       });
     } catch (error) {
       console.error('Error al asignar área a los Itos:', error);
     }
   }
+
 
 
   async obtenerAreas() {
@@ -185,16 +191,19 @@ export class OITsComponent implements OnInit {
     const seleccionados = this.itos.filter((_, index) => this.itoSeleccionado[index]);
 
     if (seleccionados.length === 1) {
-      // Solo se permite actualizar un ITO a la vez
-      this.itoActual = { ...seleccionados[0] }; // Copia para evitar modificar directamente la lista
-      console.log('ITO seleccionado para actualizar:', this.itoActual);
+      // Se copia el ITO seleccionado para evitar modificar la lista original
+      this.itoActual = { ...seleccionados[0] };
+      // Inicializamos la propiedad para una nueva selección de área
+      this.itoActual.nuevaArea = null;
       this.showModalEditar = true;
+      console.log('ITO seleccionado para actualizar:', this.itoActual);
     } else if (seleccionados.length > 1) {
       alert('Solo puedes seleccionar un ITO para actualizar.');
     } else {
       alert('Por favor selecciona un ITO para actualizar.');
     }
   }
+
 
   cancelarActualizacion() {
     this.showModalEditar = false; // Cierra el modal sin cambios
@@ -203,8 +212,9 @@ export class OITsComponent implements OnInit {
   actualizarElIto() {
     const ito = this.itoActual;
 
-    // Verificar que `ito.area` tenga un objeto con `id`
-    const areaConTresDigitos = ito.area ? String(ito.area.id).padStart(3, '0') : null;
+    // Selecciona la nueva área si se eligió, o el área original (areaId) en caso contrario
+    const area = ito.nuevaArea ? ito.nuevaArea : ito.areaId;
+    const areaConTresDigitos = area ? String(area).padStart(3, '0') : null;
 
     const datosActualizar: any = {};
 
@@ -238,6 +248,7 @@ export class OITsComponent implements OnInit {
       alert('No hay cambios para actualizar.');
     }
   }
+
 
 
 
