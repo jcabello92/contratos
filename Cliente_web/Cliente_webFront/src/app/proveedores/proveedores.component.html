@@ -121,7 +121,7 @@
 <!-- Modal Editar Proveedor -->
 <div id="modalEditar" class="modal" [ngClass]="{'show': showModalEditar}">
   <div class="modal-content">
-    <span class="cerrar" (click)="actualizarProveedor()">&times;</span>
+    <span class="cerrar" (click)="cancelarActualizacion()">&times;</span>
     <h2>Actualizar Proveedor</h2>
     <form (ngSubmit)="actualizarElProveedor()">
       <label>RUT:</label>
@@ -133,10 +133,15 @@
       <label>Dirección:</label>
       <input type="text" [(ngModel)]="proveedorActual.direccion" name="direccion" required>
 
-      <label>Comuna Actual: {{proveedorActual.comuna}}</label>
-      <select [(ngModel)]="proveedorActual.comuna" name="comuna" required>
-        <option *ngFor="let comuna of comunas" [ngValue]="comuna">{{ comuna.nombre }}</option>
-      </select>
+      <!-- Comuna -->
+      <div class="form-group">
+        <label>Comuna Actual: {{ proveedorActual.comunaNombre }}</label>
+        <label>Seleccione Nueva Comuna (opcional):</label>
+        <select [(ngModel)]="proveedorActual.nuevaComuna" name="comuna">
+          <option value="">-- Seleccione --</option>
+          <option *ngFor="let comuna of comunas" [ngValue]="comuna.id">{{ comuna.nombre }}</option>
+        </select>
+      </div>
 
       <label>Teléfono:</label>
       <input type="tel" [(ngModel)]="proveedorActual.telefono" name="telefono" required>
@@ -144,18 +149,27 @@
       <label>Correo:</label>
       <input type="email" [(ngModel)]="proveedorActual.correo" name="correo" required>
 
-      <label>Representante Actual: {{proveedorActual.representante}}</label>
-      <select [(ngModel)]="proveedorActual.representante" name="representante" required>
-        <option *ngFor="let representante of representantes" [ngValue]="representante">{{ representante.nombre }} {{ representante.apellido }}</option>
-      </select>
+      <!-- Representante -->
+      <div class="form-group">
+        <label>Representante Actual: {{ proveedorActual.representanteNombre }}</label>
+        <label>Seleccione Nuevo Representante (opcional):</label>
+        <select [(ngModel)]="proveedorActual.nuevoRepresentante" name="representante">
+          <option value="">-- Seleccione --</option>
+          <option *ngFor="let representante of representantes" [ngValue]="representante.id">
+            {{ representante.nombre }} {{ representante.apellido }}
+          </option>
+        </select>
+      </div>
 
       <div class="botones">
         <button type="button" (click)="cancelarActualizacion()">Cancelar</button>
-        <button type="submit" (click)="actualizarElProveedor()">Actualizar Proveedor</button>
+        <!-- Se elimina el click adicional en el botón submit, ya que (ngSubmit) lo maneja -->
+        <button type="submit">Actualizar Proveedor</button>
       </div>
     </form>
   </div>
 </div>
+
 
 
 <!-- Modal Eliminar -->

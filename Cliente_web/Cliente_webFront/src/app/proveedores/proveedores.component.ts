@@ -103,18 +103,27 @@ export class ProveedoresComponent implements OnInit {
     );
   }
 
+  // Método para asignar la comuna y representante en la lista de proveedores (read)
   async asignarComunaYRepresentante() {
     try {
       this.proveedores.forEach(proveedor => {
-        // Buscar la comuna correspondiente
-        const comunaEncontrada = this.comunas.find(comuna => comuna.id === proveedor.comuna);
-        proveedor.comuna = comunaEncontrada ? comunaEncontrada.nombre : "Desconocida";
+        // Guardar los IDs originales en propiedades separadas (si aún no están asignados)
+        proveedor.comunaId = proveedor.comunaId || proveedor.comuna;
+        proveedor.representanteId = proveedor.representanteId || proveedor.representante;
 
-        // Buscar el representante correspondiente
-        const representanteEncontrado = this.representantes.find(representante => representante.id === proveedor.representante);
-        proveedor.representante = representanteEncontrado
+        // Buscar la comuna correspondiente según el ID original
+        const comunaEncontrada = this.comunas.find(comuna => comuna.id === proveedor.comunaId);
+        proveedor.comunaNombre = comunaEncontrada ? comunaEncontrada.nombre : "Desconocida";
+
+        // Buscar el representante correspondiente según el ID original
+        const representanteEncontrado = this.representantes.find(representante => representante.id === proveedor.representanteId);
+        proveedor.representanteNombre = representanteEncontrado
           ? `${representanteEncontrado.nombre} ${representanteEncontrado.apellido}`
           : "Desconocido";
+
+        // Para la vista (read) se sobrescribe la propiedad a mostrar (opcional)
+        proveedor.comuna = proveedor.comunaNombre;
+        proveedor.representante = proveedor.representanteNombre;
       });
     } catch (error) {
       console.error('Error al asignar comuna y representante:', error);
@@ -233,12 +242,15 @@ export class ProveedoresComponent implements OnInit {
     this.proveedorSeleccionado[index] = !this.proveedorSeleccionado[index];
   }
 
-  // Método para actualizar proveedor
+  // Método para abrir el modal de actualización
   actualizarProveedor() {
     const seleccionados = this.proveedores.filter((_, index) => this.proveedorSeleccionado[index]);
 
     if (seleccionados.length === 1) {
-      this.proveedorActual = seleccionados[0];
+      // Copia el proveedor seleccionado y se inicializan las propiedades para la nueva selección
+      this.proveedorActual = { ...seleccionados[0] };
+      this.proveedorActual.nuevaComuna = null;
+      this.proveedorActual.nuevoRepresentante = null;
       this.showModalEditar = true;
     } else if (seleccionados.length > 1) {
       alert('Solo puedes seleccionar un proveedor para actualizar.');
@@ -247,11 +259,12 @@ export class ProveedoresComponent implements OnInit {
     }
   }
 
+// Cierra el modal sin cambios
   cancelarActualizacion() {
-    this.showModalEditar = false; // Cierra el modal sin realizar cambios
+    this.showModalEditar = false;
   }
 
-  // Método para enviar la actualización del proveedor
+// Método para enviar la actualización del proveedor
   actualizarElProveedor() {
     const proveedor = this.proveedorActual;
     const datosActualizar: any = {};
@@ -265,13 +278,17 @@ export class ProveedoresComponent implements OnInit {
     if (proveedor.razon_social) datosActualizar.razon_social = proveedor.razon_social;
     if (proveedor.direccion) datosActualizar.direccion = proveedor.direccion;
 
-    // Usar formatearCampo para la comuna y representante
-    if (proveedor.comuna) datosActualizar.comuna = formatearCampo(proveedor.comuna.id, 3); // Comuna formateada a 3 dígitos
+    // Para comuna: si se seleccionó una nueva, se usa esa; de lo contrario, se usa el ID original almacenado en comunaId
+    const comuna = proveedor.nuevaComuna ? proveedor.nuevaComuna : proveedor.comunaId;
+    if (comuna) datosActualizar.comuna = formatearCampo(comuna, 3);
+
     if (proveedor.telefono) datosActualizar.telefono = proveedor.telefono;
     if (proveedor.correo) datosActualizar.correo = proveedor.correo;
-    if (proveedor.representante) datosActualizar.representante = formatearCampo(proveedor.representante.id, 4); // Representante formateado a 4 dígitos
 
-    // Verificar si hay datos para actualizar
+    // Para representante: si se seleccionó uno nuevo, se usa ese; de lo contrario, se usa el ID original almacenado en representanteId
+    const representante = proveedor.nuevoRepresentante ? proveedor.nuevoRepresentante : proveedor.representanteId;
+    if (representante) datosActualizar.representante = formatearCampo(representante, 4);
+
     if (Object.keys(datosActualizar).length > 0) {
       const url = `http://localhost:8000/api/proveedores/${proveedor.id}`;
 
@@ -282,7 +299,7 @@ export class ProveedoresComponent implements OnInit {
           } else {
             alert('Proveedor actualizado correctamente');
             this.showModalEditar = false;
-            this.obtenerProveedores(); // Actualizar la lista de proveedores
+            this.obtenerProveedores(); // Actualiza la lista de proveedores
           }
         },
         (error) => {
