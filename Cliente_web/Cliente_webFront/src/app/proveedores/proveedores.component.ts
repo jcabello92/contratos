@@ -216,7 +216,7 @@ export class ProveedoresComponent implements OnInit {
       this.http.post(url, proveedor, { responseType: 'text' })
         .subscribe(
           response => {
-            console.log('Respuesta del servidor:', response);
+            //console.log('Respuesta del servidor:', response);
             if(response == "No se enviaron todos los datos requeridos.") {
               alert("Un dato ingresado, no fue reconocido por el sistema");
             } else {
@@ -338,12 +338,12 @@ export class ProveedoresComponent implements OnInit {
     // Suscribirse a los Observables
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
-        console.log('Respuestas de la API:', respuestas); // Verifica la respuesta ahora
+        //console.log('Respuestas de la API:', respuestas); // Verifica la respuesta ahora
 
         // Extraemos el proveedor de cada array de la respuesta
         this.proveedoresParaEliminar = respuestas.map(respuesta => respuesta[0]); // Cambié el nombre aquí
 
-        console.log('Proveedores a eliminar:', this.proveedoresParaEliminar); // Verifica los proveedores extraídos
+        //console.log('Proveedores a eliminar:', this.proveedoresParaEliminar); // Verifica los proveedores extraídos
       },
       (error) => {
         console.error('Error al obtener los proveedores:', error);
@@ -365,7 +365,7 @@ export class ProveedoresComponent implements OnInit {
 
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
-          console.log(`Proveedor con ID ${proveedor.id} eliminado:`, response);
+          //console.log(`Proveedor con ID ${proveedor.id} eliminado:`, response);
           alert("Proveedor(es) eliminado(s) con éxito");
           this.obtenerProveedores(); // Actualizar la lista después de la eliminación
         },

@@ -172,7 +172,7 @@ export class OITsComponent implements OnInit {
             alert("Un dato ingresado no fue reconocido por el sistema");
           } else {
             alert("El ito fue creado exitosamente");
-            console.log('Respuesta del servidor:', response);
+            //console.log('Respuesta del servidor:', response);
             this.obtenerItos();
             this.cerrarModalItoCrear();
           }
@@ -202,7 +202,7 @@ export class OITsComponent implements OnInit {
       // Inicializamos la propiedad para una nueva selección de área
       this.itoActual.nuevaArea = null;
       this.showModalEditar = true;
-      console.log('ITO seleccionado para actualizar:', this.itoActual);
+      //console.log('ITO seleccionado para actualizar:', this.itoActual);
     } else if (seleccionados.length > 1) {
       alert('Solo puedes seleccionar un ITO para actualizar.');
     } else {
@@ -240,7 +240,7 @@ export class OITsComponent implements OnInit {
             alert('Un dato ingresado no fue reconocido por el sistema.');
           } else {
             alert('ITO actualizado correctamente');
-            console.log('ITO actualizado correctamente:', response);
+            //console.log('ITO actualizado correctamente:', response);
             this.showModalEditar = false; // Cerrar el modal
             this.obtenerItos(); // Refrescar la lista de ITOs
           }
@@ -282,12 +282,12 @@ export class OITsComponent implements OnInit {
 
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
-        console.log('Respuestas de la API:', respuestas);
+        //console.log('Respuestas de la API:', respuestas);
 
         // Extraemos el primer objeto de cada array en respuestas
         this.itosParaEliminar = respuestas.map(respuesta => respuesta[0]);
 
-        console.log('Itos a eliminar:', this.itosParaEliminar);
+        //console.log('Itos a eliminar:', this.itosParaEliminar);
 
         // Ahora que los datos están listos, abrir el modal
         this.modalAbiertoEliminar = true;
@@ -315,7 +315,7 @@ export class OITsComponent implements OnInit {
 
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
-          console.log(`Ito con ID ${ito.id} eliminado:`, response);
+          //console.log(`Ito con ID ${ito.id} eliminado:`, response);
           alert("Ito(s) eliminado(s) con éxito");
           this.obtenerItos(); // Actualizar la lista después de la eliminación
         },

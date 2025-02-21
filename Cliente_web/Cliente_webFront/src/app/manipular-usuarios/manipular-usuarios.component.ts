@@ -103,7 +103,7 @@ export class ManipularUsuariosComponent implements OnInit{
 
     const url = `http://localhost:8000/api/usuarios?${queryParams.toString()}`;
 
-    console.log('URL generada:', url); // Registro en consola para depuración
+    //console.log('URL generada:', url); // Registro en consola para depuración
 
     if (this.nuevoUsuario.usuario && this.nuevoUsuario.contrasena && this.nuevoUsuario.rut && this.nuevoUsuario.nombre && this.nuevoUsuario.apellido && this.nuevoUsuario.telefono && this.nuevoUsuario.correo && this.nuevoUsuario.rol) {
       if (this.validarCodigo()) {  // Aquí llamamos a validarCodigo antes de proceder
@@ -113,7 +113,7 @@ export class ManipularUsuariosComponent implements OnInit{
               alert("Un dato ingresado, no fue reconocido por el sistema");
             } else {
               alert("El usuario fue creado exitosamente");
-              console.log('Usuario creado exitosamente:', response);
+              //console.log('Usuario creado exitosamente:', response);
               this.closeModal();
               this.closeModalCodigo();
 
@@ -141,7 +141,7 @@ export class ManipularUsuariosComponent implements OnInit{
     this.http.get<any[]>('http://localhost:8000/api/usuarios/pagina/1').subscribe(
       (response) => {
         this.usuarios = response; // Almacenar usuarios en la variable
-        console.log('Usuarios llamados obtenidos', this.usuarios);
+        //console.log('Usuarios llamados obtenidos', this.usuarios);
       },
       (error) => {
         console.error('Error al obtener los usuarios:', error);
@@ -265,7 +265,7 @@ export class ManipularUsuariosComponent implements OnInit{
 
     emailjs.send('service_uxe4xlr', 'template_dy8romm', templateParams, '5t3e8VdfQtWUUB3qM')
       .then(response => {
-        console.log('Correo enviado:', response);
+        //console.log('Correo enviado:', response);
         alert('Correo enviado correctamente. Revisa tu bandeja de entrada para el código de confirmación.');
         this.showModalCodigo = true;  // Mostrar el modal para ingresar el código
       })
@@ -280,14 +280,14 @@ export class ManipularUsuariosComponent implements OnInit{
       this.http.get<any[]>('http://localhost:8000/api/usuarios/activar/pagina/1')
         .subscribe(
           (usuarios) => {
-            console.log("Usuarios obtenidos:", usuarios); // ✅ Verificar la lista completa
+            //console.log("Usuarios obtenidos:", usuarios); // ✅ Verificar la lista completa
 
             if (Array.isArray(usuarios)) {
               usuarios.forEach(usuario => {
-                console.log(`Intentando activar usuario ID: ${usuario.id}`); // 🔍 Depuración
+                //console.log(`Intentando activar usuario ID: ${usuario.id}`); // 🔍 Depuración
 
                 if (usuario.id) {
-                  console.log("IdLocura:",usuario.id)
+                  //console.log("IdLocura:",usuario.id)
                   this.http.patch(`http://localhost:8000/api/usuarios/activar/${usuario.id}`, {}, { responseType: 'text' })
                     .subscribe(
                       () => console.log(`✅ Usuario ${usuario.id} activado`),

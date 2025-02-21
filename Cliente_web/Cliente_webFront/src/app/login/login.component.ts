@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit{
   verificarUsuario() {
     this.http.get<any[]>('http://localhost:8000/api/usuarios/pagina/1').subscribe(
       (usuarios) => {
-        console.log("Estos son los usuarios encontrados:", usuarios);
+        //console.log("Estos son los usuarios encontrados:", usuarios);
 
         // Normalizamos el usuario ingresado y lo comparamos con los usuarios de la base de datos
         const usuarioIngresadoNormalizado = this.usuarioIngresado.trim().toLowerCase();
@@ -133,7 +133,7 @@ export class LoginComponent implements OnInit{
       nombre: this.usuarioEncontrado.nombre
     };
 
-    console.log("Datos Correo:", templateParams )
+    //console.log("Datos Correo:", templateParams )
 
     emailjs.send(serviceId, templateId, templateParams, userId)
       .then(() => console.log('Correo enviado exitosamente'))
@@ -165,7 +165,7 @@ export class LoginComponent implements OnInit{
     this.http.patch(`http://localhost:8000/api/usuarios/${this.usuarioEncontrado.id}`, { contrasena: hashedPassword }, { responseType: 'text' })
       .subscribe(
         (response) => {
-          console.log(response);  // Verifica si la respuesta es el mensaje correcto.
+          //console.log(response);  // Verifica si la respuesta es el mensaje correcto.
           alert('Contraseña actualizada correctamente.');
           this.cerrarModales();
         },

@@ -103,7 +103,7 @@ export class RepresentantesComponent implements OnInit {
               alert("Un dato ingresado, no fue reconocido por el sistema")
             }else{
               alert("El representante fue creado exitosamente")
-              console.log('Respuesta del servidor:', response);
+              //console.log('Respuesta del servidor:', response);
               this.obtenerRepresentantes(); // Actualizar la lista después de la creación
               this.cerrarModalRepresentantesCrear(); // Cerrar el modal
             }
@@ -130,7 +130,7 @@ export class RepresentantesComponent implements OnInit {
     if (seleccionados.length === 1) {
       // Solo se puede actualizar un representante a la vez
       this.representanteActual = seleccionados[0];
-      console.log(this.representanteActual)
+      //console.log(this.representanteActual)
       this.showModalEditar = true;
     } else if (seleccionados.length > 1) {
       // Mostrar alerta si se seleccionaron varios representantes
@@ -169,7 +169,7 @@ export class RepresentantesComponent implements OnInit {
             alert("Un dato ingresado, no fue reconocido por el sistema")
           }else{
             alert("Representante actualizado correctamente")
-            console.log('Representante actualizado correctamente:', response);
+            //console.log('Representante actualizado correctamente:', response);
             this.showModalEditar = false; // Cerrar el modal después de la actualización
             this.obtenerRepresentantes(); // Actualizar la lista de representantes
           }
@@ -206,12 +206,12 @@ export class RepresentantesComponent implements OnInit {
 
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
-        console.log('Respuestas de la API:', respuestas);
+        //console.log('Respuestas de la API:', respuestas);
 
         // Extraemos el primer objeto de cada array en respuestas
         this.representantesParaEliminar = respuestas.map(respuesta => respuesta[0]);
 
-        console.log('Representantes a eliminar:', this.representantesParaEliminar);
+        //console.log('Representantes a eliminar:', this.representantesParaEliminar);
 
         // Ahora que los datos están listos, abrir el modal
         this.modalAbiertoEliminar = true;
@@ -237,7 +237,7 @@ export class RepresentantesComponent implements OnInit {
 
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
-          console.log(`Representante con ID ${representante.id} eliminado:`, response);
+          //console.log(`Representante con ID ${representante.id} eliminado:`, response);
           alert("Representante(s) eliminado(s) con éxito");
           this.obtenerRepresentantes(); // Actualizar la lista después de la eliminación
         },

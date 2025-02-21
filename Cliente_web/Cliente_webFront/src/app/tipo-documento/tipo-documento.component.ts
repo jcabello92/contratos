@@ -69,7 +69,7 @@ export class TipoDeDocumentoComponent implements OnInit {
             alert("El dato ingresado, no fue reconocido por el sistema")
           }else{
             alert("Tipo de documento creado exitosamente")
-            console.log(response);
+            //console.log(response);
             this.obtenerTiposDeDocumento();
             this.cerrarModal();
           }
@@ -98,7 +98,7 @@ export class TipoDeDocumentoComponent implements OnInit {
                 alert("El dato ingresado, no fue reconocido por el sistema")
             }else {
               alert("Tipo de documento actualizado correctamente")
-              console.log("Respuesta del servidor:", response);
+              //console.log("Respuesta del servidor:", response);
               this.obtenerTiposDeDocumento();
               this.cerrarModal();
             }

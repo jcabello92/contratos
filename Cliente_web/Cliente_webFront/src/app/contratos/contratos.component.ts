@@ -215,11 +215,11 @@ export class ContratosComponent implements OnInit {
         this.http.post(url, contrato, { responseType: 'text' })
           .subscribe(
             response => {
-              console.log('Respuesta del servidor:', response);
+              //console.log('Respuesta del servidor:', response);
               if (response == "No se enviaron todos los datos requeridos.") {
                 alert("Un dato ingresado no fue reconocido por el sistema");
               } else {
-                console.log("Nuevo Contrato:", response)
+                //console.log("Nuevo Contrato:", response)
                 alert("Contrato creado con éxito");
                 this.cerrarModalContratoCrear();
                 this,this.obtenerContratos()
@@ -331,12 +331,12 @@ export class ContratosComponent implements OnInit {
     // Suscribirse a los Observables
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
-        console.log('Respuestas de la API:', respuestas);  // Verifica la respuesta ahora
+        //console.log('Respuestas de la API:', respuestas);  // Verifica la respuesta ahora
 
         // Extraemos el contrato de cada array de la respuesta
         this.contratosAEliminar = respuestas.map(respuesta => respuesta[0]); // Accede al primer contrato
 
-        console.log('Contratos a eliminar:', this.contratosAEliminar);  // Verifica los contratos extraídos
+        //console.log('Contratos a eliminar:', this.contratosAEliminar);  // Verifica los contratos extraídos
       },
       (error) => {
         console.error('Error al obtener los contratos:', error);
@@ -358,7 +358,7 @@ export class ContratosComponent implements OnInit {
 
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
-          console.log(`Contrato con ID ${contrato.id} eliminado:`, response);
+          //console.log(`Contrato con ID ${contrato.id} eliminado:`, response);
           alert("Contrato(s) eliminado(s) con éxito");
           this.obtenerContratos();
         },

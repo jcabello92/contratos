@@ -20,7 +20,7 @@ export class EnviarCorreoComponent {
 
     emailjs.send('service_uxe4xlr', 'template_dy8romm', templateParams, '5t3e8VdfQtWUUB3qM')
       .then(response => {
-        console.log('Correo enviado:', response);
+        //console.log('Correo enviado:', response);
         alert('Correo enviado correctamente.');
       })
       .catch(error => {

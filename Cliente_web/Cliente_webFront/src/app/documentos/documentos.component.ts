@@ -169,7 +169,7 @@ export class DocumentosComponent implements OnInit {
           if(response == "No se enviaron todos los datos requeridos."){
             alert("Un dato ingresado, no fue reconocido por el sistema")
           }else{
-            console.log('Documento creado:', response);
+            //console.log('Documento creado:', response);
             alert("El documento fue creado exitosamente")
             this.obtenerDocumentos();
             this.cerrarModalDocumentosCrear();
@@ -239,7 +239,7 @@ export class DocumentosComponent implements OnInit {
             alert("Un dato ingresado, no fue reconocido por el sistema")
           }else{
             alert("Documento actualizado correctamente")
-            console.log('Documento actualizado:', response);
+            //console.log('Documento actualizado:', response);
             this.showModalEditar = false;
             this.obtenerDocumentos();
           }
@@ -275,7 +275,7 @@ export class DocumentosComponent implements OnInit {
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
         this.documentosParaEliminar = respuestas.map(respuesta => respuesta[0]);
-        console.log('Documentos a eliminar:', this.documentosParaEliminar);
+        //console.log('Documentos a eliminar:', this.documentosParaEliminar);
       },
       error => {
         console.error('Error al obtener los documentos:', error);
@@ -298,7 +298,7 @@ export class DocumentosComponent implements OnInit {
 
       this.http.delete(url, { responseType: 'text' }).subscribe(
         response => {
-          console.log(`Documento con ID ${doc.id} eliminado:`, response);
+          //console.log(`Documento con ID ${doc.id} eliminado:`, response);
           alert('Documento(s) eliminado(s) con éxito');
           this.obtenerDocumentos();
         },
