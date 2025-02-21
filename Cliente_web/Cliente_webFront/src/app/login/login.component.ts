@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit{
       },
       (error) => {
         console.error('Error al conectar con la API:', error);
-        alert('Error al conectar con el servidor.');
+        alert('El usuario o contraseña no son correctos.');
       }
     );
   }

@@ -372,11 +372,11 @@ export class OITsComponent implements OnInit {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
   }
 
-  gestionPaginas(accion: string) {
+  async gestionPaginas(accion: string) {
     if (accion === 'anterior') {
       if (this.ItosAObtener > 1) {
         this.ItosAObtener--;
-        this.obtenerItos();
+        await this.obtenerItos();
       } else {
         alert('No hay una página anterior a esta.');
       }
@@ -389,6 +389,7 @@ export class OITsComponent implements OnInit {
           if (Array.isArray(response) && response.length > 0) {
             this.ItosAObtener++;
             this.itos = response;
+            this.asignarAreaAItos()
           } else {
             alert('No hay más itos disponibles.');
           }

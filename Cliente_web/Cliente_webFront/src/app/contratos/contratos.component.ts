@@ -208,6 +208,7 @@ export class ContratosComponent implements OnInit {
               if (response == "No se enviaron todos los datos requeridos.") {
                 alert("Un dato ingresado no fue reconocido por el sistema");
               } else {
+                console.log("Nuevo Contrato:", response)
                 alert("Contrato creado con éxito");
                 this.cerrarModalContratoCrear();
                 this,this.obtenerContratos()
@@ -406,11 +407,11 @@ export class ContratosComponent implements OnInit {
   }
 
 
-  gestionPaginas(accion: string) {
+  async gestionPaginas(accion: string) {
     if (accion === 'anterior') {
       if (this.contratosAObtener > 1) {
         this.contratosAObtener--;
-        this.obtenerContratos();
+        await this.obtenerContratos();
       } else {
         alert('No hay una página anterior a esta.');
       }
@@ -423,6 +424,7 @@ export class ContratosComponent implements OnInit {
           if (Array.isArray(response) && response.length > 0) {
             this.contratosAObtener++;
             this.contratos = response;
+            this.ObtenerProveedoresEItosEnContratos()
           } else {
             alert('No hay más contratos disponibles para cargar en pantalla');
           }

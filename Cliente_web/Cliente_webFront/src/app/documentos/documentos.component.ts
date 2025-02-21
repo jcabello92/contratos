@@ -371,11 +371,11 @@ export class DocumentosComponent implements OnInit {
   }
 
 
-  gestionPaginas(accion: string) {
+  async gestionPaginas(accion: string) {
     if (accion === 'anterior') {
       if (this.DocumentosAObtener > 1) {
         this.DocumentosAObtener--;
-        this.obtenerDocumentos();
+        await this.obtenerDocumentos();
       } else {
         alert('No hay una página anterior a esta.');
       }
@@ -392,6 +392,7 @@ export class DocumentosComponent implements OnInit {
             if (Array.isArray(jsonResponse) && jsonResponse.length > 0) {
               this.DocumentosAObtener++;
               this.documentos = jsonResponse;
+              this.asignarTipoDocumentoYContrato()
             } else {
               alert('No hay más documentos disponibles.');
             }

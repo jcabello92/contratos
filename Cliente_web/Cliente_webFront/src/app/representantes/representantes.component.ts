@@ -275,11 +275,11 @@ export class RepresentantesComponent implements OnInit {
     return parseInt(rut.replace(/\./g, '').split('-')[0], 10);
   }
 
-  gestionPaginas(accion: string) {
+  async gestionPaginas(accion: string) {
     if (accion === 'anterior') {
       if (this.RepresentantesAObtener > 1) {
         this.RepresentantesAObtener--;
-        this.obtenerRepresentantes();
+        await this.obtenerRepresentantes();
       } else {
         alert('No hay una página anterior a esta.');
       }
