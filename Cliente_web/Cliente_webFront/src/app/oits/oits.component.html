@@ -96,8 +96,8 @@
     </select>
 
     <div class="modal-buttons">
-      <button (click)="crearIto()" class="boton-crear">Crear</button>
       <button (click)="cerrarModalItoCrear()" class="boton-cancelar">Cerrar</button>
+      <button (click)="crearIto()" class="boton-crear">Crear</button>
     </div>
   </div>
 </div>
@@ -129,8 +129,8 @@
     </select>
 
     <div class="modal-buttons">
-      <button (click)="actualizarElIto()" class="boton-crear">Actualizar</button>
       <button (click)="cancelarActualizacion()" class="boton-cancelar">Cancelar</button>
+      <button (click)="actualizarElIto()" class="boton-crear">Actualizar</button>
     </div>
   </div>
 </div>
@@ -139,7 +139,6 @@
 <!-- Modal para Eliminar ito -->
 <div *ngIf="modalAbiertoEliminar" id="modalEliminar" class="modal">
   <div class="modal-content">
-    <span class="cerrar" (click)="cerrarModalEliminar()">&times;</span>
     <h2>¿Estás seguro de que deseas eliminar los siguientes ID(s)?</h2>
 
     <!-- Mostrar los nombres de los itos a eliminar -->
@@ -150,8 +149,8 @@
     </ul>
 
     <div class="botones">
-      <button type="button" (click)="cerrarModalEliminar()">Cancelar</button>
-      <button type="button" (click)="confirmarEliminacion()">Confirmar</button>
+      <button type="button" class="buttons" (click)="confirmarEliminacion()">Confirmar</button>
+      <button type="button" class="buttons" (click)="cerrarModalEliminar()">Cancelar</button>
     </div>
   </div>
 </div>

@@ -141,14 +141,25 @@
 </div>
 
 
-<!-- Modal de eliminación -->
+<!-- Modal para Eliminar Representantes -->
 <div *ngIf="modalAbiertoEliminar" class="modal">
   <div class="modal-content">
-    <h3>¿Está seguro que desea eliminar a los representantes con los id: {{ idsParaEliminar }}?</h3>
-    <button (click)="confirmarEliminacion()">Confirmar</button>
-    <button (click)="cerrarModalEliminar()">Cancelar</button>
+    <h2>¿Estás seguro de que deseas eliminar los siguientes representantes?</h2>
+
+    <!-- Mostrar los nombres de los representantes a eliminar -->
+    <ul>
+      <li *ngFor="let representante of representantesParaEliminar">
+        Nombre: {{ representante.nombre }} {{ representante.apellido }}
+      </li>
+    </ul>
+
+    <div class="botones">
+      <button type="button" class="buttons" (click)="confirmarEliminacion()">Confirmar</button>
+      <button type="button" class="buttons" (click)="cerrarModalEliminar()">Cancelar</button>
+    </div>
   </div>
 </div>
+
 
 
 

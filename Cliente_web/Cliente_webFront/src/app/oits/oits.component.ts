@@ -254,7 +254,7 @@ export class OITsComponent implements OnInit {
 
       this.modalAbiertoEliminar = true;
     } else {
-      console.log('Ningún ito seleccionado para eliminar');
+      alert('Ningún ito seleccionado para eliminar');
     }
   }
 

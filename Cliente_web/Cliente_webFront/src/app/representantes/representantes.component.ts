@@ -4,6 +4,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
+import {forkJoin} from 'rxjs';
 
 
 @Component({
@@ -182,34 +183,54 @@ export class RepresentantesComponent implements OnInit {
       alert("No están todos los datos ingresados")
     }
   }
-
-  // Función para mostrar el modal de eliminación con los IDs seleccionados
+// Función para mostrar el modal de eliminación con los representantes seleccionados
   eliminarRepresentante() {
     const seleccionados = this.representantes.filter((_, index) => this.representanteSeleccionado[index]);
 
     if (seleccionados.length > 0) {
-      // Crear la lista de IDs seleccionados para mostrar en el modal
-      const idsSeleccionados = seleccionados.map((representante) => representante.id).join(', ');
+      const idsSeleccionados = seleccionados.map((representante) => representante.id);
 
-      // Asignar los IDs a mostrar en el modal
-      this.idsParaEliminar = idsSeleccionados;
+      // Llamar a la API para obtener los datos completos de los representantes
+      this.obtenerRepresentantesParaEliminar(idsSeleccionados);
 
-      // Abrir el modal de confirmación
       this.modalAbiertoEliminar = true;
     } else {
-      console.log('Ningún representante seleccionado para eliminar');
+      alert('Ningún representante seleccionado para eliminar');
     }
   }
 
-  // Función para cerrar el modal de eliminación
-  cerrarModalEliminar() {
-    this.modalAbiertoEliminar = false;
-    this.idsParaEliminar = ''; // Limpiar los IDs mostrados en el modal
+  obtenerRepresentantesParaEliminar(ids: number[]) {
+    const apiUrl = 'http://localhost:8000/api/representantes/id/';
+
+    const requests = ids.map(id => this.http.get(`${apiUrl}${id}`));
+
+    forkJoin(requests).subscribe(
+      (respuestas: any[]) => {
+        console.log('Respuestas de la API:', respuestas);
+
+        // Extraemos el primer objeto de cada array en respuestas
+        this.representantesParaEliminar = respuestas.map(respuesta => respuesta[0]);
+
+        console.log('Representantes a eliminar:', this.representantesParaEliminar);
+
+        // Ahora que los datos están listos, abrir el modal
+        this.modalAbiertoEliminar = true;
+      },
+      (error) => {
+        console.error('Error al obtener los representantes:', error);
+      }
+    );
   }
 
-  // Función para confirmar la eliminación de los representantes seleccionados
+// Función para cerrar el modal de eliminación
+  cerrarModalEliminar() {
+    this.modalAbiertoEliminar = false;
+    this.representantesParaEliminar = [];
+  }
+
+// Función para confirmar la eliminación de los representantes seleccionados
   confirmarEliminacion() {
-    const seleccionados = this.representantes.filter((_, index) => this.representanteSeleccionado[index]);
+    const seleccionados = this.representantesParaEliminar;
 
     seleccionados.forEach((representante) => {
       const url = `http://localhost:8000/api/representantes/${representante.id}`;
@@ -217,33 +238,29 @@ export class RepresentantesComponent implements OnInit {
       this.http.delete(url, { responseType: 'text' }).subscribe(
         (response) => {
           console.log(`Representante con ID ${representante.id} eliminado:`, response);
-          alert("Representante(s) eliminado(s) con éxito")
+          alert("Representante(s) eliminado(s) con éxito");
           this.obtenerRepresentantes(); // Actualizar la lista después de la eliminación
         },
         (error: any) => {
           if (error instanceof HttpErrorResponse) {
             if (error.status === 500) {
-              // Si es error 500 (Internal Server Error)
               console.error(`Error 500 al eliminar el representante con ID ${representante.id}:`, error);
               alert("ERROR: No se puede eliminar uno o más representante(s) porque tiene un proveedor asociado.");
             } else {
-              // Si es otro error diferente a 500
               console.error(`Error al eliminar el representante con ID ${representante.id}:`, error);
               alert(`Error al eliminar uno o más representante(s)`);
             }
           } else {
-            // Si el error no es un HttpErrorResponse (error inesperado)
             console.error(`Error inesperado al eliminar el representante con ID ${representante.id}:`, error);
             alert("Ocurrió un error inesperado al eliminar uno o más representante(s).");
           }
         }
-
       );
     });
 
-    // Cerrar el modal después de la eliminación
     this.cerrarModalEliminar();
   }
+
 
   filtrarRepresentantes() {
     const url = `http://localhost:8000/api/representantes/pagina/${this.RepresentantesAObtener}`;
