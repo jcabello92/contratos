@@ -307,7 +307,7 @@ export class DocumentosComponent implements OnInit {
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
         this.documentosParaEliminar = respuestas.map(respuesta => respuesta[0]);
-        //console.log('Documentos a eliminar:', this.documentosParaEliminar);
+        console.log('Documentos a eliminar:', this.documentosParaEliminar);
       },
       error => {
         console.error('Error al obtener los documentos:', error);
@@ -343,6 +343,39 @@ export class DocumentosComponent implements OnInit {
 
     this.cerrarModalEliminar();
   }
+
+  descargarDocumento(documento: any) {
+    const url = `http://localhost:8000/api/documentos/id/${documento.id}`;
+
+    // Pedimos el archivo como 'blob' (binario)
+    this.http.get(url, { responseType: 'blob' }).subscribe(
+      async (blob) => {
+        // Convertimos el blob a texto, para detectar si es un mensaje de error
+        const text = await blob.text();
+
+        // Si el texto contiene 'No se encontró el documento registrado en el sistema',
+        // significa que el backend devolvió un error en vez de un archivo
+        if (text.includes('No se encontró el documento registrado en el sistema.')) {
+          alert('No se encontró un archivo en el sistema para este documento');
+          return;
+        }
+
+        // Si no contiene el mensaje de error, asumimos que es un archivo válido
+        // Para descargarlo en el navegador:
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = documento.nombre || 'documento.pdf'; // Nombre sugerido del archivo
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+      },
+      (error) => {
+        console.error('Error al descargar el documento:', error);
+        alert('No se encontró un archivo en el sistema para este documento');
+      }
+    );
+  }
+
 
   async filtrarDocumentos() {
     const url = `http://localhost:8000/api/documentos/pagina/${this.DocumentosAObtener}`;

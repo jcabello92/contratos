@@ -55,7 +55,7 @@
     <td>{{ documento.tipo_documento }}</td>
     <td>{{ documento.contrato }}</td>
     <td>
-      <button class="botonesCrud">Acceso al documento</button>
+      <button class="botonesCrud" (click)="descargarDocumento(documento)">Acceso al documento</button>
     </td>
   </tr>
   </tbody>
