@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Documento;
 
@@ -49,8 +50,8 @@ class DocumentoController extends Controller
             'nombre' => 'max:100|required|unique:App\Models\Documento,nombre',
             'fecha_subida' => 'max:10|required',
             'hora_subida' => 'max:8|required',
-            'tipo_documento' => 'numeric|digits:2|required',
-            'contrato' => 'numeric|digits:4|required'
+            'tipo_documento' => 'max:2|required',
+            'contrato' => 'max:4|required'
         ]);
 
         if($validator->fails())
@@ -62,14 +63,18 @@ class DocumentoController extends Controller
             'nombre' => $request->nombre,
             'fecha_subida' => $request->fecha_subida,
             'hora_subida' => $request->hora_subida,
-            'tipo_documento' => $request->tipo_documento,
-            'contrato' => $request->contrato
+            'tipo_documento' => (int)$request->tipo_documento,
+            'contrato' => (int)$request->contrato
         ]);
 
         if(!$documento)
         {
             return 'No se pudo registrar el documento en el sistema.';
         }
+
+        Storage::disk('local')->put(Documento::latest('id')->first()->id, $request->archivo);
+
+        return $request->archivo;
 
         return 'Documento registrado con éxito en el sistema.';
     }
@@ -96,8 +101,10 @@ class DocumentoController extends Controller
         {
             return 'No se encontró el documento registrado en el sistema.';
         }
+
+        $archivo = Storage::download("/" . $id . "/5dZ58Sr6vZi9xPbvqdUPFwp2hi4560tZ2LE7I6TL.pdf");
         
-        return $documento;
+        return $archivo;
     }
 
 
