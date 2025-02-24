@@ -92,12 +92,30 @@
     <label>Contrato relacionado:</label>
     <input type="text" [(ngModel)]="nuevoDocumento.contrato">
 
+    <!-- Input oculto para seleccionar archivo -->
+    <input
+      id="fileInput"
+      type="file"
+      style="display: none"
+      (change)="onFileSelected($event)"
+      accept=".pdf,.xlsx,.xls"
+    />
+
+    <!-- Mostrar el nombre del archivo seleccionado -->
+    <div *ngIf="selectedFile">
+      <p>Archivo seleccionado: {{ selectedFile.name }}</p>
+    </div>
+
     <div class="modal-buttons">
+      <!-- Botón para abrir el explorador de archivos -->
+      <button class="buttons" (click)="abrirSelectorArchivos()">Seleccionar Archivo</button>
       <button class="buttons" (click)="cerrarModalDocumentosCrear()">Cancelar</button>
       <button class="buttons" (click)="crearDocumento()">Crear</button>
     </div>
   </div>
 </div>
+
+
 
 <!-- Modal Actualizar -->
 <div *ngIf="showModalEditar" class="modal">

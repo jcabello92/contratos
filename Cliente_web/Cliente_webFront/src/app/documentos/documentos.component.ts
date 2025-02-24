@@ -31,6 +31,8 @@ export class DocumentosComponent implements OnInit {
   documentoActual: any = {};
   documentosParaEliminar: any[] = [];
   idsParaEliminar: string = '';
+  //archivo seleccionado para subir al sistema
+  selectedFile: File | null = null;
 
   //filtros
   campoOrden: string = 'nombre'; // Valor predeterminado
@@ -147,6 +149,21 @@ export class DocumentosComponent implements OnInit {
     this.nuevoDocumento = { nombre: '', fecha_subida: '', hora_subida: '', tipo_documento: '', contrato: '' };
   }
 
+  // Método para abrir el input de archivo "oculto"
+  abrirSelectorArchivos(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  }
+
+  // Método que se llama cuando el usuario selecciona un archivo
+  onFileSelected(event: any): void {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+      // Opcional: podrías validar aquí si es PDF o Excel
+      // Ejemplo: if (!['application/pdf', ...].includes(this.selectedFile.type)) ...
+    }
+  }
+
   crearDocumento() {
     // Asegurar que tipo_documento tenga al menos 2 dígitos
     this.nuevoDocumento.tipo_documento = this.nuevoDocumento.tipo_documento.padStart(2, '0');
@@ -154,34 +171,49 @@ export class DocumentosComponent implements OnInit {
     // Asegurar que contrato tenga al menos 4 dígitos
     this.nuevoDocumento.contrato = this.nuevoDocumento.contrato.padStart(4, '0');
 
-    const params = new URLSearchParams();
-    params.set('nombre', this.nuevoDocumento.nombre);
-    params.set('fecha_subida', this.nuevoDocumento.fecha_subida);
-    params.set('hora_subida', this.nuevoDocumento.hora_subida);
-    params.set('tipo_documento', this.nuevoDocumento.tipo_documento);
-    params.set('contrato', this.nuevoDocumento.contrato);
+    // Validar que los campos no estén vacíos
+    if (
+      this.nuevoDocumento.nombre &&
+      this.nuevoDocumento.fecha_subida &&
+      this.nuevoDocumento.hora_subida &&
+      this.nuevoDocumento.tipo_documento &&
+      this.nuevoDocumento.contrato
+    ) {
+      // En lugar de mandar los datos por query params, usaremos FormData
+      // para que sea multipart/form-data y se envíe el archivo.
+      const formData = new FormData();
+      formData.append('nombre', this.nuevoDocumento.nombre);
+      formData.append('fecha_subida', this.nuevoDocumento.fecha_subida);
+      formData.append('hora_subida', this.nuevoDocumento.hora_subida);
+      formData.append('tipo_documento', this.nuevoDocumento.tipo_documento);
+      formData.append('contrato', this.nuevoDocumento.contrato);
 
-    if(this.nuevoDocumento.nombre && this.nuevoDocumento.fecha_subida && this.nuevoDocumento.hora_subida && this.nuevoDocumento.tipo_documento && this.nuevoDocumento.contrato){
-      const url = `http://localhost:8000/api/documentos?${params.toString()}`;
+      // Si el usuario seleccionó un archivo, lo adjuntamos
+      if (this.selectedFile) {
+        formData.append('archivo', this.selectedFile, this.selectedFile.name);
+      }
 
-      this.http.post(url, {}, { responseType: 'text' }).subscribe(
+      const url = 'http://localhost:8000/api/documentos';
+
+      this.http.post(url, formData, { responseType: 'text' }).subscribe(
         response => {
-          if(response == "No se enviaron todos los datos requeridos."){
-            alert("Un dato ingresado, no fue reconocido por el sistema")
-          }else{
-            //console.log('Documento creado:', response);
-            alert("El documento fue creado exitosamente")
+          if (response === 'No se enviaron todos los datos requeridos.') {
+            alert('Un dato ingresado no fue reconocido por el sistema');
+            this.cerrarModalDocumentosCrear()
+          } else {
+            alert('El documento fue creado exitosamente');
             this.obtenerDocumentos();
             this.cerrarModalDocumentosCrear();
           }
         },
         error => {
           console.error('Error al crear documento:', error);
-          alert("No se pudo crear el documento, hay un dato mal ingresado")
+          alert('No se pudo crear el documento, hay un dato mal ingresado');
+          this.cerrarModalDocumentosCrear()
         }
       );
-    }else{
-      alert("No están todos los datos ingresados")
+    } else {
+      alert('No están todos los datos ingresados');
     }
   }
 
