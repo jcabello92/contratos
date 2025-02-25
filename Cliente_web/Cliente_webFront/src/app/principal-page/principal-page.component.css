@@ -165,3 +165,18 @@
   gap: 15px;
 }
 
+.buttons {
+  display: block;
+  margin-bottom: 10px; /* Espaciado inferior */
+  padding: 10px 15px; /* Ajustar el padding para más espacio */
+  text-align: center; /* Centrar el texto */
+  font-family: 'Arial', sans-serif; /* Fuente sencilla y profesional */
+  font-size: 14px; /* Tamaño del texto */
+  font-weight: bold; /* Texto más visible */
+  background-color: #FFD700; /* Fondo amarillo dorado */
+  color: #000000; /* Texto negro */
+  border: none; /* Sin bordes */
+  border-radius: 20px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Suavidad en los cambios de color */
+}

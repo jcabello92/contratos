@@ -280,6 +280,7 @@ export class DocumentosComponent implements OnInit {
   }
 
 
+  // Método para iniciar la eliminación: se obtienen los documentos seleccionados
   eliminarDocumento() {
     const seleccionados = this.documentos.filter((_, index) => this.documentoSeleccionado[index]);
 
@@ -292,14 +293,16 @@ export class DocumentosComponent implements OnInit {
     }
   }
 
+// Se consulta la API para obtener cada documento completo (usando el endpoint correcto)
   obtenerDocumentosParaEliminar(ids: number[]) {
+    // Usamos el endpoint sin el segmento "id"
     const apiUrl = 'http://localhost:8000/api/documentos/id/';
-
     const requests = ids.map(id => this.http.get(`${apiUrl}${id}`));
 
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
-        this.documentosParaEliminar = respuestas.map(respuesta => respuesta[0]);
+        // Asumimos que cada respuesta es el objeto completo del documento
+        this.documentosParaEliminar = respuestas;
         console.log('Documentos a eliminar:', this.documentosParaEliminar);
       },
       error => {
@@ -308,34 +311,35 @@ export class DocumentosComponent implements OnInit {
     );
   }
 
-
+// Cierra el modal de eliminación y limpia las variables asociadas
   cerrarModalEliminar() {
     this.modalAbiertoEliminar = false;
     this.idsParaEliminar = '';
     this.documentosParaEliminar = [];
   }
 
+// Confirma la eliminación, enviando una petición DELETE para cada documento
   confirmarEliminacion() {
     const seleccionados = this.documentosParaEliminar;
 
     seleccionados.forEach(doc => {
       const url = `http://localhost:8000/api/documentos/${doc.id}`;
-
       this.http.delete(url, { responseType: 'text' }).subscribe(
         response => {
-          //console.log(`Documento con ID ${doc.id} eliminado:`, response);
           alert('Documento(s) eliminado(s) con éxito');
-          this.obtenerDocumentos();
+          this.obtenerDocumentos(); // Actualiza la lista de documentos tras la eliminación
         },
         error => {
           console.error(`Error al eliminar el documento con ID ${doc.id}:`, error);
-          alert('Error al eliminar un(os) documento(s)');
+          alert('Error al eliminar uno o más documento(s)');
         }
       );
     });
 
     this.cerrarModalEliminar();
   }
+
+
 
   descargarDocumento(documento: any) {
     const url = `http://localhost:8000/api/documentos/id/${documento.id}`;
