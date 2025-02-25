@@ -73,47 +73,44 @@
 <!-- ==================================================== MODALES ======================================================-->
 
 <!-- Modal Crear -->
-<div class="modal" *ngIf="modalAbiertoCrear">
+<div id="modalCrear" class="modal" [ngClass]="{'show': modalAbiertoCrear}">
   <div class="modal-content">
     <h2>Crear Documento</h2>
 
     <label>Nombre:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.nombre">
+    <input type="text" [(ngModel)]="nuevoDocumento.nombre" required>
 
-    <label>Fecha de Subida:</label>
-    <input type="date" [(ngModel)]="nuevoDocumento.fecha_subida">
+    <label>Fecha de subida:</label>
+    <input type="date" [(ngModel)]="nuevoDocumento.fecha_subida" required>
 
-    <label>Hora de Subida:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.hora_subida">
+    <label>Hora de subida:</label>
+    <input type="time" [(ngModel)]="nuevoDocumento.hora_subida" required>
 
-    <label>Tipo de documento:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.tipo_documento">
+    <!-- Tipo de Documento -->
+    <label>Tipo de Documento:</label>
+    <select [(ngModel)]="nuevoDocumento.tipo_documento" name="tipo_documento" required>
+      <option *ngFor="let tipo of tiposDocumentos" [ngValue]="tipo">{{ tipo.nombre }}</option>
+    </select>
 
-    <label>Contrato relacionado:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.contrato">
+    <!-- Contrato -->
+    <label>Contrato Relacionado:</label>
+    <select [(ngModel)]="nuevoDocumento.contrato" name="contrato" required>
+      <option *ngFor="let contrato of contratos" [ngValue]="contrato">{{ contrato.nombre }}</option>
+    </select>
 
-    <!-- Input oculto para seleccionar archivo -->
-    <input
-      id="fileInput"
-      type="file"
-      style="display: none"
-      (change)="onFileSelected($event)"
-      accept=".pdf,.xlsx,.xls"
-    />
-
-    <!-- Mostrar el nombre del archivo seleccionado -->
-    <div *ngIf="selectedFile">
-      <p>Archivo seleccionado: {{ selectedFile.name }}</p>
-    </div>
+    <!-- Selección de Archivo -->
+    <label>Archivo:</label>
+    <input id="fileInput" type="file" (change)="onFileSelected($event)" hidden>
+    <button class="buttons" (click)="abrirSelectorArchivos()">Seleccionar Archivo</button>
+    <p *ngIf="selectedFile">Archivo seleccionado: {{ selectedFile.name }}</p>
 
     <div class="modal-buttons">
-      <!-- Botón para abrir el explorador de archivos -->
-      <button class="buttons" (click)="abrirSelectorArchivos()">Seleccionar Archivo</button>
-      <button class="buttons" (click)="cerrarModalDocumentosCrear()">Cancelar</button>
-      <button class="buttons" (click)="crearDocumento()">Crear</button>
+      <button class="buttons"  type="button" (click)="cerrarModalDocumentosCrear()">Cancelar</button>
+      <button class="buttons"  type="submit" (click)="crearDocumento()">Crear Documento</button>
     </div>
   </div>
 </div>
+
 
 
 

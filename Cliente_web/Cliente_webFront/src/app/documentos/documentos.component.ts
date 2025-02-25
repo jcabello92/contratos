@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { NgForOf, NgIf } from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import {forkJoin} from 'rxjs';
   selector: 'app-documentos',
   templateUrl: './documentos.component.html',
   styleUrl: './documentos.component.css',
-  imports: [NgForOf, HttpClientModule, FormsModule, NgIf],
+  imports: [NgForOf, HttpClientModule, FormsModule, NgIf, NgClass],
   standalone: true
 })
 export class DocumentosComponent implements OnInit {
@@ -23,8 +23,8 @@ export class DocumentosComponent implements OnInit {
     nombre: '',
     fecha_subida: '',
     hora_subida: '',
-    tipo_documento: '',
-    contrato:''
+    tipo_documento: { id: 0, nombre: '' },
+    contrato: { id: 0, nombre: '' }
   };
 
   documentoSeleccionado: boolean[] = [];
@@ -60,12 +60,10 @@ export class DocumentosComponent implements OnInit {
       async data => {
         if (data.length > 0) {
           this.documentos = data;
-
-          // Hacer el match de tipo_documento y contrato
           await this.asignarTipoDocumentoYContrato();
         } else {
           alert('No hay más documentos para continuar avanzando en la página');
-          this.DocumentosAObtener--; // Revertimos el cambio si no hay más datos
+          this.DocumentosAObtener--;
         }
       },
       error => {
@@ -77,11 +75,9 @@ export class DocumentosComponent implements OnInit {
   async asignarTipoDocumentoYContrato() {
     try {
       this.documentos.forEach(documento => {
-        // Buscar el tipo de documento correspondiente
         const tipoDocumentoEncontrado = this.tiposDocumentos.find(tipo => tipo.id === documento.tipo_documento);
         documento.tipo_documento = tipoDocumentoEncontrado ? tipoDocumentoEncontrado.nombre : "Desconocido";
 
-        // Buscar el contrato correspondiente
         const contratoEncontrado = this.contratos.find(contrato => contrato.id === documento.contrato);
         documento.contrato = contratoEncontrado ? contratoEncontrado.nombre : "Desconocido";
       });
@@ -92,7 +88,7 @@ export class DocumentosComponent implements OnInit {
 
   async obtenerTiposDocumentos() {
     let pagina = 1;
-    this.tiposDocumentos = []; // Reiniciamos el array
+    this.tiposDocumentos = [];
     let continuar = true;
 
     while (continuar) {
@@ -117,7 +113,7 @@ export class DocumentosComponent implements OnInit {
 
   async obtenerContratos() {
     let pagina = 1;
-    this.contratos = []; // Reiniciamos el array
+    this.contratos = [];
     let continuar = true;
 
     while (continuar) {
@@ -146,7 +142,14 @@ export class DocumentosComponent implements OnInit {
 
   cerrarModalDocumentosCrear() {
     this.modalAbiertoCrear = false;
-    this.nuevoDocumento = { nombre: '', fecha_subida: '', hora_subida: '', tipo_documento: '', contrato: '' };
+    this.nuevoDocumento = {
+      nombre: '',
+      fecha_subida: '',
+      hora_subida: '',
+      tipo_documento: { id: 0, nombre: '' },
+      contrato: { id: 0, nombre: '' }
+    };
+    this.selectedFile = null;
   }
 
   // Método para abrir el input de archivo "oculto"
@@ -159,36 +162,24 @@ export class DocumentosComponent implements OnInit {
   onFileSelected(event: any): void {
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
-      // Opcional: podrías validar aquí si es PDF o Excel
-      // Ejemplo: if (!['application/pdf', ...].includes(this.selectedFile.type)) ...
     }
   }
 
   crearDocumento() {
-    // Asegurar que tipo_documento tenga al menos 2 dígitos
-    this.nuevoDocumento.tipo_documento = this.nuevoDocumento.tipo_documento.padStart(2, '0');
-
-    // Asegurar que contrato tenga al menos 4 dígitos
-    this.nuevoDocumento.contrato = this.nuevoDocumento.contrato.padStart(4, '0');
-
-    // Validar que los campos no estén vacíos
     if (
       this.nuevoDocumento.nombre &&
       this.nuevoDocumento.fecha_subida &&
       this.nuevoDocumento.hora_subida &&
-      this.nuevoDocumento.tipo_documento &&
-      this.nuevoDocumento.contrato
+      this.nuevoDocumento.tipo_documento.id &&
+      this.nuevoDocumento.contrato.id
     ) {
-      // En lugar de mandar los datos por query params, usaremos FormData
-      // para que sea multipart/form-data y se envíe el archivo.
       const formData = new FormData();
       formData.append('nombre', this.nuevoDocumento.nombre);
       formData.append('fecha_subida', this.nuevoDocumento.fecha_subida);
       formData.append('hora_subida', this.nuevoDocumento.hora_subida);
-      formData.append('tipo_documento', this.nuevoDocumento.tipo_documento);
-      formData.append('contrato', this.nuevoDocumento.contrato);
+      formData.append('tipo_documento', this.nuevoDocumento.tipo_documento.id.toString().padStart(2, '0'));
+      formData.append('contrato', this.nuevoDocumento.contrato.id.toString().padStart(4, '0'));
 
-      // Si el usuario seleccionó un archivo, lo adjuntamos
       if (this.selectedFile) {
         formData.append('archivo', this.selectedFile, this.selectedFile.name);
       }
@@ -197,23 +188,17 @@ export class DocumentosComponent implements OnInit {
 
       this.http.post(url, formData, { responseType: 'text' }).subscribe(
         response => {
-          if (response === 'No se enviaron todos los datos requeridos.') {
-            alert('Un dato ingresado no fue reconocido por el sistema');
-            this.cerrarModalDocumentosCrear()
-          } else {
-            alert('El documento fue creado exitosamente');
-            this.obtenerDocumentos();
-            this.cerrarModalDocumentosCrear();
-          }
+          alert("Documento creado con éxito");
+          this.obtenerDocumentos();
+          this.cerrarModalDocumentosCrear();
         },
         error => {
           console.error('Error al crear documento:', error);
-          alert('No se pudo crear el documento, hay un dato mal ingresado');
-          this.cerrarModalDocumentosCrear()
+          alert("No se pudo crear el documento, hay un dato mal ingresado");
         }
       );
     } else {
-      alert('No están todos los datos ingresados');
+      alert("No están todos los datos ingresados");
     }
   }
 
@@ -229,13 +214,13 @@ export class DocumentosComponent implements OnInit {
       this.documentoActual = seleccionados[0];
 
       // Asegurar que tipo_documento y contrato sean strings antes de aplicar padStart
-      this.nuevoDocumento = {
+      /*this.nuevoDocumento = {
         nombre: this.documentoActual.nombre,
         fecha_subida: this.documentoActual.fecha_subida,
         hora_subida: this.documentoActual.hora_subida,
         tipo_documento: String(this.documentoActual.tipo_documento).padStart(2, '0'),
         contrato: String(this.documentoActual.contrato).padStart(4, '0'),
-      };
+      };*/
 
       this.showModalEditar = true;
     } else {
