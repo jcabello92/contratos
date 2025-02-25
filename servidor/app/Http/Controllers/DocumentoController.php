@@ -102,7 +102,9 @@ class DocumentoController extends Controller
             return 'No se encontró el documento registrado en el sistema.';
         }
 
-        $archivo = Storage::download("/" . $id . "/5dZ58Sr6vZi9xPbvqdUPFwp2hi4560tZ2LE7I6TL.pdf");
+        $archivos = Storage::files("/" . $id);
+
+        $archivo = Storage::download($archivos[0]);
         
         return $archivo;
     }
