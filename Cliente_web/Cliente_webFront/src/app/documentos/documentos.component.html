@@ -112,34 +112,42 @@
 </div>
 
 
-
-
-<!-- Modal Actualizar -->
-<div *ngIf="showModalEditar" class="modal">
+<!-- Modal Actualizar Documento -->
+<div id="modalActualizar" class="modal" [ngClass]="{'show': showModalEditar}">
   <div class="modal-content">
     <h2>Actualizar Documento</h2>
+    <form (ngSubmit)="actualizarElDocumento()">
+      <label>Nombre:</label>
+      <input type="text" [(ngModel)]="nuevoDocumento.nombre" name="nombre" required>
 
-    <label>Nombre:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.nombre">
+      <label>Fecha de Subida:</label>
+      <input type="date" [(ngModel)]="nuevoDocumento.fecha_subida" name="fecha_subida" required>
 
-    <label>Fecha de Subida:</label>
-    <input type="date" [(ngModel)]="nuevoDocumento.fecha_subida">
+      <label>Hora de Subida:</label>
+      <input type="time" [(ngModel)]="nuevoDocumento.hora_subida" name="hora_subida" required>
 
-    <label>Hora de Subida:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.hora_subida">
+      <!-- Tipo de Documento con combobox -->
+      <label>Tipo de Documento:</label>
+      <select [(ngModel)]="nuevoDocumento.tipo_documento" name="tipo_documento" required>
+        <option *ngFor="let tipo of tiposDocumentos" [ngValue]="tipo">{{ tipo.nombre }}</option>
+      </select>
 
-    <label>Tipo de documento:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.tipo_documento">
+      <!-- Contrato con combobox -->
+      <label>Contrato:</label>
+      <select [(ngModel)]="nuevoDocumento.contrato" name="contrato" required>
+        <option *ngFor="let contrato of contratos" [ngValue]="contrato">{{ contrato.nombre }}</option>
+      </select>
 
-    <label>Contrato relacionado:</label>
-    <input type="text" [(ngModel)]="nuevoDocumento.contrato">
-
-    <div class="modal-buttons">
-      <button class="buttons" (click)="cancelarActualizacion()">Cancelar</button>
-      <button class="buttons" (click)="actualizarElDocumento()">Actualizar</button>
-    </div>
+      <div class="modal-buttons">
+        <button class="buttons" type="button" (click)="cancelarActualizacion()">Cancelar</button>
+        <button class="buttons" type="submit">Actualizar</button>
+      </div>
+    </form>
   </div>
 </div>
+
+
+
 
 <!-- Modal de eliminación de documentos -->
 <div *ngIf="modalAbiertoEliminar" class="modal">

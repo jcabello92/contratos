@@ -60,6 +60,7 @@ export class DocumentosComponent implements OnInit {
       async data => {
         if (data.length > 0) {
           this.documentos = data;
+          this.documentoSeleccionado = new Array(data.length).fill(false);
           await this.asignarTipoDocumentoYContrato();
         } else {
           alert('No hay más documentos para continuar avanzando en la página');
@@ -203,71 +204,78 @@ export class DocumentosComponent implements OnInit {
   }
 
 
+  // Método para manejar el cambio en los checkboxes
   onCheckboxChange(index: number) {
     this.documentoSeleccionado[index] = !this.documentoSeleccionado[index];
   }
 
+// Método para abrir el modal de actualización
   actualizarDocumento() {
     const seleccionados = this.documentos.filter((_, index) => this.documentoSeleccionado[index]);
-
+    console.log('Documentos seleccionados para actualizar:', seleccionados);
     if (seleccionados.length === 1) {
-      this.documentoActual = seleccionados[0];
+      // Copiamos el documento seleccionado para trabajar sobre él sin modificar el original
+      this.documentoActual = { ...seleccionados[0] };
 
-      // Asegurar que tipo_documento y contrato sean strings antes de aplicar padStart
-      /*this.nuevoDocumento = {
-        nombre: this.documentoActual.nombre,
-        fecha_subida: this.documentoActual.fecha_subida,
-        hora_subida: this.documentoActual.hora_subida,
-        tipo_documento: String(this.documentoActual.tipo_documento).padStart(2, '0'),
-        contrato: String(this.documentoActual.contrato).padStart(4, '0'),
-      };*/
+      // Rellenamos el objeto de edición (nuevoDocumento) con los datos actuales
+      this.nuevoDocumento.nombre = this.documentoActual.nombre;
+      this.nuevoDocumento.fecha_subida = this.documentoActual.fecha_subida;
+      this.nuevoDocumento.hora_subida = this.documentoActual.hora_subida;
+      // Para los combobox: buscamos en los arrays de tipos y contratos usando el nombre.
+      this.nuevoDocumento.tipo_documento = this.tiposDocumentos.find(tipo => tipo.nombre === this.documentoActual.tipo_documento)
+        || { id: 0, nombre: this.documentoActual.tipo_documento };
+      this.nuevoDocumento.contrato = this.contratos.find(contrato => contrato.nombre === this.documentoActual.contrato)
+        || { id: 0, nombre: this.documentoActual.contrato };
 
       this.showModalEditar = true;
     } else {
-      alert(seleccionados.length > 1 ? 'Solo puedes seleccionar un documento para actualizar.' : 'Selecciona un documento para actualizar.');
+      alert(seleccionados.length > 1
+        ? 'Solo puedes seleccionar un documento para actualizar.'
+        : 'Selecciona un documento para actualizar.');
     }
   }
 
-
-
+// Cierra el modal de actualización sin realizar cambios
   cancelarActualizacion() {
     this.showModalEditar = false;
   }
 
+// Método para enviar la actualización del documento (sin modificar el archivo)
   actualizarElDocumento() {
     const doc = this.nuevoDocumento;
     let url = `http://localhost:8000/api/documentos/${this.documentoActual.id}?`;
-
     const params: string[] = [];
+
     if (doc.nombre) params.push(`nombre=${doc.nombre}`);
     if (doc.fecha_subida) params.push(`fecha_subida=${doc.fecha_subida}`);
     if (doc.hora_subida) params.push(`hora_subida=${doc.hora_subida}`);
-    if (doc.tipo_documento) params.push(`tipo_documento=${String(doc.tipo_documento).padStart(2, '0')}`);
-    if (doc.contrato) params.push(`contrato=${String(doc.contrato).padStart(4, '0')}`);
+    if (doc.tipo_documento && doc.tipo_documento.id)
+      params.push(`tipo_documento=${doc.tipo_documento.id.toString().padStart(2, '0')}`);
+    if (doc.contrato && doc.contrato.id)
+      params.push(`contrato=${doc.contrato.id.toString().padStart(4, '0')}`);
 
     if (params.length > 0) {
       url += params.join('&');
     }
 
-    if(doc.nombre && doc.fecha_subida && doc.hora_subida && doc.tipo_documento && doc.contrato){
+    if (doc.nombre && doc.fecha_subida && doc.hora_subida && doc.tipo_documento && doc.contrato) {
       this.http.patch(url, {}, { responseType: 'text' }).subscribe(
         response => {
-          if(response == "Se encontraron errores en los datos enviados."){
-            alert("Un dato ingresado, no fue reconocido por el sistema")
-          }else{
-            alert("Documento actualizado correctamente")
-            //console.log('Documento actualizado:', response);
+          if (response === "Se encontraron errores en los datos enviados.") {
+            alert("Un dato ingresado, no fue reconocido por el sistema");
+          } else {
+            alert("Documento actualizado correctamente");
             this.showModalEditar = false;
-            this.obtenerDocumentos();
+            this.obtenerDocumentos(); // Actualiza la lista de documentos
           }
         },
         error => {
           console.error('Error al actualizar documento:', error);
-          alert("No se pudo actualizar el documento, hay un dato mal ingresado")
+          alert("No se pudo actualizar el documento, hay un dato mal ingresado");
         }
       );
-    }else{
-      alert("No están todos los datos ingresados")
+    } else {
+      alert("No están todos los datos ingresados");
     }
   }
 
