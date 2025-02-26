@@ -301,8 +301,7 @@ export class DocumentosComponent implements OnInit {
 
     forkJoin(requests).subscribe(
       (respuestas: any[]) => {
-        // Asumimos que cada respuesta es el objeto completo del documento
-        this.documentosParaEliminar = respuestas;
+        this.documentosParaEliminar = respuestas.flat(); // Aplana el array de arrays
         console.log('Documentos a eliminar:', this.documentosParaEliminar);
       },
       error => {
@@ -329,9 +328,22 @@ export class DocumentosComponent implements OnInit {
           alert('Documento(s) eliminado(s) con éxito');
           this.obtenerDocumentos(); // Actualiza la lista de documentos tras la eliminación
         },
-        error => {
-          console.error(`Error al eliminar el documento con ID ${doc.id}:`, error);
-          alert('Error al eliminar uno o más documento(s)');
+        (error:any) => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 500) {
+              // Si es error 500 (Internal Server Error)
+              console.error(`Error 500 al eliminar el documento con ID ${doc.id}:`, error);
+              alert(`ERROR al eliminar uno o más documentos. \nUno de los documentos seleccionados tiene un tipo de documetno asociado, lo que impide eliminarlo`);
+            } else {
+              // Si es otro error diferente a 500
+              console.error(`Error al eliminar el documento con ID ${doc.id}:`, error);
+              alert(`Error al eliminar uno o más documentos: ${error.message}`);
+            }
+          } else {
+            // Si el error no es un HttpErrorResponse (error inesperado)
+            console.error(`Error inesperado al eliminar el documento con ID ${doc.id}:`, error);
+            alert(`Ocurrió un error inesperado al eliminar el documento.`);
+          }
         }
       );
     });
@@ -342,7 +354,7 @@ export class DocumentosComponent implements OnInit {
 
 
   descargarDocumento(documento: any) {
-    const url = `http://localhost:8000/api/documentos/id/${documento.id}`;
+    const url = `http://localhost:8000/api/documentos/descargar/id/${documento.id}`;
 
     // Pedimos el archivo como 'blob' (binario)
     this.http.get(url, { responseType: 'blob' }).subscribe(
