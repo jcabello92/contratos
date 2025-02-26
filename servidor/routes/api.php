@@ -25,6 +25,7 @@ Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy']);
 
 Route::get('/usuarios', [UsuarioController::class, 'login']);
 Route::patch('/usuarios/activar/{id}', [UsuarioController::class, 'activarUsuario']);
+Route::get('/usuarios/activar/pagina/{pagina}', [UsuarioController::class, 'indexInvalidUser']);
 
 # PROVEEDORES
 Route::get('/proveedores/pagina/{pagina}', [ProveedorController::class, 'index']);
@@ -60,6 +61,8 @@ Route::post('/documentos', [DocumentoController::class, 'store']);
 Route::get('/documentos/id/{id}', [DocumentoController::class, 'show']);
 Route::patch('/documentos/{id}', [DocumentoController::class, 'update']);
 Route::delete('/documentos/{id}', [DocumentoController::class, 'destroy']);
+
+Route::get('/documentos/descargar/id/{id}', [DocumentoController::class, 'download']);
 
 # TIPOS DOCUMENTOS
 Route::get('/tipos_documentos/pagina/{pagina}', [TipoDocumentoController::class, 'index']);

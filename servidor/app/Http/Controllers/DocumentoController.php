@@ -101,6 +101,32 @@ class DocumentoController extends Controller
         {
             return 'No se encontró el documento registrado en el sistema.';
         }
+        
+        return $documento;
+    }
+
+
+
+
+
+    # DESCARGA UN DOCUMENTO
+    public function download(int $id)
+    {
+        $campos = [
+            'id',
+            'nombre',
+            'fecha_subida',
+            'hora_subida',
+            'tipo_documento',
+            'contrato'
+        ];
+
+        $documento = Documento::select($campos)->where('id', $id)->where('estado', 1)->limit(1)->get();
+
+        if($documento->isEmpty())
+        {
+            return 'No se encontró el documento registrado en el sistema.';
+        }
 
         $archivos = Storage::files("/" . $id);
 
