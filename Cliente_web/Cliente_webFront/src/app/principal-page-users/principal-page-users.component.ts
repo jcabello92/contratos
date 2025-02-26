@@ -2,6 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-principal-page-users',
@@ -9,7 +11,8 @@ import {Subscription} from 'rxjs';
     NgForOf,
     NgIf,
     RouterLink,
-    RouterOutlet
+    RouterOutlet,
+    HttpClientModule
   ],
   templateUrl: './principal-page-users.component.html',
   standalone: true,
@@ -22,7 +25,7 @@ export class PrincipalPageUsersComponent implements OnInit, OnDestroy{
   isFirstTime: boolean = true;
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http:HttpClient) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateBreadcrumb(event.urlAfterRedirects);
@@ -53,6 +56,30 @@ export class PrincipalPageUsersComponent implements OnInit, OnDestroy{
   updateBreadcrumb(url: string) {
     const parts = url.split('/').filter(part => part);
     this.breadcrumb = parts.slice(1);
+  }
+
+
+  descargarManualUsuario() {
+    console.log("Botón presionado"); // Verificar si la función se ejecuta
+
+    const url = 'http://localhost:8000/api/descargas/manual_usuario';
+
+    this.http.get(url, { responseType: 'blob' }).subscribe(
+      (response: Blob) => {
+        console.log("Solicitud exitosa");
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'manual_usuario.pdf';
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+      },
+      error => {
+        console.log("Solicitud fallida");
+        console.error('Error al descargar el manual:', error);
+        alert('Hubo un problema al descargar el manual.');
+      }
+    );
   }
 
 }
